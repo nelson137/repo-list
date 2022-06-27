@@ -1,5 +1,10 @@
 import { Octokit } from 'octokit';
 
+export type OctoRest = InstanceType<typeof Octokit>['rest'];
+
+type OctoMethod = (...args: any) => Promise<any>;
+export type OctoEndpointData<E extends OctoMethod> = Awaited<ReturnType<E>>['data'];
+
 export let octokit: Octokit;
 
 export const init = () => {
