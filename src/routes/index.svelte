@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+    import type { HandlerOutput } from '.';
+
+    interface $$Props extends HandlerOutput {}
+
+    export let data: HandlerOutput['data'];
+</script>
+
+<p>{JSON.stringify(data)}</p>

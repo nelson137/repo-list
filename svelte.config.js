@@ -9,6 +9,10 @@ const config = {
 
     kit: {
         adapter: adapter(),
+        vite: {
+            envDir: './environments',
+            envPrefix: 'APP_',
+        },
     },
 };
 
