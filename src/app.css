@@ -3,9 +3,11 @@
         'Open Sans', 'Helvetica Neue', sans-serif;
 
     --color-bg-dark: rgb(14, 17, 23);
+    --color-bg-medium: rgb(22, 27, 34);
     --color-bg-light: rgb(33, 38, 45);
     --color-border: rgba(139, 148, 158, 0.4);
     --color-border-hover: rgba(139, 148, 158, 0.8);
+    --color-border-muted: rgb(33, 38, 45);
     --color-text: rgb(201, 209, 217);
     --color-text-secondary: rgb(139, 148, 158);
     --color-text-translucent: rgba(201, 209, 217, 0.5);
