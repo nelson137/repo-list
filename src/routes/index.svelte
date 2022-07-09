@@ -1,10 +1,29 @@
-<script lang="ts">
+<script lang="ts" context="module">
+    import { Repo } from '$lib/models/repo';
     import RepoCard from '$lib/ui/RepoCard.svelte';
-    import type { HandlerOutput } from '.';
+    import type { LoadEvent } from '@sveltejs/kit';
+    import type { Load } from './__types/index';
 
-    interface $$Props extends HandlerOutput {}
+    type InProps = {};
+    type OutProps = {
+        repos: Repo[];
+    };
 
-    export let repos: HandlerOutput['repos'];
+    export const load: Load<InProps, OutProps> = async ({ fetch }: LoadEvent) => {
+        const response = await fetch('/api/github/repos');
+        const data = await response.json();
+        const repos = Repo.from_json_array(data);
+        return {
+            status: response.status,
+            props: { repos },
+        };
+    };
+</script>
+
+<script lang="ts">
+    interface $$Props extends OutProps {}
+
+    export let repos: OutProps['repos'];
 </script>
 
 <div class="list-wrapper">

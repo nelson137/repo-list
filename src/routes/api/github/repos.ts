@@ -1,11 +1,9 @@
 import { octokit } from '$lib/api/octokit';
 import { Repo } from '$lib/models/repo';
 import type { RequestEvent } from '@sveltejs/kit';
-import type { RequestHandler } from './__types/index';
+import type { RequestHandler } from './__types/repos';
 
-export type HandlerOutput = {
-    repos: Repo[];
-};
+export type HandlerOutput = Repo[];
 
 export const get: RequestHandler<HandlerOutput> = async (_event: RequestEvent) => {
     const repos_data = await octokit.paginate(octokit.rest.repos.listForAuthenticatedUser, {
@@ -13,9 +11,8 @@ export const get: RequestHandler<HandlerOutput> = async (_event: RequestEvent) =
         affiliation: 'owner',
     });
     const repos = Repo.from_json_array(repos_data);
-
     return {
         status: 200,
-        body: { repos },
+        body: repos,
     };
 };

@@ -8,7 +8,7 @@
     let user: User;
 
     export const load: Load<{}, {}> = async ({ fetch }: LoadEvent) => {
-        const response = await fetch('/api/user');
+        const response = await fetch('/api/github/user');
         user = User.from_json(await response.json());
         return {
             status: response.status,
