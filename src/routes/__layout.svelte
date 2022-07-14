@@ -1,27 +1,84 @@
 <script lang="ts" context="module">
     import { User } from '$lib/models/user';
+    import Login from '$lib/ui/Login.svelte';
     import type { LoadEvent } from '@sveltejs/kit';
+    import { ApiErrorReason, type ApiError } from './api/_apiError';
     import type { Load } from './__types/__layout';
 
     import '../app.css';
 
-    let user: User;
-
-    export const load: Load<{}, {}> = async ({ fetch }: LoadEvent) => {
-        const response = await fetch('/api/github/user');
-        user = User.from_json(await response.json());
-        return {
-            status: response.status,
-        };
+    type InProps = Record<string, never>;
+    type OutProps = {
+        logged_in: boolean;
+        user: User | null;
     };
+
+    export const load: Load<InProps, OutProps> = async ({ fetch, stuff }: LoadEvent) => {
+        stuff.logged_in = false;
+
+        let data: any;
+        try {
+            const response = await fetch('/api/github/user');
+            data = await response.json();
+        } catch (error) {
+            return {
+                status: 500,
+                error: JSON.stringify({
+                    status: 500,
+                    message: 'An unexpected error occurred while fetching user repositories.',
+                }),
+            };
+        }
+
+        if (data.user) {
+            stuff.logged_in = true;
+            return {
+                stuff,
+                props: {
+                    logged_in: stuff.logged_in,
+                    user: User.from_json(data.user),
+                },
+            };
+        }
+
+        const error: ApiError = data.error;
+        if (error.reason === ApiErrorReason.NoToken) {
+            return {
+                stuff,
+                props: {
+                    logged_in: stuff.logged_in,
+                    user: null,
+                },
+            };
+        } else {
+            return {
+                status: 400,
+                stuff,
+                error: JSON.stringify(error),
+            };
+        }
+    };
+</script>
+
+<script lang="ts">
+    interface $$Props extends OutProps {}
+
+    export let logged_in: OutProps['logged_in'];
+    export let user: OutProps['user'];
 </script>
 
 <header>
     <span>GitHub Face</span>
     <div class="flex-spacer" />
-    <a href={user?.html_url}>
-        <img src={user?.avatar_url} alt="@{user?.login}" />
-    </a>
+    {#if logged_in}
+        <a href={user?.html_url}>
+            <img src={user?.avatar_url} alt="@{user?.login}" />
+        </a>
+    {:else}
+        <div class="login-wrapper">
+            <Login />
+        </div>
+    {/if}
 </header>
 
 <main>
@@ -43,6 +100,10 @@
         .flex-spacer {
             height: 0;
             flex-grow: 1;
+        }
+
+        .login-wrapper {
+            margin-right: 16px;
         }
 
         a {

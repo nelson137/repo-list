@@ -6,37 +6,66 @@
 
     type InProps = {};
     type OutProps = {
-        repos: Repo[];
+        logged_in: boolean;
+        repos: Repo[] | null;
     };
 
-    export const load: Load<InProps, OutProps> = async ({ fetch }: LoadEvent) => {
-        const response = await fetch('/api/github/repos');
-        const data = await response.json();
-        const repos = Repo.from_json_array(data);
-        return {
-            status: response.status,
-            props: { repos },
-        };
+    export const load: Load<InProps, OutProps> = async ({ fetch, stuff }: LoadEvent) => {
+        if (!stuff.logged_in) {
+            return {
+                props: {
+                    logged_in: stuff.logged_in ?? false,
+                    repos: null,
+                },
+            };
+        }
+
+        try {
+            const response = await fetch('/api/github/repos');
+            const data = await response.json();
+            if (data.error) {
+                return {
+                    status: data.error.status ?? 500,
+                    error: JSON.stringify(data.error),
+                };
+            }
+            return {
+                props: {
+                    logged_in: stuff.logged_in ?? false,
+                    repos: Repo.from_json_array(data.repos),
+                },
+            };
+        } catch (error) {
+            return {
+                status: 500,
+                error: '{"status":500, "message":"An unexpected error occurred while fetching user repositories."}',
+            };
+        }
     };
 </script>
 
 <script lang="ts">
     interface $$Props extends OutProps {}
 
+    export let logged_in: OutProps['logged_in'];
     export let repos: OutProps['repos'];
 </script>
 
-<div class="list-wrapper">
-    {#if repos}
-        <div class="list">
-            {#each repos as repo}
-                <RepoCard {repo} />
-            {/each}
-        </div>
-    {:else}
-        <p>No repositories found.</p>
-    {/if}
-</div>
+{#if logged_in}
+    <div class="list-wrapper">
+        {#if repos && repos.length}
+            <div class="list">
+                {#each repos as repo}
+                    <RepoCard {repo} />
+                {/each}
+            </div>
+        {:else}
+            <p>No repositories found.</p>
+        {/if}
+    </div>
+{:else}
+    <h1>Please log in.</h1>
+{/if}
 
 <style lang="scss">
     .list-wrapper {
