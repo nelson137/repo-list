@@ -1,12 +1,14 @@
 <script lang="ts" context="module">
     import type { LoadEvent } from '@sveltejs/kit';
-    import type { HandlerError } from './login/callback';
     import type { Load } from './__types/__error';
 
     type InProps = {
         error?: string;
     };
-    type OutProps = HandlerError;
+    type OutProps = {
+        status: number;
+        message: string;
+    };
 
     const UNKNOWN_ERR_MSG = 'An unknown error occurred';
 
@@ -22,15 +24,11 @@
             };
         }
 
-        let err = JSON.parse(error.message);
-
-        let props: any = {
-            status,
-            message: (err.message as string) ?? UNKNOWN_ERR_MSG,
-        };
-
         return {
-            props,
+            props: {
+                status,
+                message: error.message ?? UNKNOWN_ERR_MSG,
+            },
         };
     };
 </script>

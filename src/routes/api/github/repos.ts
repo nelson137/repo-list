@@ -1,30 +1,12 @@
 import { octokitFactory } from '$lib/api/octokit';
+import { EndpointErrorReason, endpoint_err, type EndpointErrorBody } from '$lib/error';
 import { Repo } from '$lib/models/repo';
-import type { RequestEvent, RequestHandlerOutput } from '@sveltejs/kit';
-import { ApiErrorReason, type ApiError } from '../_apiError';
+import type { RequestEvent } from '@sveltejs/kit';
 import type { RequestHandler } from './__types/repos';
 
 export type HandlerOutput = {
     repos?: Repo[];
-    error?: ApiError;
-};
-
-const err = (
-    status: number,
-    reason: ApiErrorReason,
-    message?: string
-): RequestHandlerOutput<HandlerOutput> => {
-    return {
-        status: 200,
-        body: {
-            error: {
-                status,
-                reason,
-                message,
-            },
-        },
-    };
-};
+} & EndpointErrorBody;
 
 export const get: RequestHandler<HandlerOutput> = async ({ locals }: RequestEvent) => {
     const octokit = octokitFactory(locals.token);
@@ -39,6 +21,6 @@ export const get: RequestHandler<HandlerOutput> = async ({ locals }: RequestEven
             body: { repos },
         };
     } catch (error: any) {
-        return err(400, ApiErrorReason.GithubError, error.response.data.message);
+        return endpoint_err(400, EndpointErrorReason.GithubError, error.response.data.message);
     }
 };

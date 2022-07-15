@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
+    import { EndpointErrorReason, type EndpointError } from '$lib/error';
     import { User } from '$lib/models/user';
     import Login from '$lib/ui/Login.svelte';
     import type { LoadEvent } from '@sveltejs/kit';
-    import { ApiErrorReason, type ApiError } from './api/_apiError';
     import type { Load } from './__types/__layout';
 
     import '../app.css';
@@ -41,8 +41,8 @@
             };
         }
 
-        const error: ApiError = data.error;
-        if (error.reason === ApiErrorReason.NoToken) {
+        const error: EndpointError = data.error;
+        if (error.reason === EndpointErrorReason.NoToken) {
             return {
                 stuff,
                 props: {

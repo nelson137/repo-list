@@ -1,7 +1,7 @@
 import { init } from '$lib/api/octokit';
+import { EndpointErrorReason } from '$lib/error';
 import type { Handle } from '@sveltejs/kit';
 import * as Cookie from 'cookie';
-import { ApiErrorReason } from './routes/api/_apiError';
 
 init();
 
@@ -14,7 +14,7 @@ export const handle: Handle = ({ event, resolve }) => {
             JSON.stringify({
                 error: {
                     status: 401,
-                    reason: ApiErrorReason.NoToken,
+                    reason: EndpointErrorReason.NoToken,
                     message: 'from hooks',
                 },
             }),
