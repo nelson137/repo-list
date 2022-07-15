@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-    import { EndpointErrorReason, type EndpointError } from '$lib/error';
+    import { EndpointErrorReason, handle_endpoint_err, type EndpointError } from '$lib/error';
     import { User } from '$lib/models/user';
     import Login from '$lib/ui/Login.svelte';
     import type { LoadEvent } from '@sveltejs/kit';
@@ -20,14 +20,12 @@
         try {
             const response = await fetch('/api/github/user');
             data = await response.json();
-        } catch (error) {
-            return {
+        } catch (error: any) {
+            return handle_endpoint_err({
                 status: 500,
-                error: JSON.stringify({
-                    status: 500,
-                    message: 'An unexpected error occurred while fetching user repositories.',
-                }),
-            };
+                reason: EndpointErrorReason.Other,
+                message: `An unexpected error occurred while fetching user data: ${error.message}`,
+            });
         }
 
         if (data.user) {
@@ -42,7 +40,7 @@
         }
 
         const error: EndpointError = data.error;
-        if (error.reason === EndpointErrorReason.NoToken) {
+        if (error.reason === EndpointErrorReason.Auth_NoToken) {
             return {
                 stuff,
                 props: {
@@ -51,11 +49,7 @@
                 },
             };
         } else {
-            return {
-                status: 400,
-                stuff,
-                error: JSON.stringify(error),
-            };
+            return handle_endpoint_err(error);
         }
     };
 </script>

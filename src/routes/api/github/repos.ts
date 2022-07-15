@@ -21,6 +21,6 @@ export const get: RequestHandler<HandlerOutput> = async ({ locals }: RequestEven
             body: { repos },
         };
     } catch (error: any) {
-        return endpoint_err(400, EndpointErrorReason.GithubError, error.response.data.message);
+        return endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);
     }
 };

@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-    import { handle_endpoint_error } from '$lib/error';
+    import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import type { LoadEvent } from '@sveltejs/kit';
@@ -24,7 +24,7 @@
         try {
             const response = await fetch('/api/github/repos');
             const data = await response.json();
-            if (data.error) return handle_endpoint_error(response.status, data.error);
+            if (data.error) return handle_endpoint_err(data.error);
             return {
                 props: {
                     logged_in: stuff.logged_in ?? false,
@@ -32,10 +32,11 @@
                 },
             };
         } catch (error: any) {
-            return {
+            return handle_endpoint_err({
                 status: 400,
-                error: `${error.name}: ${error.message}`,
-            };
+                reason: EndpointErrorReason.Other,
+                message: `An unexpected error occurred while fetching user repositories: ${error.message}`,
+            });
         }
     };
 </script>

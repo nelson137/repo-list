@@ -1,12 +1,15 @@
 import type { LoadOutput, RequestHandlerOutput } from '@sveltejs/kit';
 
 export enum EndpointErrorReason {
-    Auth = 'auth',
-    GithubError = 'github-error',
-    NoToken = 'no-token',
+    Auth_Callback_NoCode = 'auth-no-code',
+    Auth_Callback_NullCode = 'auth-null-code',
+    Auth_NoToken = 'auth-no-token',
+    Github = 'github',
+    Other = 'other',
 }
 
 export type EndpointError = {
+    status: number;
     reason: EndpointErrorReason;
     message?: string;
 };
@@ -21,28 +24,42 @@ export function endpoint_err(
     message?: string
 ): RequestHandlerOutput<EndpointErrorBody> {
     return {
-        status,
-        body: {
-            error: {
-                reason,
-                message,
-            },
-        },
+        status: 200,
+        body: endpoint_err_body(status, reason, message),
     };
 }
 
-export function handle_endpoint_error<P>(status: number, data: any): LoadOutput<P> {
+export function endpoint_err_body(
+    status: number,
+    reason: EndpointErrorReason,
+    message?: string
+): EndpointErrorBody {
+    return {
+        error: { status, reason, message },
+    };
+}
+
+export function handle_endpoint_err<P>(data: EndpointError): LoadOutput<P> {
     let error = 'An unknown error occurred';
     switch (data.reason) {
-        case EndpointErrorReason.NoToken:
-            error = 'No token';
+        case EndpointErrorReason.Auth_Callback_NoCode:
+            error = 'GitHub authentication redirected with no temporary code';
             break;
-        case EndpointErrorReason.GithubError:
-            error = `GitHub returned an error: ${data.message}`;
+        case EndpointErrorReason.Auth_Callback_NullCode:
+            error = 'GitHub authentication redirected with a null temporary code';
+            break;
+        case EndpointErrorReason.Auth_NoToken:
+            error = 'No authentication token';
+            break;
+        case EndpointErrorReason.Github:
+            error = `GitHub Error: ${data.message}`;
+            break;
+        case EndpointErrorReason.Other:
+            if (data.message) error = data.message;
             break;
     }
     return {
-        status,
+        status: data.status,
         error,
     };
 }

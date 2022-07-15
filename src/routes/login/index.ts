@@ -1,4 +1,4 @@
-import type { RequestHandler } from './__types/login';
+import type { RequestHandler } from './__types/index';
 
 export type HandlerOutput = Record<string, never>;
 
