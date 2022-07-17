@@ -1,7 +1,6 @@
 <script lang="ts" context="module">
     import { EndpointErrorReason, handle_endpoint_err, type EndpointError } from '$lib/error';
     import { User } from '$lib/models/user';
-    import Login from '$lib/ui/Login.svelte';
     import type { LoadEvent } from '@sveltejs/kit';
     import type { Load } from './__types/__layout';
 
@@ -69,9 +68,7 @@
             <img src={user?.avatar_url} alt="@{user?.login}" />
         </a>
     {:else}
-        <div class="login-wrapper">
-            <Login />
-        </div>
+        <a href="/login" class="login-link">Sign In</a>
     {/if}
 </header>
 
@@ -96,7 +93,7 @@
             flex-grow: 1;
         }
 
-        .login-wrapper {
+        .login-link {
             margin-right: 16px;
         }
 
