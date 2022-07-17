@@ -30,7 +30,7 @@ export const get: RequestHandler<HandlerOutput> = async ({ url }: RequestEvent) 
                     // maxAge: 60 * 60 * 24, // Number of secs from receipt it will be deleted // 1 day
                     sameSite: 'lax',
                 }),
-                Location: '/self-destruct',
+                Location: '/',
             },
         };
     } catch (error: any) {

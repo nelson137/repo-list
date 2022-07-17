@@ -4,4 +4,4 @@
     };
 </script>
 
-<a href="/login" target="_blank">Sign In</a>
+<a href="/login">Sign In</a>
