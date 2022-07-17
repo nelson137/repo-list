@@ -58,15 +58,45 @@
 
     export let logged_in: OutProps['logged_in'];
     export let user: OutProps['user'];
+
+    let profile_menu_details: HTMLElement;
+    let profile_menu_summary: HTMLElement;
+    let profile_menu_popup: HTMLElement;
+
+    const onWindowClick = (event: MouseEvent) => {
+        let path = event.composedPath();
+        if (
+            profile_menu_details.hasAttribute('open') &&
+            !path.includes(profile_menu_summary) &&
+            !path.includes(profile_menu_popup)
+        ) {
+            profile_menu_details.removeAttribute('open');
+        }
+    };
 </script>
+
+<svelte:window on:click={onWindowClick} />
+
+<svelte:head>
+    <!-- TODO: figure out why this doesn't work correctly -->
+    <!-- <script type="module" src="./node_modules/@github/details-menu-element/dist/index.js"></script> -->
+</svelte:head>
 
 <header>
     <span>GitHub Face</span>
     <div class="flex-spacer" />
     {#if logged_in}
-        <a href={user?.html_url}>
-            <img src={user?.avatar_url} alt="@{user?.login}" />
-        </a>
+        <details class="profile" bind:this={profile_menu_details}>
+            <summary class="dropdown-trigger" bind:this={profile_menu_summary}>
+                <img src={user?.avatar_url} alt="@{user?.login}" />
+                <span class="dropdown-caret" />
+            </summary>
+            <details-menu class="dropdown-menu" role="menu" bind:this={profile_menu_popup}>
+                <a class="link" href={user?.html_url} target="_blank">@{user?.login}</a>
+                <div class="dropdown-menu-divider" />
+                <a href="/logout" class="link">Sign out</a>
+            </details-menu>
+        </details>
     {:else}
         <a href="/login" class="login-link">Sign In</a>
     {/if}
@@ -97,11 +127,82 @@
             margin-right: 16px;
         }
 
-        a {
-            img {
-                border-radius: 50%;
-                aspect-ratio: 1;
-                width: 24px;
+        .profile {
+            position: relative;
+
+            .dropdown-trigger {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                cursor: pointer;
+
+                img {
+                    border-radius: 50%;
+                    aspect-ratio: 1;
+                    width: 24px;
+                }
+
+                // TODO: make this look like GitHub's
+                .dropdown-caret {
+                    display: inline-block;
+                    width: 0;
+                    height: 0;
+                    vertical-align: middle;
+                    content: '';
+                    border-style: solid;
+                    border-width: 4px 4px 0;
+                    border-right-color: transparent;
+                    border-bottom-color: transparent;
+                    border-left-color: transparent;
+                    margin: 2px 0 0 4px;
+                }
+            }
+
+            .dropdown-menu {
+                position: absolute;
+                right: 0;
+                // left: auto;
+                z-index: 100;
+                width: 180px;
+                margin-top: 8px;
+                padding: 4px 0;
+                background-color: var(--color-bg-medium);
+                border-radius: 6px;
+                box-shadow: var(--color-shadow-large);
+
+                --color-dropdown-border: rgb(48, 54, 61);
+                border: 1px solid var(--color-dropdown-border);
+
+                &::before {
+                    position: absolute;
+                    top: -16px;
+                    right: 15px;
+                    display: inline-block;
+                    content: '';
+                    border: 8px solid transparent;
+                    border-bottom-color: var(--color-dropdown-border);
+                }
+
+                & > * {
+                    display: block;
+                    padding: 4px 8px;
+                }
+
+                .dropdown-menu-divider {
+                    height: 0;
+                    width: 100%;
+                    padding: 0;
+                    margin: 6px 0;
+                    border-top: 1px solid var(--color-dropdown-border);
+                }
+
+                .link {
+                    color: var(--color-text);
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
         }
     }

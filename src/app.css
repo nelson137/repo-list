@@ -11,6 +11,12 @@
     --color-text: rgb(201, 209, 217);
     --color-text-secondary: rgb(139, 148, 158);
     --color-text-translucent: rgba(201, 209, 217, 0.5);
+
+    --color-shadow-large: 0 8px 24px rgb(1, 4, 9);
+}
+
+* {
+    color: var(--color-text);
 }
 
 /**
