@@ -107,6 +107,8 @@
 </main>
 
 <style lang="scss">
+    @import 'src/styles/global.scss';
+
     header {
         background-color: var(--color-bg-medium);
         box-shadow: inset 0 -1px 0 var(--color-border-muted);
@@ -209,7 +211,7 @@
 
     main {
         margin: 0;
-        padding: 3em;
+        padding: $mainPadding;
         box-sizing: border-box;
     }
 </style>

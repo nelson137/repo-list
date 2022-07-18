@@ -23,12 +23,15 @@
 </a>
 
 <style lang="scss">
+    @import 'src/styles/global.scss';
+
     a {
         text-decoration: none;
     }
 
     .card {
-        width: 256px;
+        box-sizing: border-box;
+        width: $repoCardWidth;
         border-radius: 8px;
         padding: 16px;
         background-clip: padding-box;

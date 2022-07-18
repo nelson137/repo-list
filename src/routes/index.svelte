@@ -65,6 +65,8 @@
 {/if}
 
 <style lang="scss">
+    @import '../styles/global.scss';
+
     .list-wrapper {
         display: flex;
         justify-content: center;
@@ -73,7 +75,7 @@
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            gap: 24px;
+            gap: $repoCardGap;
             align-content: flex-start;
             align-items: center;
         }
@@ -82,32 +84,12 @@
     /**
      * This is the best approach to a centered flexbox with left-adjusted items:
      *     https://stackoverflow.com/a/32811002/5673922
-     * Wrapper width increases by 316 starting with 292.
-     * The max-width in the screen media query is 315 more than the min-width.
      */
-    @media screen and (max-width: 703px) {
-        .list {
-            width: 292px; /* 1 column */
-        }
-    }
-    @media screen and (min-width: 704px) and (max-width: 1019px) {
-        .list {
-            width: 608px; /* 2 columns */
-        }
-    }
-    @media screen and (min-width: 1020px) and (max-width: 1335px) {
-        .list {
-            width: 924px; /* 3 columns */
-        }
-    }
-    @media screen and (min-width: 1335px) and (max-width: 1650px) {
-        .list {
-            width: 1240px; /* 4 columns */
-        }
-    }
-    @media screen and (min-width: 1651px) /* and (max-width: 1966px) */ {
-        .list {
-            width: 1556px; /* 5 columns */
+    @for $cols from 1 through 10 {
+        @media screen and (min-width: calc($cols * ($repoCardWidth + $repoCardGap) + $repoCardGap + 2 * $mainPadding)) {
+            .list {
+                width: calc($cols * ($repoCardWidth + $repoCardGap) - $repoCardGap);
+            }
         }
     }
 </style>
