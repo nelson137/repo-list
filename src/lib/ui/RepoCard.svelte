@@ -74,6 +74,9 @@
                 height: 22px;
                 .open-button {
                     display: block;
+                    :global(svg.icon-external-link:hover) {
+                        filter: brightness(1.3);
+                    }
                 }
             }
         }
