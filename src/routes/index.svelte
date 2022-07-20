@@ -46,25 +46,14 @@
 
     export let logged_in: OutProps['logged_in'];
     export let repos: OutProps['repos'];
-
-    let option: string;
 </script>
-
-<select
-    bind:value={option}
-    style="display:block; margin: 0 auto 48px auto; width:300px; padding:4px; background-color:transparent;"
->
-    <option value="1">Always-visible button w/ text transition</option>
-    <option value="2">Auto-hide button</option>
-    <option value="3">Auto-hide external link icon</option>
-</select>
 
 {#if logged_in}
     <div class="list-wrapper">
         {#if repos && repos.length}
             <div class="list">
                 {#each repos as repo}
-                    <RepoCard {repo} {option} />
+                    <RepoCard {repo} />
                 {/each}
             </div>
         {:else}
