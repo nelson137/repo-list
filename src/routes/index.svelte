@@ -8,6 +8,7 @@
     import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
     import { load_repo_lists, RepositoryLists } from '$lib/models/repo-list';
+    import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
     import type { LoadEvent } from '@sveltejs/kit';
@@ -56,6 +57,23 @@
     export let logged_in: OutProps['logged_in'];
     export let repos: OutProps['repos'];
     let repo_lists: RepositoryLists;
+
+    /**
+     * The element ID of the source list from which the card being dragged.
+     */
+    let drag_src_list_id: string;
+    /**
+     * The index of the card being dragged.
+     */
+    let drag_start_index = -1;
+    /**
+     * Whether to disable showing the drag indicator on the right of the previous card (index-1).
+     */
+    let disable_prev_right = false;
+    /**
+     * Whether to disable showing the drag indicator on the left of the next card (index+1).
+     */
+    let disable_next_left = false;
 
     onMount(() => {
         repo_lists = load_repo_lists(repos ?? []);
@@ -116,10 +134,27 @@
         }
 
         // Enable the indicator on the determined card and side, disable all others
+        const closest_is_prev_right =
+            closest_i === drag_start_index - 1 && closest_side === Side.After;
+        const closest_is_next_left =
+            closest_i === drag_start_index + 1 && closest_side === Side.Before;
         for (let i = 0; i < children.length; i++) {
             let child = children.item(i) as HTMLElement | null;
             if (i === closest_i) {
-                child?.style.setProperty(`--display-${Side.toStr(closest_side)}`, 'block');
+                if (
+                    list_el.id === drag_src_list_id &&
+                    (i === drag_start_index ||
+                        (closest_is_prev_right && disable_prev_right) ||
+                        (closest_is_next_left && disable_next_left))
+                ) {
+                    /**
+                     * Do nothing, these conditions should not show an indicator. The else block of
+                     * if(i===closest_i) will take care of removing the indicator when the user
+                     * drags elsewhere.
+                     */
+                } else {
+                    child?.style.setProperty(`--display-${Side.toStr(closest_side)}`, 'block');
+                }
                 child?.style.removeProperty(`--display-${Side.toOppositeStr(closest_side)}`);
             } else {
                 child?.style.removeProperty(`--display-${Side.toStr(Side.Before)}`);
@@ -145,6 +180,25 @@
         );
     };
 
+    const card_drag_start = (event: CustomEvent<CardDragStartData>) => {
+        const { index, list_id } = event.detail;
+
+        drag_src_list_id = list_id;
+        drag_start_index = index;
+
+        const children = document.getElementById(list_id)?.children;
+        if (!children) {
+            console.error('Failed to get list element with id:', list_id);
+            return;
+        }
+
+        const prev = children.item(index - 1)?.getBoundingClientRect();
+        const target = children.item(index)?.getBoundingClientRect();
+        const next = children.item(index + 1)?.getBoundingClientRect();
+        disable_prev_right = !!prev && !!target && prev.x < target.x;
+        disable_next_left = !!target && !!next && target.x < next.x;
+    };
+
     const card_drag_end = (_event: CustomEvent<undefined>) => {
         const list_elements = document.getElementsByClassName('list');
         for (let l = 0; l < list_elements.length; l++) {
@@ -168,10 +222,12 @@
                         on:dragover={drag_over}
                         on:drop={drop}
                     >
-                        {#each list.repo_ids as r_id}
+                        {#each list.repo_ids as r_id, i}
                             <RepoCard
                                 list_id={list.id}
+                                index={i}
                                 repo={repo_lists.get_repo(r_id)}
+                                on:card_drag_start={card_drag_start}
                                 on:card_drag_end={card_drag_end}
                             />
                         {/each}

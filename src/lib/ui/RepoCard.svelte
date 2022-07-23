@@ -10,12 +10,17 @@
     import GitStarSvg from '$lib/ui/svgs/GitStarSvg.svelte';
     import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
+    import type { CardDragStartData } from './events';
     import ExternalLink from './svgs/ExternalLink.svelte';
 
     export let list_id: string;
+    export let index: number;
     export let repo: Repo;
 
-    const dispatch = createEventDispatcher<{ card_drag_end: undefined }>();
+    const dispatch = createEventDispatcher<{
+        card_drag_start: CardDragStartData;
+        card_drag_end: undefined;
+    }>();
 
     let card_hover = false;
     const card_enter = () => (card_hover = true);
@@ -27,6 +32,7 @@
             event.dataTransfer.dropEffect = list_id === ALL_REPOS_LIST_ID ? 'copy' : 'move';
             event.dataTransfer.setData(DRAG_DATA__REPO_ID, event.currentTarget.id);
             event.dataTransfer.setData(DRAG_DATA__SRC_LIST_ID, list_id);
+            dispatch('card_drag_start', { index, list_id });
         }
     };
 
