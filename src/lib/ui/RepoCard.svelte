@@ -139,15 +139,20 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 12px;
 
             .open-button-wrapper {
                 width: 22px;
                 height: 22px;
+                flex-shrink: 0;
                 .open-button {
                     display: block;
-                    :global(svg.icon-external-link:hover) {
-                        filter: brightness(1.3);
+                    :global(svg.icon-external-link) {
+                        // Fix for extra height added by an anchor:
+                        // https://stackoverflow.com/a/27999850/5673922
+                        vertical-align: top;
+                        &:hover {
+                            filter: brightness(1.3);
+                        }
                     }
                 }
             }
