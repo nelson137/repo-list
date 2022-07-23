@@ -26,7 +26,10 @@
     const card_enter = () => (card_hover = true);
     const card_leave = () => (card_hover = false);
 
+    let card_dragging = false;
+
     const drag_start = (event: _DragEvent) => {
+        card_dragging = true;
         if (event.dataTransfer) {
             event.dataTransfer.effectAllowed = 'copyMove';
             event.dataTransfer.dropEffect = list_id === ALL_REPOS_LIST_ID ? 'copy' : 'move';
@@ -36,12 +39,16 @@
         }
     };
 
-    const drag_end = (_event: _DragEvent) => dispatch('card_drag_end');
+    const drag_end = (_event: _DragEvent) => {
+        card_dragging = false;
+        dispatch('card_drag_end');
+    };
 </script>
 
 <div
     id={repo.id.toString()}
     class="card"
+    class:card_dragging
     draggable="true"
     on:mouseenter={card_enter}
     on:mouseleave={card_leave}
@@ -166,6 +173,13 @@
                     margin-left: 4px;
                 }
             }
+        }
+
+        &.card_dragging {
+            transition: all 0.25s ease-in-out;
+            opacity: 40%;
+            border: 2px dashed var(--color-border);
+            background-color: var(--color-bg-light-translucent);
         }
     }
 </style>
