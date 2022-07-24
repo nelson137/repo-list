@@ -1,6 +1,7 @@
 <script lang="ts">
     import {
         DRAG_DATA__REPO_ID,
+        DRAG_DATA__REPO_INDEX,
         DRAG_DATA__SRC_LIST_ID,
         type _DragEvent,
     } from '$lib/drag-and-drop';
@@ -33,6 +34,7 @@
         if (event.dataTransfer) {
             event.dataTransfer.effectAllowed = 'copyMove';
             event.dataTransfer.dropEffect = list_id === ALL_REPOS_LIST_ID ? 'copy' : 'move';
+            event.dataTransfer.setData(DRAG_DATA__REPO_INDEX, index.toString());
             event.dataTransfer.setData(DRAG_DATA__REPO_ID, event.currentTarget.id);
             event.dataTransfer.setData(DRAG_DATA__SRC_LIST_ID, list_id);
             dispatch('card_drag_start', { index, list_id });

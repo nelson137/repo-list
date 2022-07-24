@@ -1,18 +1,20 @@
 <script lang="ts" context="module">
     import {
         DRAG_DATA__REPO_ID,
+        DRAG_DATA__REPO_INDEX,
         DRAG_DATA__SRC_LIST_ID,
         Side,
         type _DragEvent,
     } from '$lib/drag-and-drop';
     import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
-    import { load_repo_lists, RepositoryLists } from '$lib/models/repo-list';
+    import { ALL_REPOS_LIST_ID, load_repo_lists, RepositoryLists } from '$lib/models/repo-list';
     import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
     import type { LoadEvent } from '@sveltejs/kit';
     import { onMount } from 'svelte';
+    import { flip } from 'svelte/animate';
     import type { Load } from './__types/index';
 
     type InProps = {};
@@ -66,6 +68,14 @@
      * The index of the card being dragged.
      */
     let drag_start_index = -1;
+    /**
+     * The index of the card closest to the mouse.
+     */
+    let closest_i = -1;
+    /**
+     * The side of the closest card that is closest to the mouse.
+     */
+    let closest_side: Side | null = null;
 
     onMount(() => {
         repo_lists = load_repo_lists(repos ?? []);
@@ -105,8 +115,8 @@
         // Determine which child element (card) and side the indicator should be shown
         const children = list_el.children;
         let closest_dist = Number.MAX_SAFE_INTEGER;
-        let closest_i = -1;
-        let closest_side = Side.Before;
+        closest_i = -1;
+        closest_side = null;
         for (let i = 0; i < children.length; i++) {
             const child = children.item(i) as HTMLElement | null;
             if (!child) continue;
@@ -124,6 +134,7 @@
                 closest_side = mouseX < childCenterX ? Side.Before : Side.After;
             }
         }
+        if (closest_i < 0 || closest_side === null) return;
 
         // Enable the indicator on the determined card and side, disable all others
         const closest_is_prev_right =
@@ -154,20 +165,59 @@
     };
 
     const drop = (event: _DragEvent) => {
-        // event.preventDefault();
-        const repo_id = event.dataTransfer?.getData(DRAG_DATA__REPO_ID);
-        const repo_name = repo_lists.entries[repo_id ?? '']?.name;
-        const src_list_id = event.dataTransfer?.getData(DRAG_DATA__SRC_LIST_ID);
-        const cur_list_id = event.currentTarget.id;
-        const cur_list = repo_lists.lists[event.currentTarget.id];
-        if (!cur_list) return;
-        const cur_list_name = cur_list.name;
+        const repo_index_str = event.dataTransfer?.getData(DRAG_DATA__REPO_INDEX);
+        if (!repo_index_str) {
+            console.error('Invalid drop: no repository index');
+            return;
+        }
+        const repo_index = parseInt(repo_index_str);
+        if (!repo_index_str) {
+            console.error('Invalid drop: invalid repository index:', repo_index_str);
+            return;
+        }
 
-        console.log(
-            cur_list_id === src_list_id
-                ? `reorder repo "${repo_name}" in list "${cur_list_name}"`
-                : `move/copy repo "${repo_name}" to list "${cur_list_name}"`
-        );
+        const repo_id = event.dataTransfer?.getData(DRAG_DATA__REPO_ID);
+        if (!repo_id) {
+            console.error('Invalid drop: no repository ID');
+            return;
+        }
+
+        const src_list_id = event.dataTransfer?.getData(DRAG_DATA__SRC_LIST_ID);
+        if (!src_list_id) {
+            console.error('Invalid drop: no source list ID');
+            return;
+        }
+
+        const cur_list_id = event.currentTarget.id;
+        if (!repo_lists.lists[cur_list_id]) {
+            console.error('Repository list not found for ID:', cur_list_id);
+            return;
+        }
+
+        if (!repo_lists.lists[src_list_id]) {
+            console.error('Repository list not found for ID:', src_list_id);
+            return;
+        }
+        const repo_ids = repo_lists.lists[src_list_id].repo_ids;
+
+        if (closest_side === null) {
+            console.error('Invalid drop: no closest_side');
+        }
+        const new_index = closest_i + (closest_side === Side.Before ? 0 : 1);
+        if (cur_list_id === src_list_id) {
+            // Reorder list
+            repo_ids.splice(new_index, 0, repo_ids[repo_index]);
+            repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
+        } else {
+            // Move or copy (if src is the special "All" list) to current list
+            const r = repo_lists.lists[src_list_id].repo_ids[repo_index];
+            repo_lists.lists[cur_list_id].repo_ids.splice(new_index, 0, r);
+            if (src_list_id !== ALL_REPOS_LIST_ID) repo_ids.splice(repo_index, 1);
+        }
+        repo_lists.lists[src_list_id].repo_ids = repo_ids;
+
+        closest_i = -1;
+        closest_side = null;
     };
 
     const card_drag_start = (event: CustomEvent<CardDragStartData>) => {
@@ -206,14 +256,19 @@
                         on:dragover={drag_over}
                         on:drop={drop}
                     >
-                        {#each list.repo_ids as r_id, i}
-                            <RepoCard
-                                list_id={list.id}
-                                index={i}
-                                repo={repo_lists.get_repo(r_id)}
-                                on:card_drag_start={card_drag_start}
-                                on:card_drag_end={card_drag_end}
-                            />
+                        {#each list.repo_ids as r_id, i (r_id)}
+                            <div
+                                class="repo-card-wrapper"
+                                animate:flip={{ duration: d => Math.sqrt(d * 500) }}
+                            >
+                                <RepoCard
+                                    list_id={list.id}
+                                    index={i}
+                                    repo={repo_lists.get_repo(r_id)}
+                                    on:card_drag_start={card_drag_start}
+                                    on:card_drag_end={card_drag_end}
+                                />
+                            </div>
                         {/each}
                     </div>
                 </div>

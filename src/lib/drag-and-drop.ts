@@ -1,5 +1,6 @@
 export type _DragEvent = DragEvent & { currentTarget: EventTarget & HTMLElement };
 
+export const DRAG_DATA__REPO_INDEX = 'application/repo-card-index';
 export const DRAG_DATA__REPO_ID = 'application/repo-card-id';
 export const DRAG_DATA__SRC_LIST_ID = 'application/repo-card-source-list-id';
 
