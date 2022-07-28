@@ -91,6 +91,12 @@
         }
     };
 
+    const _element_is_in_list = (o: any): boolean => {
+        if (!o || typeof o !== 'object' || (o.classList ?? true) || (o.parentElement ?? true))
+            return false;
+        return o.classList.contains('list') ? true : _element_is_in_list(o.parentElement);
+    };
+
     const drag_enter = (event: _DragEvent) => {
         if (!event.dataTransfer) return;
         const types = event.dataTransfer.types;
@@ -100,7 +106,10 @@
         }
     };
 
-    const drag_leave = (event: _DragEvent) => clear_list_drag_indicators(event.currentTarget);
+    const drag_leave = (event: _DragEvent) => {
+        if (_element_is_in_list(event.relatedTarget)) return;
+        clear_list_drag_indicators(event.currentTarget);
+    };
 
     const drag_over = (event: _DragEvent) => {
         event.preventDefault();
