@@ -6,7 +6,6 @@
         type _DragEvent,
     } from '$lib/drag-and-drop';
     import type { Repo } from '$lib/models/repo';
-    import { ALL_REPOS_LIST_ID } from '$lib/models/repo-list';
     import GitForkSvg from '$lib/ui/svgs/GitForkSvg.svelte';
     import GitStarSvg from '$lib/ui/svgs/GitStarSvg.svelte';
     import { createEventDispatcher } from 'svelte';
@@ -32,8 +31,6 @@
     const drag_start = (event: _DragEvent) => {
         card_dragging = true;
         if (event.dataTransfer) {
-            event.dataTransfer.effectAllowed = 'copyMove';
-            event.dataTransfer.dropEffect = list_id === ALL_REPOS_LIST_ID ? 'copy' : 'move';
             event.dataTransfer.setData(DRAG_DATA__REPO_INDEX, index.toString());
             event.dataTransfer.setData(DRAG_DATA__REPO_ID, event.currentTarget.id);
             event.dataTransfer.setData(DRAG_DATA__SRC_LIST_ID, list_id);
