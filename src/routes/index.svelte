@@ -76,6 +76,10 @@
      * The side of the closest card that is closest to the mouse.
      */
     let closest_side: Side | null = null;
+    /**
+     * Whether the list from which the card is being dragged is the special "All" list.
+     */
+    let dragging_in_list_all = false;
 
     onMount(() => {
         repo_lists = load_repo_lists(repos ?? []);
@@ -98,23 +102,25 @@
     };
 
     const drag_enter = (event: _DragEvent) => {
-        if (!event.dataTransfer) return;
-        const types = event.dataTransfer.types;
-        if (types.includes(DRAG_DATA__REPO_ID) && types.includes(DRAG_DATA__SRC_LIST_ID)) {
-            // Cancel event to accept the drop
-            event.preventDefault();
+        if (event.currentTarget.id === ALL_REPOS_LIST_ID) {
+            dragging_in_list_all = true;
+            return;
         }
+        event.preventDefault();
     };
 
     const drag_leave = (event: _DragEvent) => {
         if (_element_is_in_list(event.relatedTarget)) return;
+        dragging_in_list_all = false;
         clear_list_drag_indicators(event.currentTarget);
     };
 
     const drag_over = (event: _DragEvent) => {
+        const list_el = event.currentTarget;
+        if (list_el.id === ALL_REPOS_LIST_ID) return;
+
         event.preventDefault();
 
-        const list_el = event.currentTarget;
         const list_rect = list_el.getBoundingClientRect();
 
         // Mouse position from top left of client window
@@ -243,6 +249,7 @@
     };
 
     const card_drag_end = (_event: CustomEvent<undefined>) => {
+        dragging_in_list_all = false;
         const list_elements = document.getElementsByClassName('list');
         for (let l = 0; l < list_elements.length; l++) {
             const list_el = list_elements.item(l) as HTMLElement | null;
@@ -255,7 +262,10 @@
     {#if repo_lists}
         {#each Object.values(repo_lists.lists) as list}
             <div class="list-wrapper">
-                <div class="list-card">
+                <div
+                    class="list-card"
+                    class:list-disabled={list.id === ALL_REPOS_LIST_ID && dragging_in_list_all}
+                >
                     <span class="list-title">{list.name}</span>
                     <div
                         id={list.id}
@@ -274,6 +284,8 @@
                                     list_id={list.id}
                                     index={i}
                                     repo={repo_lists.get_repo(r_id)}
+                                    card_disabled={list.id === ALL_REPOS_LIST_ID &&
+                                        dragging_in_list_all}
                                     on:card_drag_start={card_drag_start}
                                     on:card_drag_end={card_drag_end}
                                 />
@@ -302,6 +314,17 @@
         .list-card {
             border: 1px solid var(--color-border);
             border-radius: 16px;
+
+            &.list-disabled {
+                --color-red: rgb(229, 115, 115, 0.2);
+                background: repeating-linear-gradient(
+                    135deg,
+                    transparent,
+                    transparent 12px,
+                    var(--color-red) 12px,
+                    var(--color-red) 24px
+                );
+            }
 
             .list-title {
                 display: block;

@@ -16,6 +16,7 @@
     export let list_id: string;
     export let index: number;
     export let repo: Repo;
+    export let card_disabled: boolean;
 
     const dispatch = createEventDispatcher<{
         card_drag_start: CardDragStartData;
@@ -48,6 +49,7 @@
     id={repo.id.toString()}
     class="card"
     class:card_dragging
+    class:card_disabled
     draggable="true"
     on:mouseenter={card_enter}
     on:mouseleave={card_leave}
@@ -184,6 +186,10 @@
             opacity: 40%;
             border: 2px dashed var(--color-border);
             background-color: var(--color-bg-light-translucent);
+        }
+
+        &.card_disabled {
+            opacity: 25%;
         }
     }
 </style>
