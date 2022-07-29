@@ -92,7 +92,7 @@
     };
 
     const _element_is_in_list = (o: any): boolean => {
-        if (!o || typeof o !== 'object' || (o.classList ?? true) || (o.parentElement ?? true))
+        if (!o || typeof o !== 'object' || !(o.classList ?? true) || !(o.parentElement ?? true))
             return false;
         return o.classList.contains('list') ? true : _element_is_in_list(o.parentElement);
     };
