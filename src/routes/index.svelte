@@ -10,7 +10,7 @@
     import { load_repo_lists, RepositoryLists } from '$lib/models/repo-list';
     import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
-    import { dist, rects_overlap_y } from '$lib/util';
+    import { dist } from '$lib/util';
     import type { LoadEvent } from '@sveltejs/kit';
     import { onMount } from 'svelte';
     import type { Load } from './__types/index';
@@ -66,14 +66,6 @@
      * The index of the card being dragged.
      */
     let drag_start_index = -1;
-    /**
-     * Whether to disable showing the drag indicator on the right of the previous card (index-1).
-     */
-    let disable_prev_right = false;
-    /**
-     * Whether to disable showing the drag indicator on the left of the next card (index+1).
-     */
-    let disable_next_left = false;
 
     onMount(() => {
         repo_lists = load_repo_lists(repos ?? []);
@@ -143,9 +135,7 @@
             if (i === closest_i) {
                 if (
                     list_el.id === drag_src_list_id &&
-                    (i === drag_start_index ||
-                        (closest_is_prev_right && disable_prev_right) ||
-                        (closest_is_next_left && disable_next_left))
+                    (i === drag_start_index || closest_is_prev_right || closest_is_next_left)
                 ) {
                     /**
                      * Do nothing, these conditions should not show an indicator. The else block of
@@ -190,29 +180,6 @@
         if (!children) {
             console.error('Failed to get list element with id:', list_id);
             return;
-        }
-
-        const t = children.item(index);
-        if (!t) {
-            console.error('Failed to get repository card at index:', index);
-            return;
-        }
-        const target = t.getBoundingClientRect();
-
-        const prev = children.item(index - 1)?.getBoundingClientRect();
-        disable_prev_right = false;
-        if (!!prev) {
-            disable_prev_right = rects_overlap_y(prev, target)
-                ? prev.x < target.x
-                : prev.y < target.y;
-        }
-
-        const next = children.item(index + 1)?.getBoundingClientRect();
-        disable_next_left = false;
-        if (!!next) {
-            disable_next_left = rects_overlap_y(target, next)
-                ? target.x < next.x
-                : target.y < next.y;
         }
     };
 
