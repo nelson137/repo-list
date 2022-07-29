@@ -10,7 +10,7 @@
     import { load_repo_lists, RepositoryLists } from '$lib/models/repo-list';
     import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
-    import { dist } from '$lib/util';
+    import { dist, rects_overlap_y } from '$lib/util';
     import type { LoadEvent } from '@sveltejs/kit';
     import { onMount } from 'svelte';
     import type { Load } from './__types/index';
@@ -192,11 +192,28 @@
             return;
         }
 
+        const t = children.item(index);
+        if (!t) {
+            console.error('Failed to get repository card at index:', index);
+            return;
+        }
+        const target = t.getBoundingClientRect();
+
         const prev = children.item(index - 1)?.getBoundingClientRect();
-        const target = children.item(index)?.getBoundingClientRect();
+        disable_prev_right = false;
+        if (!!prev) {
+            disable_prev_right = rects_overlap_y(prev, target)
+                ? prev.x < target.x
+                : prev.y < target.y;
+        }
+
         const next = children.item(index + 1)?.getBoundingClientRect();
-        disable_prev_right = !!prev && !!target && prev.x < target.x;
-        disable_next_left = !!target && !!next && target.x < next.x;
+        disable_next_left = false;
+        if (!!next) {
+            disable_next_left = rects_overlap_y(target, next)
+                ? target.x < next.x
+                : target.y < next.y;
+        }
     };
 
     const card_drag_end = (_event: CustomEvent<undefined>) => {
