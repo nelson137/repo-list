@@ -151,7 +151,12 @@
                 indicator_y = childCenterY - list_rect.top;
             }
         }
-        if (closest_i < 0 || closest_side === null) return;
+        if (closest_i < 0 || closest_side === null) {
+            list_el.style.setProperty('--closest-x', 12 + 'px');
+            list_el.style.setProperty('--closest-y', list_rect.height / 2 + 'px');
+            list_el.style.setProperty('--indicator-display', 'block');
+            return;
+        }
 
         // Enable the indicator on the determined card and side, disable all others
         const closest_is_prev_right =
@@ -211,11 +216,12 @@
         }
         const src_repo_ids = repo_lists.lists[src_list_id].repo_ids;
 
-        if (closest_side === null) {
+        if (closest_side === null && repo_lists.lists[cur_list_id].repo_ids.length > 0) {
             console.error('Invalid drop: no closest_side');
             return;
         }
-        const new_index = closest_i + (closest_side === Side.Before ? 0 : 1);
+        const new_index =
+            closest_side === null ? 0 : closest_i + (closest_side === Side.Before ? 0 : 1);
 
         if (cur_list_id === src_list_id) {
             // Reorder list
@@ -333,6 +339,7 @@
             .list {
                 margin: 0 auto;
                 padding: $repoCardGap;
+                min-height: 91px;
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
