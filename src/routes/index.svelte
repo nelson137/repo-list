@@ -177,14 +177,19 @@
             return;
         }
         const repo_index = parseInt(repo_index_str);
-        if (!repo_index_str) {
+        if (!Number.isSafeInteger(repo_index)) {
             console.error('Invalid drop: invalid repository index:', repo_index_str);
             return;
         }
 
-        const repo_id = event.dataTransfer?.getData(DRAG_DATA__REPO_ID);
-        if (!repo_id) {
+        const repo_id_str = event.dataTransfer?.getData(DRAG_DATA__REPO_ID);
+        if (!repo_id_str) {
             console.error('Invalid drop: no repository ID');
+            return;
+        }
+        const repo_id = parseInt(repo_id_str);
+        if (!Number.isSafeInteger(repo_id)) {
+            console.error('Invalid drop: invalid repository id:', repo_id_str);
             return;
         }
 
@@ -204,23 +209,25 @@
             console.error('Repository list not found for ID:', src_list_id);
             return;
         }
-        const repo_ids = repo_lists.lists[src_list_id].repo_ids;
+        const src_repo_ids = repo_lists.lists[src_list_id].repo_ids;
 
         if (closest_side === null) {
             console.error('Invalid drop: no closest_side');
+            return;
         }
         const new_index = closest_i + (closest_side === Side.Before ? 0 : 1);
+
         if (cur_list_id === src_list_id) {
             // Reorder list
-            repo_ids.splice(new_index, 0, repo_ids[repo_index]);
-            repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
+            src_repo_ids.splice(new_index, 0, src_repo_ids[repo_index]);
+            src_repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
         } else {
             // Move or copy (if src is the special "All" list) to current list
-            const r = repo_lists.lists[src_list_id].repo_ids[repo_index];
-            repo_lists.lists[cur_list_id].repo_ids.splice(new_index, 0, r);
-            if (src_list_id !== ALL_REPOS_LIST_ID) repo_ids.splice(repo_index, 1);
+            repo_lists.lists[cur_list_id].repo_ids.splice(new_index, 0, repo_id);
+            if (src_list_id !== ALL_REPOS_LIST_ID) src_repo_ids.splice(repo_index, 1);
         }
-        repo_lists.lists[src_list_id].repo_ids = repo_ids;
+
+        repo_lists.lists[src_list_id].repo_ids = src_repo_ids;
 
         closest_i = -1;
         closest_side = null;
