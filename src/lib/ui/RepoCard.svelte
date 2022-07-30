@@ -103,33 +103,6 @@
         transition: all 0.2s ease-out;
         position: relative;
 
-        &::before,
-        &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            height: 100%;
-            --width: 2px;
-            --indicator-offset: calc(var(--border-width) + var(--width) / 2 + 24px / 2);
-            width: var(--width);
-            border-radius: calc(var(--width));
-            background-color: lightskyblue;
-        }
-
-        &::before {
-            left: 0;
-            transform: translateX(calc(-1 * var(--indicator-offset)));
-            display: var(--display-before, none);
-            // background-color: lightskyblue;
-        }
-
-        &::after {
-            right: 0;
-            transform: translateX(var(--indicator-offset));
-            display: var(--display-after, none);
-            // background-color: seagreen;
-        }
-
         &:hover {
             transition: all 0.2s ease-out;
             border-color: var(--color-border-hover);

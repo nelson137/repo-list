@@ -87,13 +87,8 @@
         // localStorage.setItem(REPO_LISTS, JSON.stringify(repo_lists));
     });
 
-    const clear_list_drag_indicators = (list: HTMLElement) => {
-        for (let c = 0; c < list.children.length; c++) {
-            let child = list.children.item(c) as HTMLElement | null;
-            child?.style.removeProperty(`--display-${Side.toStr(Side.Before)}`);
-            child?.style.removeProperty(`--display-${Side.toStr(Side.After)}`);
-        }
-    };
+    const list_clear_drag_indicator = (list: HTMLElement) =>
+        list.style.removeProperty('--indicator-display');
 
     const _element_is_in_list = (o: any): boolean => {
         if (!o || typeof o !== 'object' || !(o.classList ?? true) || !(o.parentElement ?? true))
@@ -112,7 +107,7 @@
     const drag_leave = (event: _DragEvent) => {
         if (_element_is_in_list(event.relatedTarget)) return;
         dragging_in_list_all = false;
-        clear_list_drag_indicators(event.currentTarget);
+        list_clear_drag_indicator(event.currentTarget);
     };
 
     const drag_over = (event: _DragEvent) => {
@@ -132,21 +127,28 @@
         let closest_dist = Number.MAX_SAFE_INTEGER;
         closest_i = -1;
         closest_side = null;
+        let indicator_x = 0;
+        let indicator_y = 0;
         for (let i = 0; i < children.length; i++) {
             const child = children.item(i) as HTMLElement | null;
             if (!child) continue;
 
             const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = child;
+            const halfWidth = offsetWidth / 2;
+            const halfHeight = offsetHeight / 2;
 
             // Center of card from top left of client window
-            const childCenterX = list_rect.left + offsetLeft + offsetWidth / 2;
-            const childCenterY = list_rect.top + offsetTop + offsetHeight / 2;
+            const childCenterX = list_rect.left + offsetLeft + halfWidth;
+            const childCenterY = list_rect.top + offsetTop + halfHeight;
 
             const d = dist(childCenterX, childCenterY, mouseX, mouseY);
             if (d < closest_dist) {
                 closest_dist = d;
                 closest_i = i;
                 closest_side = mouseX < childCenterX ? Side.Before : Side.After;
+                indicator_x = childCenterX - list_rect.left;
+                indicator_x += (closest_side === Side.Before ? -1 : 1) * (halfWidth + 12);
+                indicator_y = childCenterY - list_rect.top;
             }
         }
         if (closest_i < 0 || closest_side === null) return;
@@ -156,26 +158,15 @@
             closest_i === drag_start_index - 1 && closest_side === Side.After;
         const closest_is_next_left =
             closest_i === drag_start_index + 1 && closest_side === Side.Before;
-        for (let i = 0; i < children.length; i++) {
-            let child = children.item(i) as HTMLElement | null;
-            if (i === closest_i) {
-                if (
-                    list_el.id === drag_src_list_id &&
-                    (i === drag_start_index || closest_is_prev_right || closest_is_next_left)
-                ) {
-                    /**
-                     * Do nothing, these conditions should not show an indicator. The else block of
-                     * if(i===closest_i) will take care of removing the indicator when the user
-                     * drags elsewhere.
-                     */
-                } else {
-                    child?.style.setProperty(`--display-${Side.toStr(closest_side)}`, 'block');
-                }
-                child?.style.removeProperty(`--display-${Side.toOppositeStr(closest_side)}`);
-            } else {
-                child?.style.removeProperty(`--display-${Side.toStr(Side.Before)}`);
-                child?.style.removeProperty(`--display-${Side.toStr(Side.After)}`);
-            }
+        if (
+            list_el.id === drag_src_list_id &&
+            (closest_i === drag_start_index || closest_is_prev_right || closest_is_next_left)
+        ) {
+            list_el.style.removeProperty('--indicator-display');
+        } else {
+            list_el.style.setProperty('--closest-x', indicator_x + 'px');
+            list_el.style.setProperty('--closest-y', indicator_y + 'px');
+            list_el.style.setProperty('--indicator-display', 'block');
         }
     };
 
@@ -253,7 +244,7 @@
         const list_elements = document.getElementsByClassName('list');
         for (let l = 0; l < list_elements.length; l++) {
             const list_el = list_elements.item(l) as HTMLElement | null;
-            if (list_el) clear_list_drag_indicators(list_el);
+            if (list_el) list_clear_drag_indicator(list_el);
         }
     };
 </script>
@@ -348,6 +339,20 @@
                  * for the cards.
                  */
                 position: relative;
+
+                &::before {
+                    content: '';
+                    display: var(--indicator-display, none);
+                    position: absolute;
+                    top: var(--closest-y, 0px);
+                    left: calc(var(--closest-x, 0px));
+                    transform: translate(-50%, -50%);
+                    height: 80px;
+                    --width: 2px;
+                    width: var(--width);
+                    border-radius: calc(var(--width));
+                    background-color: lightskyblue;
+                }
             }
         }
     }
