@@ -43,48 +43,48 @@ export class RepositoryLists {
     public entries: { [id: string]: Repo } = {};
 
     public get_repo = (id: number | string): Repo => this.entries[id.toString()];
-}
 
-export const load_repo_lists = (repos: Repo[]): RepositoryLists => {
-    const repo_lists = new RepositoryLists();
-    repo_lists.entries = _.keyBy(repos, r => r.id.toString());
+    public static from_local_storage = (repos: Repo[]): RepositoryLists => {
+        const repo_lists = new RepositoryLists();
+        repo_lists.entries = _.keyBy(repos, r => r.id.toString());
 
-    try {
-        const repo_lists_data_raw = JSON.parse(localStorage.getItem(REPO_LISTS_KEY) ?? '[]');
-        if (!Array.isArray(repo_lists_data_raw)) {
-            console.error('data is not an array:', repo_lists_data_raw);
-            return repo_lists;
+        try {
+            const repo_lists_data_raw = JSON.parse(localStorage.getItem(REPO_LISTS_KEY) ?? '[]');
+            if (!Array.isArray(repo_lists_data_raw)) {
+                console.error('data is not an array:', repo_lists_data_raw);
+                return repo_lists;
+            }
+            const repo_lists_data: RepoList[] = repo_lists_data_raw
+                .filter(d => {
+                    if (typeof d !== 'object') {
+                        console.error('Data for repository list is not an object:', d);
+                        return false;
+                    }
+                    const list = d as RepoList;
+                    if (!list.id || !list.name || !Array.isArray(list.repo_ids)) {
+                        console.error('Invalid data for repository list:', d);
+                        return false;
+                    }
+                    return true;
+                })
+                .map(RepoList.from_json);
+
+            repo_lists.lists = _.keyBy(repo_lists_data, rl => rl.id);
+
+            repo_lists.lists[ALL_REPOS_LIST_ID] = new RepoList(
+                'All',
+                repos.map(r => r.id),
+                ALL_REPOS_LIST_ID
+            );
+        } catch (error: any) {
+            console.error('Failed to load repository lists from local storage:', error);
         }
-        const repo_lists_data: RepoList[] = repo_lists_data_raw
-            .filter(d => {
-                if (typeof d !== 'object') {
-                    console.error('Data for repository list is not an object:', d);
-                    return false;
-                }
-                const list = d as RepoList;
-                if (!list.id || !list.name || !Array.isArray(list.repo_ids)) {
-                    console.error('Invalid data for repository list:', d);
-                    return false;
-                }
-                return true;
-            })
-            .map(RepoList.from_json);
 
-        repo_lists.lists = _.keyBy(repo_lists_data, rl => rl.id);
+        return repo_lists;
+    };
 
-        repo_lists.lists[ALL_REPOS_LIST_ID] = new RepoList(
-            'All',
-            repos.map(r => r.id),
-            ALL_REPOS_LIST_ID
-        );
-    } catch (error: any) {
-        console.error('Failed to load repository lists from local storage:', error);
-    }
-
-    return repo_lists;
-};
-
-export const store_repo_lists = (repo_lists: RepositoryLists) => {
-    const data = Object.values(repo_lists).filter(l => l.id !== ALL_REPOS_LIST_ID);
-    localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(data));
-};
+    public to_local_storage = () => {
+        const data = Object.values(this.lists).filter(l => l.id !== ALL_REPOS_LIST_ID);
+        localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(data));
+    };
+}

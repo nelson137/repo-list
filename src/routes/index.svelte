@@ -8,7 +8,7 @@
     } from '$lib/drag-and-drop';
     import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
-    import { ALL_REPOS_LIST_ID, load_repo_lists, RepositoryLists } from '$lib/models/repo-list';
+    import { ALL_REPOS_LIST_ID, RepositoryLists } from '$lib/models/repo-list';
     import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
@@ -82,9 +82,7 @@
     let dragging_in_list_all = false;
 
     onMount(() => {
-        repo_lists = load_repo_lists(repos ?? []);
-        // console.log(repo_lists);
-        // localStorage.setItem(REPO_LISTS, JSON.stringify(repo_lists));
+        repo_lists = RepositoryLists.from_local_storage(repos ?? []);
     });
 
     const list_clear_drag_indicator = (list: HTMLElement) =>
@@ -234,6 +232,8 @@
         }
 
         repo_lists.lists[src_list_id].repo_ids = src_repo_ids;
+
+        repo_lists.to_local_storage();
 
         closest_i = -1;
         closest_side = null;
