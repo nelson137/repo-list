@@ -1,0 +1,79 @@
+<script lang="ts">
+    import { get_popup_state, PopupState, set_popup_state } from '$lib/stores/delete-popup-state';
+    import TrashSvg from '$lib/ui/svgs/TrashSvg.svelte';
+    import { createEventDispatcher, getContext } from 'svelte';
+    import DeleteListPopup from './DeleteListPopup.svelte';
+    import type { DeleteListEvents } from './events';
+
+    export let list_id: string;
+    export let list_name: string;
+
+    const dispatch = createEventDispatcher<DeleteListEvents>();
+
+    const { open } = getContext('simple-modal');
+
+    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLDivElement };
+    const on_click = (_event: _ClickEvent) => {
+        set_popup_state(list_id, PopupState.Deciding);
+        open(
+            DeleteListPopup,
+            {
+                list_id,
+                list_name,
+            },
+            {
+                closeButton: false,
+                closeOnEsc: true,
+                closeOnOuterClick: true,
+                classWindowWrap: 'modal-wrap',
+                classWindow: 'modal-window',
+            },
+            {
+                onClose: (_event: CustomEvent) => {
+                    let state = get_popup_state(list_id);
+                    if (state === PopupState.Deciding) {
+                        state = PopupState.Canceled;
+                        set_popup_state(list_id, PopupState.Canceled);
+                    }
+                    switch (state) {
+                        case PopupState.Canceled:
+                            dispatch('canceled');
+                            break;
+                        case PopupState.No:
+                            dispatch('no');
+                            break;
+                        case PopupState.Yes:
+                            dispatch('yes');
+                            break;
+                    }
+                },
+            }
+        );
+    };
+</script>
+
+<div class="wrapper" on:click={on_click}>
+    <div class="click-wrapper">
+        <TrashSvg />
+    </div>
+</div>
+
+<style lang="scss">
+    :global(div.modal-wrap div.modal-window) {
+        max-width: 512px;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 12px;
+
+        .click-wrapper {
+            :global(svg.icon-trash) {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+</style>

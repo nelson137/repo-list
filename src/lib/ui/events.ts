@@ -8,3 +8,9 @@ export type CardDragStartData = {
      */
     list_id: string;
 };
+
+export type DeleteListEvents = {
+    canceled: undefined;
+    no: undefined;
+    yes: undefined;
+};

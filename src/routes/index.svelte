@@ -9,11 +9,13 @@
     import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
     import { ALL_REPOS_LIST_ID, RepositoryLists } from '$lib/models/repo-list';
+    import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
     import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
     import type { LoadEvent } from '@sveltejs/kit';
     import { onMount } from 'svelte';
+    import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
     import type { Load } from './__types/index';
 
@@ -59,6 +61,7 @@
     export let logged_in: OutProps['logged_in'];
     export let repos: OutProps['repos'];
     let repo_lists: RepositoryLists;
+    let list_wrapper_elements: HTMLElement[] = [];
 
     /**
      * The element ID of the source list from which the card being dragged.
@@ -84,6 +87,12 @@
     onMount(() => {
         repo_lists = RepositoryLists.from_local_storage(repos ?? []);
     });
+
+    const delete_list = (id: string, index: number) => {
+        list_wrapper_elements[index]?.remove();
+        delete repo_lists.lists[id];
+        repo_lists.to_local_storage();
+    };
 
     const list_clear_drag_indicator = (list: HTMLElement) =>
         list.style.removeProperty('--indicator-display');
@@ -264,13 +273,24 @@
 
 {#if logged_in}
     {#if repo_lists}
-        {#each Object.values(repo_lists.lists) as list}
-            <div class="list-wrapper">
+        {#each Object.values(repo_lists.lists) as list, l_i}
+            <div class="list-wrapper" bind:this={list_wrapper_elements[l_i]}>
                 <div
                     class="list-card"
                     class:list-disabled={list.id === ALL_REPOS_LIST_ID && dragging_in_list_all}
                 >
-                    <span class="list-title">{list.name}</span>
+                    <div class="list-header">
+                        <span class="list-title">{list.name}</span>
+                        {#if list.id !== ALL_REPOS_LIST_ID}
+                            <Modal>
+                                <DeleteListPopupTrigger
+                                    list_id={list.id}
+                                    list_name={list.name}
+                                    on:yes={() => delete_list(list.id, l_i)}
+                                />
+                            </Modal>
+                        {/if}
+                    </div>
                     <div
                         id={list.id}
                         class="list"
@@ -330,10 +350,15 @@
                 );
             }
 
-            .list-title {
-                display: block;
-                padding: 12px 24px;
+            .list-header {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
                 border-bottom: 1px solid var(--color-border);
+
+                .list-title {
+                    padding: 12px 24px;
+                }
             }
 
             .list {

@@ -14,6 +14,10 @@
     --color-text-translucent: rgba(201, 209, 217, 0.5);
 
     --color-shadow-large: 0 8px 24px rgb(1, 4, 9);
+
+    /* https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
+    --color-green-500-rgb: 76 175 80;
+    --color-red-500-rgb: 244 67 54;
 }
 
 * {
