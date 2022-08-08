@@ -28,6 +28,7 @@
  * by default.
  */
 svg {
+    display: block;
     stroke: var(--color-text);
 }
 
