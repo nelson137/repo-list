@@ -106,6 +106,7 @@
         &:hover {
             transition: all 0.2s ease-out;
             border-color: var(--color-border-hover);
+            box-shadow: 0 0 16px #ffffff30;
         }
 
         .card-header {
