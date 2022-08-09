@@ -38,17 +38,19 @@ const REPO_LISTS_KEY = 'repo-lists';
 
 export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
 
+const type = (x: any, type: string) => typeof x === type;
+
 const repo_list_data_is_valid = (repo_list_data: any): boolean => {
     if (typeof repo_list_data !== 'object') {
         console.error('Data for repository list is not an object:', repo_list_data);
         return false;
     }
-    const list = repo_list_data as RepoList;
-    if (!list.id || !list.name || !Array.isArray(list.repo_ids)) {
-        console.error('Invalid data for repository list:', repo_list_data);
-        return false;
+    const list = repo_list_data;
+    if (type(list.id, 'string') && type(list.name, 'string') && Array.isArray(list.repo_ids)) {
+        return true;
     }
-    return true;
+    console.error('Invalid data for repository list:', repo_list_data);
+    return false;
 };
 
 export class RepositoryLists {
