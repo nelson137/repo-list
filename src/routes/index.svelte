@@ -91,7 +91,6 @@
 
     const create_list = (event: CustomEvent<CreateListOkData>) => {
         const { name } = event.detail;
-        for (const l_id in repo_lists.lists) repo_lists.lists[l_id].index++;
         const list = new RepoList(name);
         repo_lists.lists[list.id] = list;
         repo_lists.to_local_storage();
@@ -99,7 +98,7 @@
 
     const delete_list = (id: string, index: number) => {
         list_wrapper_elements[index]?.remove();
-        delete repo_lists.lists[id];
+        repo_lists.delete_list(id);
         repo_lists.to_local_storage();
     };
 
@@ -293,7 +292,7 @@
             </div>
         </div>
 
-        {#each Object.values(repo_lists.lists) as list, l_i}
+        {#each repo_lists.get_repo_lists() as list, l_i}
             <div class="list-wrapper" bind:this={list_wrapper_elements[l_i]}>
                 <div
                     class="list-card"

@@ -34,6 +34,10 @@ export class RepoList {
         from_json(RepoList, data);
 }
 
+export class RepoListStorage extends RepoList {
+    public index: number | null;
+}
+
 const REPO_LISTS_KEY = 'repo-lists';
 
 export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
@@ -46,7 +50,12 @@ const repo_list_data_is_valid = (repo_list_data: any): boolean => {
         return false;
     }
     const list = repo_list_data;
-    if (type(list.id, 'string') && type(list.name, 'string') && Array.isArray(list.repo_ids)) {
+    if (
+        type(list.id, 'string') &&
+        type(list.index, 'number') &&
+        type(list.name, 'string') &&
+        Array.isArray(list.repo_ids)
+    ) {
         return true;
     }
     console.error('Invalid data for repository list:', repo_list_data);
@@ -56,8 +65,38 @@ const repo_list_data_is_valid = (repo_list_data: any): boolean => {
 export class RepositoryLists {
     public lists: { [id: string]: RepoList } = {};
     public entries: { [id: string]: Repo } = {};
+    /**
+     * An array of list IDs indicating the order in which they should be displayed.
+     */
+    private order: string[] = [];
+
+    public get_repo_lists = (): RepoList[] =>
+        this.order
+            .filter(id => {
+                if (this.lists[id] === undefined) {
+                    console.error('Failed to find list for ID in `order` array:', id);
+                    return false;
+                }
+                return true;
+            })
+            .map(id => this.lists[id]);
 
     public get_repo = (id: number | string): Repo => this.entries[id.toString()];
+
+    public delete_list = (id: string) => {
+        if (this.lists[id] === undefined) {
+            console.error('Failed to remove list object with ID:', id);
+        } else {
+            delete this.lists[id];
+        }
+
+        const index = this.order.indexOf(id);
+        if (index === -1) {
+            console.error('Failed to remove list from order with ID:', id);
+        } else {
+            this.order.splice(index, 1);
+        }
+    };
 
     public static from_local_storage = (repos: Repo[]): RepositoryLists => {
         const repo_lists = new RepositoryLists();
@@ -69,17 +108,21 @@ export class RepositoryLists {
                 console.error('data is not an array:', repo_lists_data_raw);
                 return repo_lists;
             }
-            const repo_lists_data: RepoList[] = repo_lists_data_raw
-                .filter(repo_list_data_is_valid)
-                .map(RepoList.from_json);
+
+            const valid_repo_lists_data = repo_lists_data_raw.filter(repo_list_data_is_valid);
+
+            const repo_lists_data: RepoList[] = valid_repo_lists_data.map(RepoList.from_json);
 
             repo_lists.lists = _.keyBy(repo_lists_data, rl => rl.id);
-
             repo_lists.lists[ALL_REPOS_LIST_ID] = new RepoList(
                 'All',
                 repos.map(r => r.id),
                 ALL_REPOS_LIST_ID
             );
+
+            const order = [];
+            for (const l of valid_repo_lists_data) order[l.index] = l.id;
+            repo_lists.order = order.filter(id => id !== undefined).concat([ALL_REPOS_LIST_ID]);
         } catch (error: any) {
             console.error('Failed to load repository lists from local storage:', error);
         }
@@ -88,7 +131,23 @@ export class RepositoryLists {
     };
 
     public to_local_storage = () => {
-        const data = Object.values(this.lists).filter(l => l.id !== ALL_REPOS_LIST_ID);
-        localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(data));
+        const data = Object.fromEntries<RepoListStorage>(
+            Object.values(this.lists)
+                .filter(l => l.id !== ALL_REPOS_LIST_ID)
+                .map(l => [l.id, { ...l, index: null }])
+        );
+        for (let i = 0; i < this.order.length; i++) {
+            const id = this.order[i];
+            if (id === ALL_REPOS_LIST_ID) continue;
+            if (data[id] === undefined) {
+                console.error(
+                    'Failed to commit lists to local storage, list not found for id:',
+                    id
+                );
+                continue;
+            }
+            data[id].index = i;
+        }
+        localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(Object.values(data)));
     };
 }
