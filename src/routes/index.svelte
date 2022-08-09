@@ -8,7 +8,7 @@
     } from '$lib/drag-and-drop';
     import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
-    import { ALL_REPOS_LIST_ID, RepositoryLists } from '$lib/models/repo-list';
+    import { ALL_REPOS_LIST_ID, RepoList, RepositoryLists } from '$lib/models/repo-list';
     import CreateListDialogTrigger from '$lib/ui/CreateListDialogTrigger.svelte';
     import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
     import type { CardDragStartData, CreateListOkData } from '$lib/ui/events';
@@ -18,7 +18,6 @@
     import { onMount } from 'svelte';
     import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
-    import { v4 as uuid } from 'uuid';
     import type { Load } from './__types/index';
 
     type InProps = {};
@@ -92,8 +91,9 @@
 
     const create_list = (event: CustomEvent<CreateListOkData>) => {
         const { name } = event.detail;
-        const id = uuid();
-        repo_lists.lists[id] = { id, name, repo_ids: [] };
+        for (const l_id in repo_lists.lists) repo_lists.lists[l_id].index++;
+        const list = new RepoList(name);
+        repo_lists.lists[list.id] = list;
         repo_lists.to_local_storage();
     };
 
