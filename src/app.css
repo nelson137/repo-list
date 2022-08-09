@@ -7,6 +7,7 @@
     --color-bg-light: rgb(33, 38, 45);
     --color-bg-light-translucent: rgba(33, 38, 45, 0.4);
     --color-border: rgba(139, 148, 158, 0.4);
+    --color-border-opaque: #363b40;
     --color-border-hover: rgba(139, 148, 158, 0.8);
     --color-border-muted: rgb(33, 38, 45);
     --color-text: rgb(201, 209, 217);
@@ -16,6 +17,7 @@
     --color-shadow-large: 0 8px 24px rgb(1, 4, 9);
 
     /* https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
+    --color-green-a700-rgb: 0 200 83;
     --color-green-500-rgb: 76 175 80;
     --color-red-500-rgb: 244 67 54;
 }

@@ -9,14 +9,16 @@
     import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
     import { Repo } from '$lib/models/repo';
     import { ALL_REPOS_LIST_ID, RepositoryLists } from '$lib/models/repo-list';
+    import CreateListDialogTrigger from '$lib/ui/CreateListDialogTrigger.svelte';
     import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
-    import type { CardDragStartData } from '$lib/ui/events';
+    import type { CardDragStartData, CreateListOkData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
     import type { LoadEvent } from '@sveltejs/kit';
     import { onMount } from 'svelte';
     import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
+    import { v4 as uuid } from 'uuid';
     import type { Load } from './__types/index';
 
     type InProps = {};
@@ -87,6 +89,13 @@
     onMount(() => {
         repo_lists = RepositoryLists.from_local_storage(repos ?? []);
     });
+
+    const create_list = (event: CustomEvent<CreateListOkData>) => {
+        const { name } = event.detail;
+        const id = uuid();
+        repo_lists.lists[id] = { id, name, repo_ids: [] };
+        repo_lists.to_local_storage();
+    };
 
     const delete_list = (id: string, index: number) => {
         list_wrapper_elements[index]?.remove();
@@ -273,6 +282,17 @@
 
 {#if logged_in}
     {#if repo_lists}
+        <div class="create-list-wrapper">
+            <div class="create-list-line-wrapper">
+                <div class="create-list-line" />
+            </div>
+            <div class="create-list-icon-wrapper">
+                <Modal>
+                    <CreateListDialogTrigger on:ok={create_list} />
+                </Modal>
+            </div>
+        </div>
+
         {#each Object.values(repo_lists.lists) as list, l_i}
             <div class="list-wrapper" bind:this={list_wrapper_elements[l_i]}>
                 <div
@@ -326,6 +346,53 @@
 
 <style lang="scss">
     @import '../styles/global.scss';
+
+    .create-list-wrapper {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 1fr;
+
+        & > * {
+            grid-row: 1;
+            grid-column: 1;
+            grid-auto-flow: column;
+        }
+
+        .create-list-line-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .create-list-line {
+                width: 100%;
+                height: 0;
+                border-top: 2px solid var(--color-border-opaque);
+            }
+        }
+
+        .create-list-icon-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+
+            .create-list-icon {
+                background-color: var(--color-bg-dark);
+                border-radius: 50%;
+                padding: 2px;
+
+                &:hover :global(svg.icon-circle-plus) {
+                    stroke: rgb(var(--color-green-500-rgb) / 0.85);
+                }
+
+                :global(svg.icon-circle-plus) {
+                    width: 42px;
+                    height: 42px;
+                    stroke: var(--color-border-opaque);
+                }
+            }
+        }
+    }
 
     .list-wrapper {
         display: flex;
