@@ -282,13 +282,15 @@
 {#if logged_in}
     {#if repo_lists}
         <div class="create-list-wrapper">
-            <div class="create-list-line-wrapper">
-                <div class="create-list-line" />
-            </div>
-            <div class="create-list-icon-wrapper">
-                <Modal>
-                    <CreateListDialogTrigger on:ok={create_list} />
-                </Modal>
+            <div class="create-list">
+                <div class="create-list-line-wrapper">
+                    <div class="create-list-line" />
+                </div>
+                <div class="create-list-icon-wrapper">
+                    <Modal>
+                        <CreateListDialogTrigger on:ok={create_list} />
+                    </Modal>
+                </div>
             </div>
         </div>
 
@@ -347,33 +349,39 @@
     @import '../styles/global.scss';
 
     .create-list-wrapper {
-        display: grid;
-        grid-template-rows: 1fr;
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
 
-        & > * {
-            grid-row: 1;
-            grid-column: 1;
-            grid-auto-flow: column;
-        }
+        .create-list {
+            width: 90%;
+            display: grid;
+            grid-template-rows: 1fr;
+            grid-template-columns: 1fr;
 
-        .create-list-line-wrapper {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            .create-list-line {
-                width: 100%;
-                height: 0;
-                border-top: 2px solid var(--color-border-opaque);
+            > * {
+                grid-row: 1;
+                grid-column: 1;
+                grid-auto-flow: column;
             }
-        }
 
-        .create-list-icon-wrapper {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
+            .create-list-line-wrapper {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .create-list-line {
+                    width: 100%;
+                    height: 0;
+                    border-top: 2px solid var(--color-border-opaque);
+                }
+            }
+
+            .create-list-icon-wrapper {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
         }
     }
 
