@@ -374,22 +374,6 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-
-            .create-list-icon {
-                background-color: var(--color-bg-dark);
-                border-radius: 50%;
-                padding: 2px;
-
-                &:hover :global(svg.icon-circle-plus) {
-                    stroke: rgb(var(--color-green-500-rgb) / 0.85);
-                }
-
-                :global(svg.icon-circle-plus) {
-                    width: 42px;
-                    height: 42px;
-                    stroke: var(--color-border-opaque);
-                }
-            }
         }
     }
 
