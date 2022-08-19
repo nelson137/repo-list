@@ -48,25 +48,27 @@
         margin-top: 32px;
         display: flex;
         flex-flow: row wrap;
-        justify-content: space-between;
+        justify-content: space-around;
 
-        // .modal-button-cancel {
-        //     --stroke-rgb: var(--color-red-500-rgb);
-        // }
+        .modal-button-cancel {
+            background-color: red;
+        }
 
-        // .modal-button-ok {
-        //     --stroke-rgb: var(--color-green-500-rgb);
-        // }
+        .modal-button-ok {
+            background-color: green;
+        }
 
         .modal-button-cancel,
         .modal-button-ok {
-            // padding: 1px;
-            // border-radius: 50%;
-            border: 1px solid rgb(var(--stroke-rgb));
-            // stroke: rgb(var(--stroke-rgb));
-            // &:hover {
-            //     background-color: rgb(var(--stroke-rgb) / 0.1);
-            // }
+            min-width: 64px;
+            color: white;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border-width: 0;
+            opacity: 90%;
+            &:hover {
+                opacity: 100%;
+            }
         }
     }
 </style>
