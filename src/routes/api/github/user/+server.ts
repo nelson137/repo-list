@@ -1,24 +1,23 @@
+throw new Error("@migration task: Update +server.js (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292701)");
+
 import { octokitFactory } from '$lib/api/octokit';
 import { EndpointErrorReason, endpoint_err, type EndpointErrorBody } from '$lib/error';
-import { Repo } from '$lib/models/repo';
+import { User } from '$lib/models/user';
 import type { RequestEvent } from '@sveltejs/kit';
-import type { RequestHandler } from './__types/repos';
+import type { RequestHandler } from '../$types';
 
 export type HandlerOutput = {
-    repos?: Repo[];
+    user?: User;
 } & EndpointErrorBody;
 
 export const get: RequestHandler<HandlerOutput> = async ({ locals }: RequestEvent) => {
     const octokit = octokitFactory(locals.token);
     try {
-        const repos_data = await octokit.paginate(octokit.rest.repos.listForAuthenticatedUser, {
-            per_page: 100,
-            affiliation: 'owner',
-        });
-        const repos = Repo.from_json_array(repos_data);
+        const response = await octokit.rest.users.getAuthenticated();
+        const user = User.from_json(response.data);
         return {
             status: 200,
-            body: { repos },
+            body: { user },
         };
     } catch (error: any) {
         return endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);

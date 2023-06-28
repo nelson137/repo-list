@@ -1,8 +1,10 @@
+throw new Error("@migration task: Update +page.server.js (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
+
 import { auth } from '$lib/api/octokit';
 import { EndpointErrorReason, endpoint_err, type EndpointErrorBody } from '$lib/error';
 import type { RequestEvent } from '@sveltejs/kit';
 import * as Cookie from 'cookie';
-import type { RequestHandler } from './__types/callback';
+import type { RequestHandler } from '../$types';
 
 export type HandlerOutput = EndpointErrorBody;
 

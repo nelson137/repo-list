@@ -1,59 +1,63 @@
 <script lang="ts" context="module">
-    import { EndpointErrorReason, handle_endpoint_err, type EndpointError } from '$lib/error';
-    import { User } from '$lib/models/user';
-    import type { LoadEvent } from '@sveltejs/kit';
-    import type { Load } from './__types/__layout';
+    throw new Error("@migration task: Check code was safely removed (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292722)");
 
-    import '../app.css';
+    // import { EndpointErrorReason, handle_endpoint_err, type EndpointError } from '$lib/error';
+    // import { User } from '$lib/models/user';
+    // import type { LoadEvent } from '@sveltejs/kit';
+    // import type { Load } from './$types';
 
-    type InProps = Record<string, never>;
-    type OutProps = {
-        logged_in: boolean;
-        user: User | null;
-    };
+    // import '../app.css';
 
-    export const load: Load<InProps, OutProps> = async ({ fetch, stuff }: LoadEvent) => {
-        stuff.logged_in = false;
+    // type InProps = Record<string, never>;
+    // type OutProps = {
+    //     logged_in: boolean;
+    //     user: User | null;
+    // };
 
-        let data: any;
-        try {
-            const response = await fetch('/api/github/user');
-            data = await response.json();
-        } catch (error: any) {
-            return handle_endpoint_err({
-                status: 500,
-                reason: EndpointErrorReason.Other,
-                message: `An unexpected error occurred while fetching user data: ${error.message}`,
-            });
-        }
+    // export const load: Load<InProps, OutProps> = async ({ fetch, stuff }: LoadEvent) => {
+    //     stuff.logged_in = false;
 
-        if (data.user) {
-            stuff.logged_in = true;
-            return {
-                stuff,
-                props: {
-                    logged_in: stuff.logged_in,
-                    user: User.from_json(data.user),
-                },
-            };
-        }
+    //     let data: any;
+    //     try {
+    //         const response = await fetch('/api/github/user');
+    //         data = await response.json();
+    //     } catch (error: any) {
+    //         return handle_endpoint_err({
+    //             status: 500,
+    //             reason: EndpointErrorReason.Other,
+    //             message: `An unexpected error occurred while fetching user data: ${error.message}`,
+    //         });
+    //     }
 
-        const error: EndpointError = data.error;
-        if (error.reason === EndpointErrorReason.Auth_NoToken) {
-            return {
-                stuff,
-                props: {
-                    logged_in: stuff.logged_in,
-                    user: null,
-                },
-            };
-        } else {
-            return handle_endpoint_err(error);
-        }
-    };
+    //     if (data.user) {
+    //         stuff.logged_in = true;
+    //         return {
+    //             stuff,
+    //             props: {
+    //                 logged_in: stuff.logged_in,
+    //                 user: User.from_json(data.user),
+    //             },
+    //         };
+    //     }
+
+    //     const error: EndpointError = data.error;
+    //     if (error.reason === EndpointErrorReason.Auth_NoToken) {
+    //         return {
+    //             stuff,
+    //             props: {
+    //                 logged_in: stuff.logged_in,
+    //                 user: null,
+    //             },
+    //         };
+    //     } else {
+    //         return handle_endpoint_err(error);
+    //     }
+    // };
 </script>
 
 <script lang="ts">
+    throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+
     interface $$Props extends OutProps {}
 
     export let logged_in: OutProps['logged_in'];
