@@ -1,73 +1,15 @@
-<script lang="ts" context="module">
-    throw new Error("@migration task: Check code was safely removed (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292722)");
-
-    // import { EndpointErrorReason, handle_endpoint_err, type EndpointError } from '$lib/error';
-    // import { User } from '$lib/models/user';
-    // import type { LoadEvent } from '@sveltejs/kit';
-    // import type { Load } from './$types';
-
-    // import '../app.css';
-
-    // type InProps = Record<string, never>;
-    // type OutProps = {
-    //     logged_in: boolean;
-    //     user: User | null;
-    // };
-
-    // export const load: Load<InProps, OutProps> = async ({ fetch, stuff }: LoadEvent) => {
-    //     stuff.logged_in = false;
-
-    //     let data: any;
-    //     try {
-    //         const response = await fetch('/api/github/user');
-    //         data = await response.json();
-    //     } catch (error: any) {
-    //         return handle_endpoint_err({
-    //             status: 500,
-    //             reason: EndpointErrorReason.Other,
-    //             message: `An unexpected error occurred while fetching user data: ${error.message}`,
-    //         });
-    //     }
-
-    //     if (data.user) {
-    //         stuff.logged_in = true;
-    //         return {
-    //             stuff,
-    //             props: {
-    //                 logged_in: stuff.logged_in,
-    //                 user: User.from_json(data.user),
-    //             },
-    //         };
-    //     }
-
-    //     const error: EndpointError = data.error;
-    //     if (error.reason === EndpointErrorReason.Auth_NoToken) {
-    //         return {
-    //             stuff,
-    //             props: {
-    //                 logged_in: stuff.logged_in,
-    //                 user: null,
-    //             },
-    //         };
-    //     } else {
-    //         return handle_endpoint_err(error);
-    //     }
-    // };
-</script>
-
 <script lang="ts">
-    throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+    import type { LayoutData } from './$types';
+    import '../app.css';
 
-    interface $$Props extends OutProps {}
-
-    export let logged_in: OutProps['logged_in'];
-    export let user: OutProps['user'];
+    export let data: LayoutData;
 
     let profile_menu_details: HTMLElement;
     let profile_menu_summary: HTMLElement;
     let profile_menu_popup: HTMLElement;
 
     const onWindowClick = (event: MouseEvent) => {
+        if (!data.logged_in) return;
         let path = event.composedPath();
         if (
             profile_menu_details.hasAttribute('open') &&
@@ -89,14 +31,14 @@
 <header>
     <span>GitHub Face</span>
     <div class="flex-spacer" />
-    {#if logged_in}
+    {#if data.logged_in}
         <details class="profile" bind:this={profile_menu_details}>
             <summary class="dropdown-trigger" bind:this={profile_menu_summary}>
-                <img src={user?.avatar_url} alt="@{user?.login}" />
+                <img src={data.user?.avatar_url} alt="@{data.user?.login}" />
                 <span class="dropdown-caret" />
             </summary>
             <details-menu class="dropdown-menu" role="menu" bind:this={profile_menu_popup}>
-                <a class="link" href={user?.html_url} target="_blank">@{user?.login}</a>
+                <a class="link" href={data.user?.html_url} target="_blank">@{data.user?.login}</a>
                 <div class="dropdown-menu-divider" />
                 <a href="/logout" class="link">Sign out</a>
             </details-menu>

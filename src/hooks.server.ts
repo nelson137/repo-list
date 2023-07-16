@@ -5,7 +5,7 @@ import * as Cookie from 'cookie';
 
 init();
 
-export const handle: Handle = ({ event, resolve }) => {
+export const handle = (({ event, resolve }) => {
     const cookies_str = event.request.headers.get('cookie');
     const cookies = cookies_str ? Cookie.parse(cookies_str) : {};
 
@@ -19,4 +19,4 @@ export const handle: Handle = ({ event, resolve }) => {
     event.locals.token = cookies.token;
 
     return resolve(event);
-};
+}) satisfies Handle;

@@ -1,14 +1,11 @@
-throw new Error("@migration task: Update +page.server.js (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
-
 import { auth } from '$lib/api/octokit';
 import { EndpointErrorReason, endpoint_err, type EndpointErrorBody } from '$lib/error';
-import type { RequestEvent } from '@sveltejs/kit';
-import * as Cookie from 'cookie';
-import type { RequestHandler } from '../$types';
+import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export type HandlerOutput = EndpointErrorBody;
 
-export const get: RequestHandler<HandlerOutput> = async ({ url }: RequestEvent) => {
+export const load = (async ({ url, cookies }) => {
     if (!url.searchParams.has('code'))
         return endpoint_err(500, EndpointErrorReason.Auth_Callback_NoCode);
 
@@ -22,20 +19,17 @@ export const get: RequestHandler<HandlerOutput> = async ({ url }: RequestEvent) 
             state: url.searchParams.get('state') ?? undefined,
         });
 
-        return {
-            status: 302,
-            headers: {
-                'Set-Cookie': Cookie.serialize('token', token, {
-                    path: '/',
-                    // secure: true, // Only send over https
-                    httpOnly: true, // Not accessible via JS on the client
-                    // maxAge: 60 * 60 * 24, // Number of secs from receipt it will be deleted // 1 day
-                    sameSite: 'lax',
-                }),
-                Location: '/',
-            },
-        };
+        cookies.set('token', token, {
+            path: '/',
+            // secure: true, // Only send over https
+            httpOnly: true, // Not accessible via JS on the client
+            // maxAge: 60 * 60 * 24, // Number of secs from receipt it will be deleted // 1 day
+            sameSite: 'lax',
+        });
     } catch (error: any) {
-        return endpoint_err(401, EndpointErrorReason.Github, error.message);
+        const desc = error.response?.data?.error_description;
+        return endpoint_err(401, EndpointErrorReason.Github, desc);
     }
-};
+
+    throw redirect(302, '/');
+}) satisfies PageServerLoad;

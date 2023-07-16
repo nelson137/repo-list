@@ -1,16 +1,22 @@
 /// <reference types="@sveltejs/kit" />
 
+export { };
+
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-declare namespace App {
-    interface Locals {
-        token: string;
-    }
+declare global {
+    declare namespace App {
+        interface Locals {
+            token: string;
+        }
 
-    // interface Platform {}
-    // interface Session {}
+        interface Error {
+            status: number;
+            reason?: string;
+            message: string;
+        }
 
-    interface Stuff {
-        logged_in: boolean;
+        // interface Platform {}
+        // interface Session {}
     }
 }
