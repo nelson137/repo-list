@@ -4,13 +4,14 @@
     import { createEventDispatcher, getContext } from 'svelte';
     import DeleteListPopup from './DeleteListPopup.svelte';
     import type { DeleteListEvents } from './events';
+    import type { Context as ModalContext } from 'svelte-simple-modal';
 
     export let list_id: string;
     export let list_name: string;
 
     const dispatch = createEventDispatcher<DeleteListEvents>();
 
-    const { open } = getContext('simple-modal');
+    const { open } = getContext<ModalContext>('simple-modal');
 
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
@@ -29,7 +30,7 @@
                 classWindow: 'modal-window',
             },
             {
-                onClose: (_event: CustomEvent) => {
+                onClose: () => {
                     let state = get_popup_state(list_id);
                     if (state === PopupState.Deciding) {
                         state = PopupState.Canceled;

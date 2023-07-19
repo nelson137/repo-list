@@ -1,10 +1,11 @@
 <script lang="ts">
     import { DialogAction, set_dialog_state } from '$lib/stores/create-dialog-state';
     import { getContext } from 'svelte';
+    import type { Context as ModalContext } from 'svelte-simple-modal';
 
     let input_value: string | undefined;
 
-    const { close } = getContext('simple-modal');
+    const { close } = getContext<ModalContext>('simple-modal');
 
     const on_cancel = () => {
         set_dialog_state(DialogAction.Canceled);

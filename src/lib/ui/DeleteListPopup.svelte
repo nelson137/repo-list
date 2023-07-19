@@ -3,11 +3,12 @@
     import { getContext } from 'svelte';
     import CheckSvg from './svgs/CheckSvg.svelte';
     import XSvg from './svgs/XSvg.svelte';
+    import type { Context as ModalContext } from 'svelte-simple-modal';
 
     export let list_id: string;
     export let list_name: string;
 
-    const { close } = getContext('simple-modal');
+    const { close } = getContext<ModalContext>('simple-modal');
 
     const on_no = () => {
         set_popup_state(list_id, PopupState.No);
