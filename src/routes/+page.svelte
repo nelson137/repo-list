@@ -278,6 +278,7 @@
                         on:dragleave={drag_leave}
                         on:dragover={drag_over}
                         on:drop={drop}
+                        role="list"
                     >
                         {#each list.repo_ids as r_id, i (r_id)}
                             <div

@@ -13,7 +13,7 @@
 
     const { open } = getContext('simple-modal');
 
-    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLDivElement };
+    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         set_dialog_state(DialogAction.Waiting, null);
         open(
@@ -50,9 +50,9 @@
     };
 </script>
 
-<div class="create-list-icon" on:click={on_click}>
+<button class="create-list-icon" on:click={on_click}>
     <CirclePlusSvg />
-</div>
+</button>
 
 <style lang="scss">
     :global(div.modal-wrap div.modal-window) {
@@ -61,7 +61,7 @@
 
     .create-list-icon {
         background-color: var(--color-bg-dark);
-        border-radius: 50%;
+        border: none;
         padding: 2px;
 
         &:hover :global(svg.icon-circle-plus) {

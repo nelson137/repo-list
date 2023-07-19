@@ -25,12 +25,12 @@
 </div>
 
 <div class="modal-buttons">
-    <div class="modal-button-no" on:click={on_no}>
+    <button class="modal-button-no" on:click={on_no}>
         <XSvg />
-    </div>
-    <div class="modal-button-yes" on:click={on_yes}>
+    </button>
+    <button class="modal-button-yes" on:click={on_yes}>
         <CheckSvg />
-    </div>
+    </button>
 </div>
 
 <style lang="scss">
@@ -57,6 +57,7 @@
             border-radius: 50%;
             border: 1px solid rgb(var(--stroke-rgb));
             stroke: rgb(var(--stroke-rgb));
+            background-color: transparent;
             &:hover {
                 background-color: rgb(var(--stroke-rgb) / 0.1);
             }

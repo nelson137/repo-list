@@ -55,6 +55,7 @@
     on:mouseleave={card_leave}
     on:dragstart={drag_start}
     on:dragend={drag_end}
+    role="listitem"
 >
     <div class="card-header">
         <span>{repo.name}</span>

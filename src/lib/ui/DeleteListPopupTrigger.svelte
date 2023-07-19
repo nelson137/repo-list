@@ -12,7 +12,7 @@
 
     const { open } = getContext('simple-modal');
 
-    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLDivElement };
+    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         set_popup_state(list_id, PopupState.Deciding);
         open(
@@ -52,11 +52,11 @@
     };
 </script>
 
-<div class="wrapper" on:click={on_click}>
+<button class="wrapper" on:click={on_click}>
     <div class="click-wrapper">
         <TrashSvg />
     </div>
-</div>
+</button>
 
 <style lang="scss">
     :global(div.modal-wrap div.modal-window) {
@@ -67,7 +67,9 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-right: 12px;
+        padding: 0px 12px 0px 0px;
+        border: none;
+        background-color: transparent;
 
         .click-wrapper {
             :global(svg.icon-trash) {
