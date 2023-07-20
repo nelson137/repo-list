@@ -13,6 +13,25 @@
 
     const { open } = getContext<ModalContext>('simple-modal');
 
+    const on_modal_close = () => {
+        let state = get_popup_state(list_id);
+        if (state === PopupState.Deciding) {
+            state = PopupState.Canceled;
+            set_popup_state(list_id, PopupState.Canceled);
+        }
+        switch (state) {
+            case PopupState.Canceled:
+                dispatch('canceled');
+                break;
+            case PopupState.No:
+                dispatch('no');
+                break;
+            case PopupState.Yes:
+                dispatch('yes');
+                break;
+        }
+    };
+
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         set_popup_state(list_id, PopupState.Deciding);
@@ -30,24 +49,7 @@
                 classWindow: 'modal-window',
             },
             {
-                onClose: () => {
-                    let state = get_popup_state(list_id);
-                    if (state === PopupState.Deciding) {
-                        state = PopupState.Canceled;
-                        set_popup_state(list_id, PopupState.Canceled);
-                    }
-                    switch (state) {
-                        case PopupState.Canceled:
-                            dispatch('canceled');
-                            break;
-                        case PopupState.No:
-                            dispatch('no');
-                            break;
-                        case PopupState.Yes:
-                            dispatch('yes');
-                            break;
-                    }
-                },
+                onClose: on_modal_close,
             }
         );
     };

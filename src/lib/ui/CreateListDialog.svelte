@@ -13,8 +13,7 @@
     };
 
     const on_ok = () => {
-        console.log('dialog | input value:', input_value);
-        set_dialog_state(DialogAction.Ok, (input_value ?? '').trim());
+        set_dialog_state(DialogAction.Ok, input_value?.trim() ?? '');
         close();
     };
 </script>

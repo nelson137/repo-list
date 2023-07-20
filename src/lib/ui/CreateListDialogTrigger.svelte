@@ -14,6 +14,23 @@
 
     const { open } = getContext<ModalContext>('simple-modal');
 
+    const on_modal_close = () => {
+        let { action, name } = get_dialog_state();
+        switch (action) {
+            case DialogAction.Ok:
+                if (name === null) {
+                    name = '';
+                    console.warn('State for dialog name is null, defaulting to empty string.');
+                }
+                dispatch('ok', { name });
+                break;
+            default:
+                dispatch('canceled');
+                break;
+        }
+        set_dialog_state(DialogAction.NotOpen, null);
+    };
+
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         set_dialog_state(DialogAction.Waiting, null);
@@ -28,24 +45,7 @@
                 classWindow: 'modal-window',
             },
             {
-                onClose: () => {
-                    let { action, name } = get_dialog_state();
-                    switch (action) {
-                        case DialogAction.Ok:
-                            if (name === null) {
-                                name = '';
-                                console.warn(
-                                    'State for dialog name is null, defaulting to empty string.'
-                                );
-                            }
-                            dispatch('ok', { name });
-                            break;
-                        default:
-                            dispatch('canceled');
-                            break;
-                    }
-                    set_dialog_state(DialogAction.NotOpen, null);
-                },
+                onClose: on_modal_close,
             }
         );
     };
