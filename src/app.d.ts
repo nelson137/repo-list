@@ -14,7 +14,7 @@ declare global {
 
     declare namespace App {
         interface Locals {
-            token: string;
+            token?: string;
         }
 
         interface Error {

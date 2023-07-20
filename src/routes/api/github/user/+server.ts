@@ -4,7 +4,7 @@ import { User } from '$lib/models/user';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals }) => {
-    const octokit = octokitFactory(locals.token);
+    const octokit = octokitFactory(locals.token!);
     let response;
     try {
         const users_response = await octokit.rest.users.getAuthenticated();

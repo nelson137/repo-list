@@ -4,7 +4,7 @@ import { Repo } from '$lib/models/repo';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ locals }) => {
-    const octokit = octokitFactory(locals.token);
+    const octokit = octokitFactory(locals.token!);
     let response;
     try {
         const repos_data = await octokit.paginate(octokit.rest.repos.listForAuthenticatedUser, {
