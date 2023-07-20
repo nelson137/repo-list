@@ -6,7 +6,7 @@
         Side,
         type _DragEvent,
     } from '$lib/drag-and-drop';
-    import { ALL_REPOS_LIST_ID, RepoList, RepositoryLists } from '$lib/models/repo-list';
+    import { ALL_REPOS_LIST_ID, RepoList } from '$lib/models/repo-list';
     import CreateListDialogTrigger from '$lib/ui/CreateListDialogTrigger.svelte';
     import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
     import type { CardDragStartData, CreateListOkData } from '$lib/ui/events';
@@ -17,10 +17,10 @@
     import { flip } from 'svelte/animate';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
+    import { repo_lists, lists } from '$lib/stores/repo-lists';
 
     export let data: PageData;
 
-    let repo_lists: RepositoryLists;
     let list_wrapper_elements: HTMLElement[] = [];
 
     /**
@@ -45,18 +45,13 @@
     let dragging_in_list_all = false;
 
     onMount(() => {
-        repo_lists = RepositoryLists.from_local_storage($page.data.repos ?? []);
+        repo_lists.load_local_storage($page.data.repos ?? []);
     });
 
-    const create_list = (event: CustomEvent<CreateListOkData>) => {
-        const list = new RepoList(event.detail.name);
-        repo_lists.add_list(list);
-    };
+    const create_list = (event: CustomEvent<CreateListOkData>) =>
+        repo_lists.add_list(new RepoList(event.detail.name));
 
-    const delete_list = (id: string, index: number) => {
-        list_wrapper_elements[index]?.remove();
-        repo_lists.delete_list(id);
-    };
+    const delete_list = (id: string) => repo_lists.delete_list(id);
 
     const list_clear_drag_indicator = (list: HTMLElement) =>
         list.style.removeProperty('--indicator-display');
@@ -176,18 +171,18 @@
         }
 
         const cur_list_id = event.currentTarget.id;
-        if (!repo_lists.lists[cur_list_id]) {
+        if (!repo_lists.get_list(cur_list_id)) {
             console.error('Repository list not found for ID:', cur_list_id);
             return;
         }
 
-        if (!repo_lists.lists[src_list_id]) {
+        if (!repo_lists.get_list(src_list_id)) {
             console.error('Repository list not found for ID:', src_list_id);
             return;
         }
-        const src_repo_ids = repo_lists.lists[src_list_id].repo_ids;
+        const src_repo_ids = repo_lists.get_list(src_list_id).repo_ids;
 
-        if (closest_side === null && repo_lists.lists[cur_list_id].repo_ids.length > 0) {
+        if (closest_side === null && repo_lists.get_list(cur_list_id).repo_ids.length > 0) {
             console.error('Invalid drop: no closest_side');
             return;
         }
@@ -200,13 +195,13 @@
             src_repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
         } else {
             // Move or copy (if src is the special "All" list) to current list
-            repo_lists.lists[cur_list_id].repo_ids.splice(new_index, 0, repo_id);
+            repo_lists.get_list(cur_list_id).repo_ids.splice(new_index, 0, repo_id);
             if (src_list_id !== ALL_REPOS_LIST_ID) src_repo_ids.splice(repo_index, 1);
         }
 
-        repo_lists.lists[src_list_id].repo_ids = src_repo_ids;
+        repo_lists.update_list_repos(src_list_id, src_repo_ids);
 
-        repo_lists.to_local_storage();
+        repo_lists.save_to_local_storage();
 
         closest_i = -1;
         closest_side = null;
@@ -236,7 +231,7 @@
 </script>
 
 {#if data?.logged_in}
-    {#if repo_lists}
+    {#if $lists}
         <div class="create-list-wrapper">
             <div class="create-list">
                 <div class="create-list-line-wrapper">
@@ -250,7 +245,7 @@
             </div>
         </div>
 
-        {#each repo_lists.get_repo_lists() as list, l_i}
+        {#each $lists as list, l_i}
             <div class="list-wrapper" bind:this={list_wrapper_elements[l_i]}>
                 <div
                     class="list-card"
@@ -263,7 +258,7 @@
                                 <DeleteListPopupTrigger
                                     list_id={list.id}
                                     list_name={list.name}
-                                    on:yes={() => delete_list(list.id, l_i)}
+                                    on:yes={() => delete_list(list.id)}
                                 />
                             </Modal>
                         {/if}
