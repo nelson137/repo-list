@@ -85,6 +85,7 @@ export class RepositoryLists {
 
     public add_list = (list: RepoList) => {
         this.lists[list.id] = list;
+        this.order.unshift(list.id);
         this.to_local_storage();
     };
 
