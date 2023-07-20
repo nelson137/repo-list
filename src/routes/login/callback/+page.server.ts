@@ -4,12 +4,9 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ url, cookies }) => {
-    if (!url.searchParams.has('code'))
-        return endpoint_err(500, EndpointErrorReason.Auth_Callback_NoCode);
-
     const code = url.searchParams.get('code');
     if (!code)
-        return endpoint_err(500, EndpointErrorReason.Auth_Callback_NullCode);
+        return endpoint_err(500, EndpointErrorReason.Auth_Callback_InvalidCode);
 
     try {
         const { token } = await auth({

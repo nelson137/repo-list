@@ -1,8 +1,7 @@
 import { error } from '@sveltejs/kit';
 
 export enum EndpointErrorReason {
-    Auth_Callback_NoCode = 'auth-no-code',
-    Auth_Callback_NullCode = 'auth-null-code',
+    Auth_Callback_InvalidCode = 'auth-invalid-code',
     Auth_NoToken = 'auth-no-token',
     Github = 'github',
     Other = 'other',
@@ -11,10 +10,8 @@ export enum EndpointErrorReason {
 function endpoint_err_message(reason: EndpointErrorReason, message?: string): string {
     const UNKNOWN_ERR_MSG = 'An unknown error occurred';
     switch (reason) {
-        case EndpointErrorReason.Auth_Callback_NoCode:
-            return 'GitHub authentication redirected with no temporary code';
-        case EndpointErrorReason.Auth_Callback_NullCode:
-            return 'GitHub authentication redirected with a null temporary code';
+        case EndpointErrorReason.Auth_Callback_InvalidCode:
+            return 'GitHub authentication redirected with an invalid temporary code';
         case EndpointErrorReason.Auth_NoToken:
             return 'No authentication token';
         case EndpointErrorReason.Github:
