@@ -49,16 +49,13 @@
     });
 
     const create_list = (event: CustomEvent<CreateListOkData>) => {
-        const { name } = event.detail;
-        const list = new RepoList(name);
-        repo_lists.lists[list.id] = list;
-        repo_lists.to_local_storage();
+        const list = new RepoList(event.detail.name);
+        repo_lists.add_list(list);
     };
 
     const delete_list = (id: string, index: number) => {
         list_wrapper_elements[index]?.remove();
         repo_lists.delete_list(id);
-        repo_lists.to_local_storage();
     };
 
     const list_clear_drag_indicator = (list: HTMLElement) =>

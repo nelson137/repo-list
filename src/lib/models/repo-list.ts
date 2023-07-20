@@ -83,6 +83,11 @@ export class RepositoryLists {
 
     public get_repo = (id: number | string): Repo => this.entries[id.toString()];
 
+    public add_list = (list: RepoList) => {
+        this.lists[list.id] = list;
+        this.to_local_storage();
+    };
+
     public delete_list = (id: string) => {
         if (this.lists[id] === undefined) {
             console.error('Failed to remove list object with ID:', id);
@@ -96,6 +101,8 @@ export class RepositoryLists {
         } else {
             this.order.splice(index, 1);
         }
+
+        this.to_local_storage();
     };
 
     public static from_local_storage = (repos: Repo[]): RepositoryLists => {
