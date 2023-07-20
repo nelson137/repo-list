@@ -63,15 +63,26 @@ const repo_list_data_is_valid = (repo_list_data: any): boolean => {
 };
 
 export class RepositoryLists {
+    /**
+     * A dictionary of the repository lists.
+     *
+     * This allows for quick access to a list by ID.
+     */
     public lists: { [id: string]: RepoList } = {};
-    public entries: { [id: string]: Repo } = {};
+    /**
+     * A dictionary of the repositories.
+     *
+     * Repositories are stored in the lists by ID only. This allows for quick
+     * access to a repo by ID.
+     */
+    public repositories: { [id: string]: Repo } = {};
     /**
      * An array of list IDs indicating the order in which they should be displayed.
      */
-    private order: string[] = [];
+    private list_order: string[] = [];
 
     public get_repo_lists = (): RepoList[] =>
-        this.order
+        this.list_order
             .filter(id => {
                 if (this.lists[id] === undefined) {
                     console.error('Failed to find list for ID in `order` array:', id);
@@ -81,20 +92,20 @@ export class RepositoryLists {
             })
             .map(id => this.lists[id]);
 
-    public get_repo = (id: number | string): Repo => this.entries[id.toString()];
+    public get_repo = (id: number | string): Repo => this.repositories[id.toString()];
 
     public add_list = (list: RepoList) => {
         this.lists[list.id] = list;
-        this.order.unshift(list.id);
+        this.list_order.unshift(list.id);
         this.to_local_storage();
     };
 
     public delete_list = (id: string) => {
-        const index = this.order.indexOf(id);
+        const index = this.list_order.indexOf(id);
         if (index === -1) {
             console.error('Failed to remove list from order with ID:', id);
         } else {
-            this.order.splice(index, 1);
+            this.list_order.splice(index, 1);
         }
 
         if (this.lists[id] === undefined) {
@@ -130,7 +141,7 @@ export class RepositoryLists {
 
             const order = [];
             for (const l of valid_repo_lists_data) order[l.index] = l.id;
-            repo_lists.order = order.filter(id => id !== undefined).concat([ALL_REPOS_LIST_ID]);
+            repo_lists.list_order = order.filter(id => id !== undefined).concat([ALL_REPOS_LIST_ID]);
         } catch (error: any) {
             console.error('Failed to load repository lists from local storage:', error);
         }
@@ -144,8 +155,8 @@ export class RepositoryLists {
                 .filter(l => l.id !== ALL_REPOS_LIST_ID)
                 .map(l => [l.id, { ...l, index: null }])
         );
-        for (let i = 0; i < this.order.length; i++) {
-            const id = this.order[i];
+        for (let i = 0; i < this.list_order.length; i++) {
+            const id = this.list_order[i];
             if (id === ALL_REPOS_LIST_ID) continue;
             if (data[id] === undefined) {
                 console.error(
