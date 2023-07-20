@@ -81,6 +81,10 @@ export class RepositoryLists {
      */
     private list_order: string[] = [];
 
+    constructor(repos: Repo[]) {
+        this.repositories = _.keyBy(repos, r => r.id.toString());
+    }
+
     public get_repo_lists = (): RepoList[] =>
         this.list_order
             .filter(id => {
@@ -117,37 +121,37 @@ export class RepositoryLists {
         this.to_local_storage();
     };
 
-    public static from_local_storage = (repos: Repo[]): RepositoryLists => {
-        const repo_lists = new RepositoryLists();
-        repo_lists.entries = _.keyBy(repos, r => r.id.toString());
-
+    public load_local_storage = (): RepositoryLists => {
         try {
             const repo_lists_data_raw = JSON.parse(localStorage.getItem(REPO_LISTS_KEY) ?? '[]');
             if (!Array.isArray(repo_lists_data_raw)) {
                 console.error('data is not an array:', repo_lists_data_raw);
-                return repo_lists;
+                return this;
             }
 
             const valid_repo_lists_data = repo_lists_data_raw.filter(repo_list_data_is_valid);
 
             const repo_lists_data: RepoList[] = valid_repo_lists_data.map(RepoList.from_json);
 
-            repo_lists.lists = _.keyBy(repo_lists_data, rl => rl.id);
-            repo_lists.lists[ALL_REPOS_LIST_ID] = new RepoList(
+            this.lists = _.keyBy(repo_lists_data, rl => rl.id);
+            this.lists[ALL_REPOS_LIST_ID] = new RepoList(
                 'All',
-                repos.map(r => r.id),
+                Object.values(this.repositories).map(r => r.id),
                 ALL_REPOS_LIST_ID
             );
 
             const order = [];
             for (const l of valid_repo_lists_data) order[l.index] = l.id;
-            repo_lists.list_order = order.filter(id => id !== undefined).concat([ALL_REPOS_LIST_ID]);
+            this.list_order = order.filter(id => id !== undefined).concat([ALL_REPOS_LIST_ID]);
         } catch (error: any) {
             console.error('Failed to load repository lists from local storage:', error);
         }
 
-        return repo_lists;
+        return this;
     };
+
+    public static from_local_storage = (repos: Repo[]): RepositoryLists =>
+        new RepositoryLists(repos).load_local_storage();
 
     public to_local_storage = () => {
         const data = Object.fromEntries<RepoListStorage>(
