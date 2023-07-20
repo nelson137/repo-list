@@ -33,7 +33,7 @@ export function endpoint_err_body(
     };
 }
 
-export function handle_endpoint_err<Data>(
+export function endpoint_err<Data>(
     status: number,
     reason: EndpointErrorReason,
     message?: string,

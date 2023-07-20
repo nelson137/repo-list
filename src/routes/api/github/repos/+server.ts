@@ -1,5 +1,5 @@
 import { octokitFactory } from '$lib/api/octokit';
-import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
+import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { Repo } from '$lib/models/repo';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -16,6 +16,6 @@ export const GET = (async ({ locals }) => {
         const repos = Repo.from_json_array(repos_data);
         return json({ repos });
     } catch (error: any) {
-        return handle_endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);
+        return endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);
     }
 }) satisfies RequestHandler;

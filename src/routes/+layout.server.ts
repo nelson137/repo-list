@@ -1,4 +1,4 @@
-import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
+import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import type { User } from '$lib/models/user';
 import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
@@ -23,7 +23,7 @@ export const load = (async ({ fetch, locals }) => {
         response = await fetch('/api/github/user');
         payload = await response.json();
     } catch (error: any) {
-        return handle_endpoint_err(
+        return endpoint_err(
             500,
             EndpointErrorReason.Other,
             `An unexpected error occurred while fetching user data: ${error.message}`,

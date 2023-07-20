@@ -1,4 +1,4 @@
-import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
+import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { Repo } from '$lib/models/repo';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
@@ -23,7 +23,7 @@ export const load = (async ({ fetch, parent }) => {
         response = await fetch('/api/github/repos');
         payload = await response.json();
     } catch (error: any) {
-        return handle_endpoint_err(
+        return endpoint_err(
             500,
             EndpointErrorReason.Other,
             `An unexpected error occurred while fetching user repositories: ${error.message}`,
