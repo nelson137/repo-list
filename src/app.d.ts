@@ -18,7 +18,6 @@ declare global {
         }
 
         interface Error {
-            status: number;
             reason?: string;
             message: string;
         }

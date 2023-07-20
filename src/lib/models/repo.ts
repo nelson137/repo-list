@@ -33,12 +33,13 @@ export class Repo {
      * @param data The raw JSON object data from GitHub's API endpoint.
      * @returns An instance of this model from `data`.
      */
-    public static from_json = (data: EndpointData): Repo => from_json(Repo, data);
+    public static from_json = (data: Partial<EndpointData>): Repo => from_json(Repo, data);
 
     /**
      * Deserialize an array of instances of this model.
      * @param data The raw JSON array data from GitHub's API endpoint.
      * @returns An array of instances of this model from `data`.
      */
-    public static from_json_array = (data: EndpointData[]): Repo[] => from_json(Repo, data);
+    public static from_json_array = (data: Partial<EndpointData>[]): Repo[] =>
+        from_json(Repo, data);
 }

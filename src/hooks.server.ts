@@ -1,6 +1,6 @@
 import { init } from '$lib/api/octokit';
 import { EndpointErrorReason, endpoint_err_body } from '$lib/error';
-import type { Handle } from '@sveltejs/kit';
+import { json, type Handle } from '@sveltejs/kit';
 import * as Cookie from 'cookie';
 
 init();
@@ -10,9 +10,9 @@ export const handle = (({ event, resolve }) => {
     const cookies = cookies_str ? Cookie.parse(cookies_str) : {};
 
     if (event.url.pathname.startsWith('/api/github') && !cookies.token) {
-        return new Response(
-            JSON.stringify(endpoint_err_body(401, EndpointErrorReason.Auth_NoToken)),
-            { status: 200 }
+        return json(
+            endpoint_err_body(EndpointErrorReason.Auth_NoToken),
+            { status: 401 }
         );
     }
 

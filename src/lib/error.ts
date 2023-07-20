@@ -8,55 +8,35 @@ export enum EndpointErrorReason {
     Other = 'other',
 }
 
-export type EndpointError = {
-    status: number;
-    reason: EndpointErrorReason;
-    message?: string;
-};
-
-export type EndpointErrorBody = {
-    error?: EndpointError;
-};
-
-export function endpoint_err(
-    status: number,
-    reason: EndpointErrorReason,
-    message?: string
-): EndpointErrorBody {
-    return endpoint_err_body(status, reason, message);
+function endpoint_err_message(reason: EndpointErrorReason, message?: string): string {
+    const UNKNOWN_ERR_MSG = 'An unknown error occurred';
+    switch (reason) {
+        case EndpointErrorReason.Auth_Callback_NoCode:
+            return 'GitHub authentication redirected with no temporary code';
+        case EndpointErrorReason.Auth_Callback_NullCode:
+            return 'GitHub authentication redirected with a null temporary code';
+        case EndpointErrorReason.Auth_NoToken:
+            return 'No authentication token';
+        case EndpointErrorReason.Github:
+            return `GitHub Error: ${message}`;
+        case EndpointErrorReason.Other:
+            return message ?? UNKNOWN_ERR_MSG;
+    }
 }
 
 export function endpoint_err_body(
-    status: number,
     reason: EndpointErrorReason,
-    message?: string
-): EndpointErrorBody {
+    message?: string,
+): App.Error {
     return {
-        error: { status, reason, message },
+        message: endpoint_err_message(reason, message)
     };
 }
 
-export function handle_endpoint_err<Data>(data: EndpointError): Data {
-    let message = 'An unknown error occurred';
-    switch (data.reason) {
-        case EndpointErrorReason.Auth_Callback_NoCode:
-            message = 'GitHub authentication redirected with no temporary code';
-            break;
-        case EndpointErrorReason.Auth_Callback_NullCode:
-            message = 'GitHub authentication redirected with a null temporary code';
-            break;
-        case EndpointErrorReason.Auth_NoToken:
-            message = 'No authentication token';
-            break;
-        case EndpointErrorReason.Github:
-            message = `GitHub Error: ${data.message}`;
-            break;
-        case EndpointErrorReason.Other:
-            if (data.message) message = data.message;
-            break;
-    }
-    throw error(data.status, {
-        status: data.status,
-        message,
-    });
+export function handle_endpoint_err<Data>(
+    status: number,
+    reason: EndpointErrorReason,
+    message?: string,
+): Data {
+    throw error(status, endpoint_err_body(reason, message));
 }
