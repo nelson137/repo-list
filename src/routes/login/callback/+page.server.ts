@@ -1,16 +1,19 @@
 import { auth } from '$lib/api/octokit';
-import { EndpointErrorReason, endpoint_err, type EndpointErrorBody } from '$lib/error';
+import { EndpointErrorReason, handle_endpoint_err } from '$lib/error';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export type HandlerOutput = EndpointErrorBody;
-
 export const load = (async ({ url, cookies }) => {
     if (!url.searchParams.has('code'))
-        return endpoint_err(500, EndpointErrorReason.Auth_Callback_NoCode);
+        return handle_endpoint_err({
+            status: 500, reason: EndpointErrorReason.Auth_Callback_NoCode
+        });
 
     const code = url.searchParams.get('code');
-    if (!code) return endpoint_err(500, EndpointErrorReason.Auth_Callback_NullCode);
+    if (!code)
+        return handle_endpoint_err({
+            status: 500, reason: EndpointErrorReason.Auth_Callback_NullCode
+        });
 
     try {
         const { token } = await auth({
@@ -28,7 +31,9 @@ export const load = (async ({ url, cookies }) => {
         });
     } catch (error: any) {
         const desc = error.response?.data?.error_description;
-        return endpoint_err(401, EndpointErrorReason.Github, desc);
+        return handle_endpoint_err({
+            status: 401, reason: EndpointErrorReason.Github, message: desc
+        });
     }
 
     throw redirect(302, '/');
