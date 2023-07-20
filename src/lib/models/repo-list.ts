@@ -89,17 +89,17 @@ export class RepositoryLists {
     };
 
     public delete_list = (id: string) => {
-        if (this.lists[id] === undefined) {
-            console.error('Failed to remove list object with ID:', id);
-        } else {
-            delete this.lists[id];
-        }
-
         const index = this.order.indexOf(id);
         if (index === -1) {
             console.error('Failed to remove list from order with ID:', id);
         } else {
             this.order.splice(index, 1);
+        }
+
+        if (this.lists[id] === undefined) {
+            console.error('Failed to remove list object with ID:', id);
+        } else {
+            delete this.lists[id];
         }
 
         this.to_local_storage();
