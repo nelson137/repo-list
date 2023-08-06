@@ -1,56 +1,43 @@
-import { Expose } from 'class-transformer';
 import * as _ from 'lodash-es';
 import { v4 as uuid } from 'uuid';
 import type { Repo } from './repo';
-import { from_json } from './_model';
+import { z } from 'zod';
+import { ZClass } from './zod-utils';
 
-export class RepoList {
-    /** The UUID of this list. */
-    @Expose() id: string;
-    /** The name of this list. */
-    @Expose() name: string;
-    /** The IDs of the [Repos](./repo.ts) in this list. */
-    @Expose() repo_ids: number[];
+const repoListSchema = z.object({
+    id: z.string().optional().default(() => uuid()).describe('The UUID of this list.'),
+    name: z.string().describe('The name of this list.'),
+    repo_ids: z.array(z.number().describe('The IDs of the [Repos](./repo.ts) in this list.')),
+});
 
-    constructor(name: string, repo_ids: number[] = [], id?: string) {
-        this.name = name;
-        this.repo_ids = repo_ids;
-        this.id = id ? id : uuid();
+export class RepoList extends ZClass<RepoList>()(repoListSchema) {
+    public static from(name: string, repo_ids: number[] = [], id?: string): RepoList {
+        return new RepoList({
+            name,
+            id: id ?? uuid(),
+            repo_ids,
+        });
     }
 
     /**
-     * Deserialize an instance of this model.
-     * @param data The raw JSON object data.
-     * @returns An instance of this model from `data`.
+     * Deserialize, validate, and construct an instance of this model.
+     * @param data The raw data.
+     * @returns An instance of this model.
      */
-    public static from_json = (data: Record<string, any>): RepoList => from_json(RepoList, data);
-
-    /**
-     * Deserialize an array of instances of this model.
-     * @param data The raw JSON object data.
-     * @returns An array of instances of this model from `data`.
-     */
-    public static from_json_array = (data: Record<string, any>[]): RepoList[] =>
-        from_json(RepoList, data);
+    public static parse = (data: unknown): RepoListStorage => repoListStorageSchema.parse(data);
 }
 
-export class RepoListStorage extends RepoList {
-    public index: number | null;
+const repoListStorageSchema = repoListSchema.extend({
+    index: z.number().nullable(),
+});
 
+export class RepoListStorage extends ZClass<RepoListStorage>()(repoListStorageSchema) {
     /**
-     * Deserialize an instance of this model.
-     * @param data The raw JSON object data.
-     * @returns An instance of this model from `data`.
+     * Deserialize, validate, and construct an instance of this model.
+     * @param data The raw data.
+     * @returns An instance of this model.
      */
-    public static from_json = (data: Record<string, any>): RepoListStorage => from_json(RepoListStorage, data);
-
-    /**
-     * Deserialize an array of instances of this model.
-     * @param data The raw JSON object data.
-     * @returns An array of instances of this model from `data`.
-     */
-    public static from_json_array = (data: Record<string, any>[]): RepoListStorage[] =>
-        from_json(RepoListStorage, data);
+    public static parse = (data: unknown): RepoListStorage => repoListStorageSchema.parse(data);
 }
 
 export const REPO_LISTS_KEY = 'repo-lists';
@@ -119,8 +106,8 @@ export class RepositoryLists {
     };
 
     public load_lists = (lists: RepoListStorage[]): RepositoryLists => {
-        this.lists = _.keyBy(lists, rl => rl.id);
-        this.lists[ALL_REPOS_LIST_ID] = new RepoList(
+        this.lists = _.keyBy(lists.map(s => new RepoList(s)), rl => rl.id);
+        this.lists[ALL_REPOS_LIST_ID] = RepoList.from(
             'All',
             Object.values(this.repositories).map(r => r.id),
             ALL_REPOS_LIST_ID

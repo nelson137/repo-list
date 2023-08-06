@@ -7,24 +7,6 @@ const store = writable<RepositoryLists>(new RepositoryLists());
 
 export const lists = derived(store, rl => rl.get_repo_lists());
 
-const repo_list_data_is_valid = (repo_list_data: any): boolean => {
-    if (typeof repo_list_data !== 'object') {
-        console.error('Data for repository list is not an object:', repo_list_data);
-        return false;
-    }
-    const list = repo_list_data;
-    if (
-        typeof list.id === 'string' &&
-        typeof list.index === 'number' &&
-        typeof list.name === 'string' &&
-        Array.isArray(list.repo_ids)
-    ) {
-        return true;
-    }
-    console.error('Invalid data for repository list:', repo_list_data);
-    return false;
-};
-
 export const repo_lists = {
     load_local_storage: (repos: Repo[]) => store.update(repo_lists => {
         repo_lists.load_repositories(repos);
@@ -37,10 +19,7 @@ export const repo_lists = {
                 return repo_lists;
             }
 
-            const valid_lists_data = repo_lists_data_raw.filter(repo_list_data_is_valid);
-            const lists = valid_lists_data.map(RepoListStorage.from_json);
-
-            repo_lists.load_lists(lists);
+            repo_lists.load_lists(repo_lists_data_raw.map(RepoListStorage.parse));
         } catch (error: any) {
             console.error('Failed to load repository lists from local storage:', error);
         }

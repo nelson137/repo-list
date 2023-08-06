@@ -49,7 +49,7 @@
     });
 
     const create_list = (event: CustomEvent<CreateListOkData>) =>
-        repo_lists.add_list(new RepoList(event.detail.name));
+        repo_lists.add_list(RepoList.from(event.detail.name));
 
     const delete_list = (id: string) => repo_lists.delete_list(id);
 
