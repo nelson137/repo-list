@@ -6,7 +6,7 @@
         Side,
         type _DragEvent,
     } from '$lib/drag-and-drop';
-    import { ALL_REPOS_LIST_ID, RepoList } from '$lib/models/repo-list';
+    import { RepoList } from '$lib/models/repo-list';
     import CreateListDialogTrigger from '$lib/ui/CreateListDialogTrigger.svelte';
     import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
     import type { CardDragStartData, CreateListOkData } from '$lib/ui/events';
@@ -17,7 +17,7 @@
     import { flip } from 'svelte/animate';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
-    import { repo_lists, lists } from '$lib/stores/repo-lists';
+    import { ALL_REPOS_LIST_ID, repo_lists, lists } from '$lib/stores/repo-lists';
 
     export let data: PageData;
 
