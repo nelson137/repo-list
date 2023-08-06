@@ -36,15 +36,15 @@ class RepositoryListsData {
             ALL_REPOS_LIST_ID
         );
 
-        const order: string[] = [];
-        for (const l of lists) {
-            if (l.index !== null) {
-                order[l.index] = l.id;
-            } else {
-                console.warn('Skipping list from local storage with no index:', l);
-            }
-        }
-        this.list_order = order.filter(id => id !== undefined).concat([ALL_REPOS_LIST_ID]);
+        this.list_order = lists
+            .filter(l => {
+                if (l.index === null)
+                    console.warn('Skipping list from local storage with no index:', l);
+                return l.index !== null;
+            })
+            .sort(l => l.index ?? Infinity)
+            .map(l => l.id)
+            .concat([ALL_REPOS_LIST_ID]);
     };
 
     public get_repo_lists = (): RepoList[] =>
