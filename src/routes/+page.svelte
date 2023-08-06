@@ -201,8 +201,6 @@
 
         repo_lists.update_list_repos(src_list_id, src_repo_ids);
 
-        repo_lists.save_to_local_storage();
-
         closest_i = -1;
         closest_side = null;
     };

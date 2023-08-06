@@ -3,8 +3,6 @@ import { RepoList, RepoListStorage } from "$lib/models/repo-list";
 import * as _ from 'lodash-es';
 import { derived, get, writable } from "svelte/store";
 
-export const REPO_LISTS_KEY = 'repo-lists';
-
 export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
 
 class RepositoryListsData {
@@ -29,14 +27,17 @@ class RepositoryListsData {
     public list_order: string[] = [];
 
     /**
-     * Load `lists`.
+     * Load data.
+     * @param repos The array of repositories.
      * @param lists The repository lists from storage.
      *
      * - Insert `lists` into the list map.
      * - Calculate the list order.
      * - Append the special All Repos list to the lists map and order array.
      */
-    public load_lists = (lists: RepoListStorage[]) => {
+    public load = (repos: Repo[], lists: RepoListStorage[]) => {
+        this.repositories = _.keyBy(repos, r => r.id.toString());
+
         this.lists = _.keyBy(lists.map(s => new RepoList(s)), rl => rl.id);
         this.lists[ALL_REPOS_LIST_ID] = RepoList.from(
             'All',
@@ -85,20 +86,15 @@ class RepositoryListsData {
     /**
      * Insert a repository list.
      * @param list The repository list.
-     *
-     * Note: local storage is updated.
      */
     public add_list = (list: RepoList) => {
         this.lists[list.id] = list;
         this.list_order.unshift(list.id);
-        this.to_local_storage();
     };
 
     /**
      * Delete a repository list.
      * @param id The ID of the repository list.
-     *
-     * Note: local storage is updated.
      */
     public delete_list = (id: string) => {
         const index = this.list_order.indexOf(id);
@@ -113,33 +109,52 @@ class RepositoryListsData {
         } else {
             delete this.lists[id];
         }
-
-        this.to_local_storage();
     };
+};
 
-    /**
-     * Write the repository lists data to local storage.
-     */
-    public to_local_storage = () => {
-        const data = Object.fromEntries<RepoListStorage>(
-            Object.values(this.lists)
-                .filter(l => l.id !== ALL_REPOS_LIST_ID)
-                .map(l => [l.id, { ...l, index: null }])
-        );
-        for (let i = 0; i < this.list_order.length; i++) {
-            const id = this.list_order[i];
-            if (id === ALL_REPOS_LIST_ID) continue;
-            if (data[id] === undefined) {
-                console.error(
-                    'Failed to commit lists to local storage, list not found for id:',
-                    id
-                );
-                continue;
-            }
-            data[id].index = i;
+export const REPO_LISTS_KEY = 'repo-lists';
+
+/**
+ * Load repository lists store data from local storage.
+ */
+function read_local_storage(): RepoListStorage[] {
+    try {
+        const data = JSON.parse(localStorage.getItem(REPO_LISTS_KEY) ?? '[]');
+        if (!Array.isArray(data)) {
+            throw `data is not an array: ${data}`;
         }
-        localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(Object.values(data)));
-    };
+
+        return data.map(RepoListStorage.parse);
+    } catch (error: any) {
+        console.error('Failed to load repository lists from local storage:', error);
+        return [];
+    }
+};
+
+/**
+ * Write repository lists store data to local storage.
+ */
+function write_to_local_storage({ lists, list_order }: RepositoryListsData) {
+    const data = Object.fromEntries(
+        Object.values(lists)
+            .filter(l => l.id !== ALL_REPOS_LIST_ID)
+            .map(l => [l.id, new RepoListStorage({ ...l, index: null })])
+    );
+
+    for (let i = 0; i < list_order.length; i++) {
+        const id = list_order[i];
+        if (id === ALL_REPOS_LIST_ID) continue;
+        if (data[id] === undefined) {
+            console.error(
+                'Failed to commit lists to local storage, list not found for id:',
+                id
+            );
+            continue;
+        }
+        data[id].index = i;
+    }
+
+    localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(Object.values(data)));
 };
 
 export class RepositoryLists {
@@ -170,27 +185,14 @@ export class RepositoryLists {
      * Load the repository lists store from local storage using `repos`.
      * @param repos The repositories from the GitHub API.
      */
-    public load_local_storage = (repos: Repo[]) => this.update(data => {
-        data.repositories = _.keyBy(repos, r => r.id.toString());
-
-        try {
-            const local_storage_data = localStorage.getItem(REPO_LISTS_KEY);
-            const repo_lists_data_raw = JSON.parse(local_storage_data ?? '[]');
-            if (!Array.isArray(repo_lists_data_raw)) {
-                console.error('data is not an array:', repo_lists_data_raw);
-                return data;
-            }
-
-            data.load_lists(repo_lists_data_raw.map(RepoListStorage.parse));
-        } catch (error: any) {
-            console.error('Failed to load repository lists from local storage:', error);
-        }
-    });
+    public load_local_storage = (repos: Repo[]) => {
+        this.update(data => data.load(repos, read_local_storage()));
+    };
 
     /**
-     * Save the repository lists store to local storage.
+     * Write the repository lists store to local storage.
      */
-    public save_to_local_storage = () => get(this.store).to_local_storage();
+    public write_to_local_storage = () => write_to_local_storage(get(this.store));
 
     /**
      * Get a repository by ID from the store.
@@ -205,24 +207,32 @@ export class RepositoryLists {
     public get_list = (id: string): Readonly<RepoList> => get(this.store).get_list(id);
 
     /**
-     * Insert a repository list into the store.
+     * Insert a repository list into the store and update local storage.
      * @param list The repository list.
      */
-    public add_list = (list: RepoList) => this.update(data => data.add_list(list));
+    public add_list = (list: RepoList) => this.update(data => {
+        data.add_list(list);
+        write_to_local_storage(data);
+    });
 
     /**
-     * Delete a repository list by ID from the store.
+     * Delete a repository list by ID from the store and update local storage.
      * @param list The ID of the repository list.
      */
-    public delete_list = (id: string) => this.update(data => data.delete_list(id));
+    public delete_list = (id: string) => this.update(data => {
+        data.delete_list(id);
+        write_to_local_storage(data);
+    });
 
     /**
-     * Update the array of repositories for a list by ID in the store.
+     * Update the array of repositories for a list by ID in the store and update
+     * local storage.
      * @param list_id The ID of the repository list.
      * @param repo_ids The new array of repository IDs for the list.
      */
     public update_list_repos = (list_id: string, repo_ids: number[]) => this.update(data => {
         data.lists[list_id].repo_ids = repo_ids;
+        write_to_local_storage(data);
     });
 }
 
