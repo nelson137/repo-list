@@ -3,6 +3,7 @@ import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { Repo } from '$lib/models/repo';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { ZodError } from 'zod';
 
 export type ResponsePayload = { repos: Repo[] } | App.Error;
 
@@ -13,9 +14,20 @@ export const GET = (async ({ locals }) => {
             per_page: 100,
             affiliation: 'owner',
         });
-        const repos = Repo.from_json_array(repos_data);
+        const repos = repos_data.map(Repo.parse);
         return json({ repos });
     } catch (error: any) {
-        return endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);
+        if (error instanceof ZodError) {
+            const message = error.issues
+                .map((iss, i) => `(${i + 1}) ${iss.message}: ${path_to_string(iss.path)}`)
+                .join('; ');
+            return endpoint_err(500, EndpointErrorReason.Data, message);
+        } else {
+            return endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);
+        }
     }
 }) satisfies RequestHandler;
+
+function path_to_string(path: (string | number)[]): string {
+    return path.map(p => typeof p === 'number' ? `[${p}]` : `.${p}`).join('');
+}

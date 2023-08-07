@@ -4,6 +4,7 @@ export enum EndpointErrorReason {
     Auth_Callback_InvalidCode = 'auth-invalid-code',
     Auth_NoToken = 'auth-no-token',
     Github = 'github',
+    Data = 'data',
     Other = 'other',
 }
 
@@ -16,6 +17,8 @@ function endpoint_err_message(reason: EndpointErrorReason, message?: string): st
             return 'No authentication token';
         case EndpointErrorReason.Github:
             return `GitHub Error: ${message}`;
+        case EndpointErrorReason.Data:
+            return `Data: ${message}`;
         case EndpointErrorReason.Other:
             return message ?? UNKNOWN_ERR_MSG;
     }

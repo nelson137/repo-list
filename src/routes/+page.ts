@@ -1,5 +1,5 @@
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
-import { Repo } from '$lib/models/repo';
+import type { Repo } from '$lib/models/repo';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import type { ResponsePayload as ReposApiPayload } from './api/github/repos/+server';
@@ -32,7 +32,7 @@ export const load = (async ({ fetch, parent }) => {
 
     if ('repos' in payload) {
         return {
-            repos: Repo.from_json_array(payload.repos ?? []),
+            repos: payload.repos,
         };
     }
 
