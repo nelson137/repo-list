@@ -45,13 +45,14 @@ class RepositoryListsData {
             ALL_REPOS_LIST_ID
         );
 
+        type IndexedRepoListStorage = RepoListStorage & { index: number };
         this.list_order = lists
-            .filter(l => {
-                if (l.index === null)
-                    console.warn('Skipping list from local storage with no index:', l);
-                return l.index !== null;
-            })
-            .sort(l => l.index ?? Infinity)
+            .filter((rls => {
+                if (rls.index === null)
+                    console.warn('Skipping list from local storage with no index:', rls);
+                return rls.index !== null;
+            }) as (_: RepoListStorage) => _ is IndexedRepoListStorage)
+            .sort((a, b) => a.index - b.index)
             .map(l => l.id)
             .concat([ALL_REPOS_LIST_ID]);
     };
