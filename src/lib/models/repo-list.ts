@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
 import { ZClass } from './zod-utils';
 
-const repoListSchema = z.object({
+export const repoListSchema = z.object({
     id: z.string().uuid().optional().default(() => uuid()).describe('The UUID of this list.'),
     name: z.string().describe('The name of this list.'),
     repo_ids: z.array(z.number().describe('The IDs of the [Repos](./repo.ts) in this list.')),
@@ -26,7 +26,7 @@ export class RepoList extends ZClass<RepoList>()(repoListSchema) {
     public static parse = (data: unknown): RepoListStorage => repoListStorageSchema.parse(data);
 }
 
-const repoListStorageSchema = repoListSchema.extend({
+export const repoListStorageSchema = repoListSchema.extend({
     index: z.number().nullable(),
 });
 

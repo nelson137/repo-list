@@ -5,7 +5,7 @@ import { derived, get, writable } from "svelte/store";
 
 export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
 
-class RepositoryListsData {
+export class RepositoryListsData {
     /**
      * A dictionary of the repository lists.
      *

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ZClass } from './zod-utils';
 
-const repoSchema = z.object({
+export const repoSchema = z.object({
     archived: z.boolean().describe(`Whether this repo is archived.`),
     description: z.string().describe(`The repo's description.`),
     disabled: z.boolean().describe(`Whether this repo is disabled.`),
