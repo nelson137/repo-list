@@ -85,7 +85,7 @@ export class RepositoryListsData {
     public get_list = (id: string): RepoList => this.lists[id];
 
     /**
-     * Insert a repository list.
+     * Prepend a repository list.
      * @param list The repository list.
      */
     public add_list = (list: RepoList) => {
@@ -208,7 +208,7 @@ export class RepositoryLists {
     public get_list = (id: string): Readonly<RepoList> => get(this.store).get_list(id);
 
     /**
-     * Insert a repository list into the store and update local storage.
+     * Prepend a repository list to the store and update local storage.
      * @param list The repository list.
      */
     public add_list = (list: RepoList) => this.update(data => {
