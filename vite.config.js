@@ -13,5 +13,8 @@ export default defineConfig({
     },
     test: {
         globals: true,
+        coverage: {
+            reporter: ['text', 'html'],
+        },
     }
 });

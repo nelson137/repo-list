@@ -4,6 +4,7 @@ node_modules
 /.svelte-kit
 /package
 vite.config.js.*.mjs
+/coverage
 .env
 .env.*
 !.env.example
