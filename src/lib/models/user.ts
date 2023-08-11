@@ -1,33 +1,19 @@
-import type { OctoEndpointData, OctoRest } from '$lib/server/api/octokit';
-import { Expose } from 'class-transformer';
-import { from_json } from './_model';
+import { z } from 'zod';
+import { ZClass } from './zod-utils';
 
-type EndpointData = OctoEndpointData<OctoRest['users']['getAuthenticated']>;
+export const userSchema = z.object({
+    avatar_url: z.string().describe(`URL of the user's profile picture (AKA avatar).`),
+    html_url: z.string().describe(`URL the user's profile.`),
+    id: z.number().describe(`The user's ID.`),
+    login: z.string().describe(`The user's username.`),
+    name: z.string().describe(`The user's full name.`),
+});
 
-export class User {
-    /** URL of the user's profile picture (AKA avatar). */
-    @Expose() avatar_url: string;
-    /** URL the user's profile. */
-    @Expose() html_url: string;
-    /** The user's ID. */
-    @Expose() id: number;
-    /** The user's username. */
-    @Expose() login: string;
-    /** The user's full name. */
-    @Expose() name: string;
-
+export class User extends ZClass<User>()(userSchema) {
     /**
-     * Deserialize an instance of this model.
-     * @param data The raw JSON object data from GitHub's API endpoint.
-     * @returns An instance of this model from `data`.
+     * Deserialize, validate, and construct an instance of this model.
+     * @param data The raw data.
+     * @returns An instance of this model.
      */
-    public static from_json = (data: Partial<EndpointData>): User => from_json(User, data);
-
-    /**
-     * Deserialize an array of instances of this model.
-     * @param data The raw JSON array data from GitHub's API endpoint.
-     * @returns An array of instances of this model from `data`.
-     */
-    public static from_json_array = (data: Partial<EndpointData>[]): User[] =>
-        from_json(User, data);
+    public static parse = (data: unknown): User => userSchema.parse(data);
 }
