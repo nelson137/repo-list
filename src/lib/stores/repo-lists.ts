@@ -118,7 +118,7 @@ export const REPO_LISTS_KEY = 'repo-lists';
 /**
  * Load repository lists store data from local storage.
  */
-function read_local_storage(): RepoListStorage[] {
+export function read_local_storage(): RepoListStorage[] {
     try {
         const data = JSON.parse(localStorage.getItem(REPO_LISTS_KEY) ?? '[]');
         if (!Array.isArray(data)) {

@@ -1,7 +1,7 @@
 import { repoSchema } from "$lib/models/repo";
-import { repoListSchema, repoListStorageSchema } from "$lib/models/repo-list";
+import { RepoList, repoListSchema, repoListStorageSchema } from "$lib/models/repo-list";
 import { z } from "zod";
-import { ALL_REPOS_LIST_ID, RepositoryListsData } from "./repo-lists";
+import { ALL_REPOS_LIST_ID, REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from "./repo-lists";
 import { generateMock } from "@anatine/zod-mock";
 import { createMockConsoleError, rand } from "$test/utils";
 
@@ -184,5 +184,79 @@ describe('RepositoryListsData', () => {
             expect(mockConsoleError).toHaveBeenCalledOnce();
             expect(mockConsoleError.mock.lastCall.join(' ')).toContain(id);
         });
+    });
+});
+
+describe('read_local_storage', () => {
+    const mockConsoleError = createMockConsoleError();
+    const spyGetItem = vi.fn();
+
+    beforeAll(() => {
+        vi.stubGlobal('localStorage', {
+            getItem: spyGetItem,
+            setItem: vi.fn(),
+        });
+    });
+
+    afterEach(() => {
+        spyGetItem.mockRestore();
+    });
+
+    afterAll(() => {
+        vi.unstubAllGlobals();
+    });
+
+    function compareLists(a: RepoList, b: RepoList): number {
+        return a.id.localeCompare(b.id);
+    }
+
+    it('should parse and return the data from local storage', () => {
+        const lists = generateMock(z.array(repoListStorageSchema).length(4));
+        const expectedLists = lists.map(ls => new RepoList(ls)).sort(compareLists);
+        spyGetItem.mockImplementation(() => JSON.stringify(lists));
+
+        const actualLists = read_local_storage();
+
+        expect(localStorage.getItem).toHaveBeenCalledWith(REPO_LISTS_KEY);
+        expect(actualLists.sort(compareLists)).toEqual(expectedLists);
+    });
+
+    it('should return an empty array when no data is in local storage', () => {
+        spyGetItem.mockImplementation(() => undefined);
+
+        const actualLists = read_local_storage();
+
+        expect(actualLists).toEqual([]);
+    });
+
+    it('should log and return an empty array when JSON parsing local storage fails', () => {
+        spyGetItem.mockImplementation(() => 'invalid json');
+
+        const actualLists = read_local_storage();
+
+        expect(mockConsoleError).toHaveBeenCalledOnce();
+        expect(mockConsoleError.mock.lastCall.join(' '))
+            .toContain('Failed to load repository lists from local storage:');
+        expect(actualLists).toEqual([]);
+    });
+
+    it('should log and return an empty array when the local storage data is not an array', () => {
+        spyGetItem.mockImplementation(() => '{}');
+
+        const actualLists = read_local_storage();
+
+        expect(mockConsoleError).toHaveBeenCalledOnce();
+        expect(mockConsoleError.mock.lastCall.join(' ')).toContain('data is not an array');
+        expect(actualLists).toEqual([]);
+    });
+
+    it('should log and return an empty array when validating the local storage data fails', () => {
+        spyGetItem.mockImplementation(() => '[{"invalidKey":"invalidValue"}]');
+
+        const actualLists = read_local_storage();
+
+        expect(mockConsoleError).toHaveBeenCalledOnce();
+        expect(mockConsoleError.mock.lastCall.join(' ')).toContain('"code": "invalid_type"');
+        expect(actualLists).toEqual([]);
     });
 });
