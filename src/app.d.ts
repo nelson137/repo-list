@@ -6,7 +6,6 @@ export { };
 // for information about these interfaces
 declare global {
     interface ImportMetaEnv {
-        APP_GITHUB_ACCESS_TOKEN: string;
         APP_CLIENT_ID: string;
         APP_CLIENT_SECRET: string;
         APP_GITHUB_REDIRECT_BASE_URL: string;
