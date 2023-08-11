@@ -3,8 +3,6 @@ import { defineConfig } from 'vite';
 import { fileURLToPath } from 'url';
 
 export default defineConfig({
-    envDir: './environments',
-    envPrefix: 'APP_',
     plugins: [sveltekit()],
     resolve: {
         alias: {

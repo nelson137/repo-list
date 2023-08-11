@@ -1,3 +1,4 @@
+import { __GITHUB_CLIENT_ID, __GITHUB_CLIENT_SECRET } from '$env/static/private';
 import { createOAuthAppAuth, type OAuthAppAuthInterface } from '@octokit/auth-oauth-app';
 import { Octokit } from 'octokit';
 
@@ -11,8 +12,8 @@ export let auth: OAuthAppAuthInterface;
 export const init = () => {
     auth = createOAuthAppAuth({
         clientType: 'oauth-app',
-        clientId: import.meta.env.APP_CLIENT_ID,
-        clientSecret: import.meta.env.APP_CLIENT_SECRET,
+        clientId: __GITHUB_CLIENT_ID,
+        clientSecret: __GITHUB_CLIENT_SECRET,
     });
 };
 
