@@ -1,4 +1,4 @@
-import { octokitFactory } from '$lib/api/octokit';
+import { octokitFactory } from '$lib/server/api/octokit';
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { User } from '$lib/models/user';
 import { json } from '@sveltejs/kit';

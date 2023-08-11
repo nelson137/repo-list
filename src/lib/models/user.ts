@@ -1,4 +1,4 @@
-import type { OctoEndpointData, OctoRest } from '$lib/api/octokit';
+import type { OctoEndpointData, OctoRest } from '$lib/server/api/octokit';
 import { Expose } from 'class-transformer';
 import { from_json } from './_model';
 

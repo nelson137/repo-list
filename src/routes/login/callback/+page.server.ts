@@ -1,4 +1,4 @@
-import { auth } from '$lib/api/octokit';
+import { auth } from '$lib/server/api/octokit';
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';

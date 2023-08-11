@@ -1,4 +1,4 @@
-import { init } from '$lib/api/octokit';
+import { init } from '$lib/server/api/octokit';
 import { EndpointErrorReason, endpoint_err_body } from '$lib/error';
 import { json, type Handle } from '@sveltejs/kit';
 import * as Cookie from 'cookie';
