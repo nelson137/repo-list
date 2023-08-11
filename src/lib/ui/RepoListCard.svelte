@@ -42,13 +42,19 @@
 
     const delete_list = (id: string) => repo_lists.delete_list(id);
 
+    const list_set_drag_indicator = (list: HTMLElement, x: number, y: number) => {
+        list.style.setProperty('--closest-x', `${x}px`);
+        list.style.setProperty('--closest-y', `${y}px`);
+        list.style.setProperty('--indicator-display', 'block');
+    };
+
     const list_clear_drag_indicator = (list: HTMLElement) =>
         list.style.removeProperty('--indicator-display');
 
     const _element_is_in_list = (o: any): boolean => {
         if (!o || typeof o !== 'object' || !(o.classList ?? true) || !(o.parentElement ?? true))
             return false;
-        return o.classList.contains('list') ? true : _element_is_in_list(o.parentElement);
+        return o.classList.contains('list') || _element_is_in_list(o.parentElement);
     };
 
     const drag_enter = (event: _DragEvent) => {
@@ -107,9 +113,7 @@
             }
         }
         if (closest_i < 0 || closest_side === null) {
-            list_el.style.setProperty('--closest-x', 12 + 'px');
-            list_el.style.setProperty('--closest-y', list_rect.height / 2 + 'px');
-            list_el.style.setProperty('--indicator-display', 'block');
+            list_set_drag_indicator(list_el, 12, list_rect.height / 2);
             return;
         }
 
@@ -122,73 +126,65 @@
             list_el.id === drag_src_list_id &&
             (closest_i === drag_start_index || closest_is_prev_right || closest_is_next_left)
         ) {
-            list_el.style.removeProperty('--indicator-display');
+            list_clear_drag_indicator(list_el);
         } else {
-            list_el.style.setProperty('--closest-x', indicator_x + 'px');
-            list_el.style.setProperty('--closest-y', indicator_y + 'px');
-            list_el.style.setProperty('--indicator-display', 'block');
+            list_set_drag_indicator(list_el, indicator_x, indicator_y);
         }
     };
 
     const drop = (event: _DragEvent) => {
-        const repo_index_str = event.dataTransfer?.getData(DRAG_DATA__REPO_INDEX);
-        if (!repo_index_str) {
-            console.error('Invalid drop: no repository index');
-            return;
-        }
-        const repo_index = parseInt(repo_index_str);
-        if (!Number.isSafeInteger(repo_index)) {
-            console.error('Invalid drop: invalid repository index:', repo_index_str);
-            return;
-        }
+        const event_data = {
+            string: (format: string, name: string): string => {
+                const data = event.dataTransfer?.getData(format);
+                if (!data) throw `Invalid drop: no ${name}`;
+                return data;
+            },
+            number: (format: string, name: string): number => {
+                const data = event_data.string(format, name);
+                const num = parseInt(data);
+                if (!Number.isSafeInteger(num)) throw `Invalid drop: invalid ${name}: ${data}`;
+                return num;
+            },
+        };
 
-        const repo_id_str = event.dataTransfer?.getData(DRAG_DATA__REPO_ID);
-        if (!repo_id_str) {
-            console.error('Invalid drop: no repository ID');
+        try {
+            const repo_index = event_data.number(DRAG_DATA__REPO_INDEX, 'repository index');
+            const repo_id = event_data.number(DRAG_DATA__REPO_ID, 'repository ID');
+            const src_list_id = event_data.string(DRAG_DATA__SRC_LIST_ID, 'source list ID');
+
+            const src_list = repo_lists.get_list(src_list_id);
+            if (!src_list) {
+                throw `Invalid drop: source repository list not found: ${src_list_id}`;
+            }
+            const src_repo_ids = repo_lists.get_list(src_list_id).repo_ids;
+
+            const cur_list_id = event.currentTarget.id;
+            const cur_list = repo_lists.get_list(cur_list_id);
+            if (!cur_list) {
+                throw `Invalid drop: target repository list not found: ${cur_list_id}`;
+            }
+
+            if (closest_side === null && cur_list.repo_ids.length > 0) {
+                throw 'Invalid drop: failed to calculate closest_side';
+            }
+            const new_index =
+                closest_side === null ? 0 : closest_i + (closest_side === Side.Before ? 0 : 1);
+
+            if (cur_list_id === src_list_id) {
+                // Reorder list
+                src_repo_ids.splice(new_index, 0, src_repo_ids[repo_index]);
+                src_repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
+            } else {
+                // Move or copy (if src is the special "All" list) to current list
+                repo_lists.get_list(cur_list_id).repo_ids.splice(new_index, 0, repo_id);
+                if (src_list_id !== ALL_REPOS_LIST_ID) src_repo_ids.splice(repo_index, 1);
+            }
+
+            repo_lists.update_list_repos(src_list_id, src_repo_ids);
+        } catch (error) {
+            console.error(error);
             return;
         }
-        const repo_id = parseInt(repo_id_str);
-        if (!Number.isSafeInteger(repo_id)) {
-            console.error('Invalid drop: invalid repository id:', repo_id_str);
-            return;
-        }
-
-        const src_list_id = event.dataTransfer?.getData(DRAG_DATA__SRC_LIST_ID);
-        if (!src_list_id) {
-            console.error('Invalid drop: no source list ID');
-            return;
-        }
-
-        const cur_list_id = event.currentTarget.id;
-        if (!repo_lists.get_list(cur_list_id)) {
-            console.error('Repository list not found for ID:', cur_list_id);
-            return;
-        }
-
-        if (!repo_lists.get_list(src_list_id)) {
-            console.error('Repository list not found for ID:', src_list_id);
-            return;
-        }
-        const src_repo_ids = repo_lists.get_list(src_list_id).repo_ids;
-
-        if (closest_side === null && repo_lists.get_list(cur_list_id).repo_ids.length > 0) {
-            console.error('Invalid drop: no closest_side');
-            return;
-        }
-        const new_index =
-            closest_side === null ? 0 : closest_i + (closest_side === Side.Before ? 0 : 1);
-
-        if (cur_list_id === src_list_id) {
-            // Reorder list
-            src_repo_ids.splice(new_index, 0, src_repo_ids[repo_index]);
-            src_repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
-        } else {
-            // Move or copy (if src is the special "All" list) to current list
-            repo_lists.get_list(cur_list_id).repo_ids.splice(new_index, 0, repo_id);
-            if (src_list_id !== ALL_REPOS_LIST_ID) src_repo_ids.splice(repo_index, 1);
-        }
-
-        repo_lists.update_list_repos(src_list_id, src_repo_ids);
 
         closest_i = -1;
         closest_side = null;
