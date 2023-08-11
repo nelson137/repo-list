@@ -3,7 +3,7 @@ import { ZClass } from './zod-utils';
 
 export const repoSchema = z.object({
     archived: z.boolean().describe(`Whether this repo is archived.`),
-    description: z.string().describe(`The repo's description.`),
+    description: z.string().nullable().describe(`The repo's description.`),
     disabled: z.boolean().describe(`Whether this repo is disabled.`),
     forks_count: z.number().describe('The number of forks of this repo.'),
     full_name: z.string().describe(`The repo's full name ("{owner_login}/{repo_name}").`),
