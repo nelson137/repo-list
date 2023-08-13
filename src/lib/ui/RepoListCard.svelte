@@ -14,6 +14,7 @@
     import { flip } from 'svelte/animate';
     import { ALL_REPOS_LIST_ID, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
+    import { repo_drag } from '$lib/stores/repo-card-drag';
 
     export let list: RepoList;
 
@@ -23,22 +24,6 @@
      * Wether a card is being dragged within this list.
      */
     let dragging_in_list = false;
-    /**
-     * The element ID of the source list from which the card being dragged.
-     */
-    let drag_src_list_id: string;
-    /**
-     * The index of the card being dragged.
-     */
-    let drag_start_index = -1;
-    /**
-     * The index of the card closest to the mouse.
-     */
-    let closest_i = -1;
-    /**
-     * The side of the closest card that is closest to the mouse.
-     */
-    let closest_side: Side | null = null;
 
     const delete_list = (id: string) => repo_lists.delete_list(id);
 
@@ -86,8 +71,8 @@
         // Determine which child element (card) and side the indicator should be shown
         const children = list_el.children;
         let closest_dist = Number.MAX_SAFE_INTEGER;
-        closest_i = -1;
-        closest_side = null;
+        let closest_i: number | null = null;
+        let closest_side: Side | null = null;
         let indicator_x = 0;
         let indicator_y = 0;
         for (let i = 0; i < children.length; i++) {
@@ -112,19 +97,22 @@
                 indicator_y = childCenterY - list_rect.top;
             }
         }
-        if (closest_i < 0 || closest_side === null) {
+        if (closest_i === null || closest_side === null) {
             list_set_drag_indicator(list_el, 12, list_rect.height / 2);
             return;
         }
 
+        repo_drag.drag_over(closest_i, closest_side);
+
+        const source = repo_drag.get_drag_source();
+
         // Enable the indicator on the determined card and side, disable all others
-        const closest_is_prev_right =
-            closest_i === drag_start_index - 1 && closest_side === Side.After;
-        const closest_is_next_left =
-            closest_i === drag_start_index + 1 && closest_side === Side.Before;
+        const closest_is_start_index = closest_i === source.index;
+        const closest_is_prev_right = closest_i === source.index - 1 && closest_side === Side.After;
+        const closest_is_next_left = closest_i === source.index + 1 && closest_side === Side.Before;
         if (
-            list_el.id === drag_src_list_id &&
-            (closest_i === drag_start_index || closest_is_prev_right || closest_is_next_left)
+            list_el.id === source.list_id &&
+            (closest_is_start_index || closest_is_prev_right || closest_is_next_left)
         ) {
             list_clear_drag_indicator(list_el);
         } else {
@@ -164,11 +152,12 @@
                 throw `Invalid drop: target repository list not found: ${cur_list_id}`;
             }
 
-            if (closest_side === null && cur_list.repo_ids.length > 0) {
+            const closest = repo_drag.get_indicator_loc();
+
+            if (closest === null && cur_list.repo_ids.length > 0) {
                 throw 'Invalid drop: failed to calculate closest_side';
             }
-            const new_index =
-                closest_side === null ? 0 : closest_i + (closest_side === Side.Before ? 0 : 1);
+            const new_index = closest ? closest.index + (closest.side === Side.Before ? 0 : 1) : 0;
 
             if (cur_list_id === src_list_id) {
                 // Reorder list
@@ -186,17 +175,13 @@
             return;
         }
 
-        closest_i = -1;
-        closest_side = null;
-
         list_clear_drag_indicator(event.currentTarget);
     };
 
     const card_drag_start = (event: CustomEvent<CardDragStartData>) => {
         const { index, list_id } = event.detail;
 
-        drag_src_list_id = list_id;
-        drag_start_index = index;
+        repo_drag.drag_start(list_id, index);
 
         const children = document.getElementById(list_id)?.children;
         if (!children) {
