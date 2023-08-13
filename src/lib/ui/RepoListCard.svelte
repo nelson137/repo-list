@@ -188,6 +188,8 @@
 
         closest_i = -1;
         closest_side = null;
+
+        list_clear_drag_indicator(event.currentTarget);
     };
 
     const card_drag_start = (event: CustomEvent<CardDragStartData>) => {
