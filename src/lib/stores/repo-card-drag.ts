@@ -35,7 +35,17 @@ export class RepoCardDragData {
      * The drag indicator -- the repository card closest to the mouse.
      * mouse.
      */
-    public indicator: DragIndicator | null = null;
+    public indicator: DragIndicator | null;
+
+    constructor(source: DragSource, indicator: DragIndicator | null = null) {
+        this.source = source;
+        this.indicator = indicator;
+    }
+
+    public clone = (): RepoCardDragData => {
+        const { source, indicator } = JSON.parse(JSON.stringify(this));
+        return new RepoCardDragData(source, indicator);
+    };
 }
 
 export class RepoCardDrag {
@@ -48,8 +58,9 @@ export class RepoCardDrag {
      */
     private update = (callback: (nextData: RepoCardDragData) => void) =>
         this.store.update(old_data => {
-            const new_data = new RepoCardDragData();
-            Object.assign(new_data, JSON.parse(JSON.stringify(old_data)));
+            if (old_data === null)
+                throw 'Cannot update drag data, there is no ongoing drag session';
+            const new_data = old_data.clone();
             callback(new_data);
             return new_data;
         });
@@ -59,12 +70,8 @@ export class RepoCardDrag {
      * @param list_id The ID of the list from which the card is being dragged.
      * @param index The index of the card in the source list.
      */
-    public drag_start = (list_id: string, index: number) => {
-        const data = new RepoCardDragData();
-        data.source = { list_id, index };
-        data.indicator = null;
-        this.store.set(data);
-    };
+    public drag_start = (list_id: string, index: number) =>
+        this.store.set(new RepoCardDragData({ list_id, index }));
 
     /**
      * Update the indicator location.
