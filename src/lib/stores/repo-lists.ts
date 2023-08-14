@@ -13,6 +13,11 @@ function cloneMapObj<T extends { clone: () => T }>(
 
 export class RepositoryListsData {
     /**
+     * An array of list IDs indicating the order in which they should be displayed.
+     */
+    public list_order: string[] = [];
+
+    /**
      * A dictionary of the repository lists.
      *
      * This allows for quick access to a list by ID.
@@ -26,11 +31,6 @@ export class RepositoryListsData {
      * access to a repo by ID.
      */
     public repositories: { [id: string]: Repo } = {};
-
-    /**
-     * An array of list IDs indicating the order in which they should be displayed.
-     */
-    public list_order: string[] = [];
 
     public clone = (): RepositoryListsData => {
         const new_data = new RepositoryListsData();
