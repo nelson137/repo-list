@@ -1,6 +1,4 @@
-import { RepoList, repoListSchema } from "$lib/models/repo-list";
 import { ALL_REPOS_LIST_ID, REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from "./repo-lists";
-import { generateMock } from "@anatine/zod-mock";
 import { createMockConsoleError, rand } from "$test/utils";
 
 describe('RepositoryListsData', () => {
@@ -131,7 +129,7 @@ describe('RepositoryListsData', () => {
     describe('add_list', () => {
         it('should prepend a list', () => {
             fillSut();
-            const list = new RepoList(generateMock(repoListSchema));
+            const list = rand.model.repoList();
 
             sut.add_list(list);
 

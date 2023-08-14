@@ -15,6 +15,10 @@ export const rand = {
 
     choice: <T>(array: T[]): T => array[rand.number(array.length - 1)],
 
+    model: {
+        repoList: () => new RepoList(generateMock(repoListSchema)),
+    },
+
     /**
      * Arguments (a) returns a number in the range [0,a].
      * Arguments (a, b) returns a number in the range [a,b].
