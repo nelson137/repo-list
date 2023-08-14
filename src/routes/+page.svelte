@@ -9,11 +9,12 @@
     import { page } from '$app/stores';
     import { repo_lists, lists } from '$lib/stores/repo-lists';
     import RepoListCard from '$lib/ui/RepoListCard.svelte';
+    import { Repo } from '$lib/models/repo';
 
     export let data: PageData;
 
     onMount(() => {
-        repo_lists.load_local_storage($page.data.repos ?? []);
+        repo_lists.load_local_storage(Repo.parse_array($page.data.repos));
     });
 
     const create_list = (event: CustomEvent<CreateListOkData>) =>

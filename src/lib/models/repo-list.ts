@@ -23,7 +23,9 @@ export class RepoList extends ZClass<RepoList>()(repoListSchema) {
      * @param data The raw data.
      * @returns An instance of this model.
      */
-    public static parse = (data: unknown): RepoListStorage => repoListStorageSchema.parse(data);
+    public static parse = (data: unknown): RepoList => new RepoList(repoListSchema.parse(data));
+
+    public clone = (): RepoList => new RepoList(JSON.parse(JSON.stringify(this)));
 }
 
 export const repoListStorageSchema = repoListSchema.extend({
@@ -36,5 +38,6 @@ export class RepoListStorage extends ZClass<RepoListStorage>()(repoListStorageSc
      * @param data The raw data.
      * @returns An instance of this model.
      */
-    public static parse = (data: unknown): RepoListStorage => repoListStorageSchema.parse(data);
+    public static parse = (data: unknown): RepoListStorage =>
+        new RepoListStorage(repoListStorageSchema.parse(data));
 }

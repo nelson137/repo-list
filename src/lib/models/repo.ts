@@ -21,5 +21,10 @@ export class Repo extends ZClass<Repo>()(repoSchema) {
      * @param data The raw data.
      * @returns An instance of this model.
      */
-    public static parse = (data: unknown): Repo => repoSchema.parse(data);
+    public static parse = (data: unknown): Repo => new Repo(repoSchema.parse(data));
+
+    public static parse_array = (data: unknown): Repo[] =>
+        z.array(repoSchema).parse(data).map(d => new Repo(d));
+
+    public clone = (): Repo => new Repo(JSON.parse(JSON.stringify(this)));
 }

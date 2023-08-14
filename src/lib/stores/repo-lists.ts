@@ -5,6 +5,12 @@ import { derived, get, writable } from "svelte/store";
 
 export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
 
+function cloneMapObj<T extends { clone: () => T }>(
+    map: { [key: string]: T }
+): { [key: string]: T } {
+    return Object.fromEntries(Object.entries(map).map(([k, v]) => [`${k}`, v.clone()]));
+}
+
 export class RepositoryListsData {
     /**
      * A dictionary of the repository lists.
@@ -25,6 +31,14 @@ export class RepositoryListsData {
      * An array of list IDs indicating the order in which they should be displayed.
      */
     public list_order: string[] = [];
+
+    public clone = (): RepositoryListsData => {
+        const new_data = new RepositoryListsData();
+        new_data.repositories = cloneMapObj(this.repositories);
+        new_data.lists = cloneMapObj(this.lists);
+        new_data.list_order = JSON.parse(JSON.stringify(this.list_order));
+        return new_data;
+    };
 
     /**
      * Load data.
@@ -175,11 +189,10 @@ export class RepositoryLists {
      * and updates it.
      */
     private update = (callback: (nextData: RepositoryListsData) => void) =>
-        this.store.update(rld => {
-            const newRld = new RepositoryListsData();
-            Object.assign(newRld, JSON.parse(JSON.stringify(rld)));
-            callback(newRld);
-            return newRld;
+        this.store.update(old_data => {
+            const new_data = old_data.clone();
+            callback(new_data);
+            return new_data;
         });
 
     /**

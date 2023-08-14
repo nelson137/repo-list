@@ -1,6 +1,4 @@
-import { repoSchema } from "$lib/models/repo";
-import { RepoList, repoListSchema, repoListStorageSchema } from "$lib/models/repo-list";
-import { z } from "zod";
+import { RepoList, repoListSchema } from "$lib/models/repo-list";
 import { ALL_REPOS_LIST_ID, REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from "./repo-lists";
 import { generateMock } from "@anatine/zod-mock";
 import { createMockConsoleError, rand } from "$test/utils";
@@ -9,12 +7,12 @@ describe('RepositoryListsData', () => {
     let sut: RepositoryListsData;
 
     function fillSut() {
-        const lists = generateMock(z.array(repoListStorageSchema).length(3));
+        const lists = rand.array.repoListStorage();
         const repo_ids = new Set(lists.flatMap(l => l.repo_ids));
         if (repo_ids.size === 0)
             throw 'generated array of repo lists has no repositories';
 
-        const repos = generateMock(z.array(repoSchema).length(repo_ids.size));
+        const repos = rand.array.repo(repo_ids.size);
         let i = 0;
         for (const id of repo_ids) repos[i++].id = id;
 
@@ -27,7 +25,7 @@ describe('RepositoryListsData', () => {
 
     describe('load', () => {
         it('should load repositories', () => {
-            const repos = generateMock(z.array(repoSchema).length(3));
+            const repos = rand.array.repo();
             const expectedReposMap = Object.fromEntries(repos.map(r => [r.id, r]));
 
             sut.load(repos, []);
@@ -36,7 +34,7 @@ describe('RepositoryListsData', () => {
         });
 
         it('should load lists', () => {
-            const lists = generateMock(z.array(repoListStorageSchema).length(3));
+            const lists = rand.array.repoListStorage();
             const expectedListsMap = Object.fromEntries(lists.map(l => [l.id, l]));
 
             sut.load([], lists);
@@ -45,7 +43,7 @@ describe('RepositoryListsData', () => {
         });
 
         it('should calculate the list order', () => {
-            const lists = generateMock(z.array(repoListStorageSchema).length(3));
+            const lists = rand.array.repoListStorage();
             lists[0].index = 2;
             lists[1].index = 1;
             lists[2].index = 0;
@@ -133,7 +131,7 @@ describe('RepositoryListsData', () => {
     describe('add_list', () => {
         it('should prepend a list', () => {
             fillSut();
-            const list = generateMock(repoListSchema);
+            const list = new RepoList(generateMock(repoListSchema));
 
             sut.add_list(list);
 
@@ -206,14 +204,13 @@ describe('read_local_storage', () => {
         vi.unstubAllGlobals();
     });
 
-    function compareLists(a: RepoList, b: RepoList): number {
+    function compareLists<T extends { id: string }>(a: T, b: T): number {
         return a.id.localeCompare(b.id);
     }
 
     it('should parse and return the data from local storage', () => {
-        const lists = generateMock(z.array(repoListStorageSchema).length(4));
-        const expectedLists = lists.map(ls => new RepoList(ls)).sort(compareLists);
-        spyGetItem.mockImplementation(() => JSON.stringify(lists));
+        const expectedLists = rand.array.repoListStorage().sort(compareLists);
+        spyGetItem.mockImplementation(() => JSON.stringify(expectedLists));
 
         const actualLists = read_local_storage();
 
