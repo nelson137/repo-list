@@ -26,11 +26,10 @@
 
 <form on:submit|preventDefault={on_ok}>
     <div class="input-wrapper">
-        <span class="label">New list name:&nbsp;&nbsp;</span>
-        <input bind:this={first_input} bind:value={input_value} />
+        <label for="new-list-name">New list name:&nbsp;&nbsp;</label>
+        <input id="new-list-name" bind:this={first_input} bind:value={input_value} />
     </div>
 
-    <!-- TODO: style dialog box -->
     <div class="modal-buttons">
         <button class="modal-button-cancel" type="button" on:click={on_cancel}>Cancel</button>
         <button class="modal-button-ok" type="submit">Ok</button>
@@ -43,7 +42,8 @@
         display: flex;
         flex-direction: row;
 
-        .label {
+        label,
+        input {
             color: black;
         }
 
