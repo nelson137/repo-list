@@ -1,25 +1,21 @@
 <script lang="ts">
-    import {
-        DRAG_DATA__REPO_ID,
-        DRAG_DATA__REPO_INDEX,
-        DRAG_DATA__SRC_LIST_ID,
-        type _DragEvent,
-    } from '$lib/drag-and-drop';
+    import type { _DragEvent } from '$lib/drag-and-drop';
     import type { Repo } from '$lib/models/repo';
     import GitForkSvg from '$lib/ui/svgs/GitForkSvg.svelte';
     import GitStarSvg from '$lib/ui/svgs/GitStarSvg.svelte';
     import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
-    import type { CardDragStartData } from './events';
     import ExternalLink from './svgs/ExternalLink.svelte';
+    import type { DragSource } from '$lib/stores/repo-card-drag';
 
+    export let id: number;
     export let list_id: string;
     export let index: number;
     export let repo: Repo;
     export let card_disabled: boolean;
 
     const dispatch = createEventDispatcher<{
-        card_drag_start: CardDragStartData;
+        card_drag_start: DragSource;
         card_drag_end: undefined;
     }>();
 
@@ -29,14 +25,9 @@
 
     let card_dragging = false;
 
-    const drag_start = (event: _DragEvent) => {
+    const drag_start = (_event: _DragEvent) => {
         card_dragging = true;
-        if (event.dataTransfer) {
-            event.dataTransfer.setData(DRAG_DATA__REPO_INDEX, index.toString());
-            event.dataTransfer.setData(DRAG_DATA__REPO_ID, event.currentTarget.id);
-            event.dataTransfer.setData(DRAG_DATA__SRC_LIST_ID, list_id);
-            dispatch('card_drag_start', { index, list_id });
-        }
+        dispatch('card_drag_start', { list_id, repo_id: id, repo_index: index });
     };
 
     const drag_end = (_event: _DragEvent) => {

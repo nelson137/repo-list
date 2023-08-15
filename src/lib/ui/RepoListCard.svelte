@@ -1,20 +1,13 @@
 <script lang="ts">
-    import {
-        DRAG_DATA__REPO_ID,
-        DRAG_DATA__REPO_INDEX,
-        DRAG_DATA__SRC_LIST_ID,
-        Side,
-        type _DragEvent,
-    } from '$lib/drag-and-drop';
+    import { Side, type _DragEvent } from '$lib/drag-and-drop';
     import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
-    import type { CardDragStartData } from '$lib/ui/events';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
     import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
     import { ALL_REPOS_LIST_ID, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
-    import { repo_drag } from '$lib/stores/repo-card-drag';
+    import { repo_drag, type DragSource } from '$lib/stores/repo-card-drag';
 
     export let list: RepoList;
 
@@ -107,9 +100,11 @@
         const source = repo_drag.get_drag_source();
 
         // Enable the indicator on the determined card and side, disable all others
-        const closest_is_start_index = closest_i === source.index;
-        const closest_is_prev_right = closest_i === source.index - 1 && closest_side === Side.After;
-        const closest_is_next_left = closest_i === source.index + 1 && closest_side === Side.Before;
+        const closest_is_start_index = closest_i === source.repo_index;
+        const closest_is_prev_right =
+            closest_i === source.repo_index - 1 && closest_side === Side.After;
+        const closest_is_next_left =
+            closest_i === source.repo_index + 1 && closest_side === Side.Before;
         if (
             list_el.id === source.list_id &&
             (closest_is_start_index || closest_is_prev_right || closest_is_next_left)
@@ -121,24 +116,8 @@
     };
 
     const drop = (event: _DragEvent) => {
-        const event_data = {
-            string: (format: string, name: string): string => {
-                const data = event.dataTransfer?.getData(format);
-                if (!data) throw `Invalid drop: no ${name}`;
-                return data;
-            },
-            number: (format: string, name: string): number => {
-                const data = event_data.string(format, name);
-                const num = parseInt(data);
-                if (!Number.isSafeInteger(num)) throw `Invalid drop: invalid ${name}: ${data}`;
-                return num;
-            },
-        };
-
         try {
-            const repo_index = event_data.number(DRAG_DATA__REPO_INDEX, 'repository index');
-            const repo_id = event_data.number(DRAG_DATA__REPO_ID, 'repository ID');
-            const src_list_id = event_data.string(DRAG_DATA__SRC_LIST_ID, 'source list ID');
+            const { list_id: src_list_id, repo_id, repo_index } = repo_drag.get_drag_source();
 
             const src_list = repo_lists.get_list(src_list_id);
             if (!src_list) {
@@ -178,11 +157,10 @@
         list_clear_drag_indicator(event.currentTarget);
     };
 
-    const card_drag_start = (event: CustomEvent<CardDragStartData>) => {
-        const { index, list_id } = event.detail;
+    const card_drag_start = (event: CustomEvent<DragSource>) => {
+        repo_drag.drag_start(event.detail);
 
-        repo_drag.drag_start(list_id, index);
-
+        const { list_id } = event.detail;
         const children = document.getElementById(list_id)?.children;
         if (!children) {
             console.error('Failed to get list element with id:', list_id);
@@ -226,6 +204,7 @@
             {#each list.repo_ids as r_id, i (r_id)}
                 <div class="repo-card-wrapper" animate:flip={{ duration: d => Math.sqrt(d * 500) }}>
                     <RepoCard
+                        id={r_id}
                         list_id={list.id}
                         index={i}
                         repo={repo_lists.get_repo(r_id)}

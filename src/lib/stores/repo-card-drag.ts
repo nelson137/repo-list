@@ -8,9 +8,14 @@ export type DragSource = {
     list_id: string;
 
     /**
+     * The ID of the repository being dragged.
+     */
+    repo_id: number;
+
+    /**
      * The index of the card being dragged in the source list.
      */
-    index: number;
+    repo_index: number;
 };
 
 export type DragIndicator = {
@@ -70,8 +75,8 @@ export class RepoCardDrag {
      * @param list_id The ID of the list from which the card is being dragged.
      * @param index The index of the card in the source list.
      */
-    public drag_start = (list_id: string, index: number) =>
-        this.store.set(new RepoCardDragData({ list_id, index }));
+    public drag_start = (source: DragSource) =>
+        this.store.set(new RepoCardDragData(source));
 
     /**
      * Update the indicator location.
