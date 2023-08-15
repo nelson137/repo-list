@@ -1,11 +1,17 @@
 <script lang="ts">
     import { DialogAction, set_dialog_state } from '$lib/stores/create-dialog-state';
-    import { getContext } from 'svelte';
+    import { getContext, onMount } from 'svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
     let input_value: string | undefined;
 
+    let first_input: HTMLElement;
+
     const { close } = getContext<ModalContext>('simple-modal');
+
+    onMount(() => {
+        first_input.focus();
+    });
 
     const on_cancel = () => {
         set_dialog_state(DialogAction.Canceled);
@@ -20,7 +26,7 @@
 
 <div class="input-wrapper">
     <span class="label">New list name:&nbsp;&nbsp;</span>
-    <input bind:value={input_value} />
+    <input bind:this={first_input} bind:value={input_value} />
 </div>
 
 <!-- TODO: style dialog box -->
