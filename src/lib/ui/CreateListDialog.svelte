@@ -24,16 +24,18 @@
     };
 </script>
 
-<div class="input-wrapper">
-    <span class="label">New list name:&nbsp;&nbsp;</span>
-    <input bind:this={first_input} bind:value={input_value} />
-</div>
+<form on:submit|preventDefault={on_ok}>
+    <div class="input-wrapper">
+        <span class="label">New list name:&nbsp;&nbsp;</span>
+        <input bind:this={first_input} bind:value={input_value} />
+    </div>
 
-<!-- TODO: style dialog box -->
-<div class="modal-buttons">
-    <button class="modal-button-cancel" on:click={on_cancel}>Cancel</button>
-    <button class="modal-button-ok" on:click={on_ok}>Ok</button>
-</div>
+    <!-- TODO: style dialog box -->
+    <div class="modal-buttons">
+        <button class="modal-button-cancel" type="button" on:click={on_cancel}>Cancel</button>
+        <button class="modal-button-ok" type="submit">Ok</button>
+    </div>
+</form>
 
 <style lang="scss">
     .input-wrapper {
