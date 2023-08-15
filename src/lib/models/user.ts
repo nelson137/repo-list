@@ -15,5 +15,5 @@ export class User extends ZClass<User>()(userSchema) {
      * @param data The raw data.
      * @returns An instance of this model.
      */
-    public static parse = (data: unknown): User => userSchema.parse(data);
+    public static parse = (data: unknown): User => new User(userSchema.parse(data));
 }
