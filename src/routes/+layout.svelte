@@ -29,7 +29,7 @@
 </svelte:head>
 
 <header>
-    <span>GitHub Face</span>
+    <span>Repo List</span>
     <div class="flex-spacer" />
     {#if data.logged_in}
         <details class="profile" bind:this={profile_menu_details}>
