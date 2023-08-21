@@ -43,7 +43,6 @@
 </script>
 
 <div
-    id={repo.id.toString()}
     data-testid="card"
     class="card"
     class:card_dragging
