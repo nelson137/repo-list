@@ -7,7 +7,7 @@
     import { flip } from 'svelte/animate';
     import { ALL_REPOS_LIST_ID, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
-    import { repo_drag, type DragSource } from '$lib/stores/repo-card-drag';
+    import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
 
     export let list: RepoList;
 

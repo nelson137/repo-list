@@ -30,7 +30,7 @@ export type DragIndicator = {
     side: Side;
 };
 
-export class RepoCardDragData {
+export class RepoDragData {
     /**
      * The source location of the repository drag.
      */
@@ -47,21 +47,21 @@ export class RepoCardDragData {
         this.indicator = indicator;
     }
 
-    public clone = (): RepoCardDragData => {
+    public clone = (): RepoDragData => {
         const { source, indicator } = JSON.parse(JSON.stringify(this));
-        return new RepoCardDragData(source, indicator);
+        return new RepoDragData(source, indicator);
     };
 }
 
-export class RepoCardDragStore {
-    private store = writable<RepoCardDragData | null>(null);
+export class RepoDragStore {
+    private store = writable<RepoDragData | null>(null);
 
     /**
      * Update the repository card drag store data, immutably.
      * @param callback The callback that takes a copy of the current store value
      * and updates it.
      */
-    private update = (callback: (nextData: RepoCardDragData) => void) =>
+    private update = (callback: (nextData: RepoDragData) => void) =>
         this.store.update(old_data => {
             if (old_data === null)
                 throw 'Cannot update drag data, there is no ongoing drag session';
@@ -76,7 +76,7 @@ export class RepoCardDragStore {
      * @param index The index of the card in the source list.
      */
     public drag_start = (source: DragSource) =>
-        this.store.set(new RepoCardDragData(source));
+        this.store.set(new RepoDragData(source));
 
     /**
      * Update the indicator location.
@@ -113,4 +113,4 @@ export class RepoCardDragStore {
     };
 }
 
-export const repo_drag = new RepoCardDragStore();
+export const repo_drag = new RepoDragStore();

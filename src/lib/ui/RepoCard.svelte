@@ -6,7 +6,7 @@
     import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
     import ExternalLink from './svgs/ExternalLink.svelte';
-    import type { DragSource } from '$lib/stores/repo-card-drag';
+    import type { DragSource } from '$lib/stores/repo-drag';
     import { ALL_REPOS_LIST_ID } from '$lib/stores/repo-lists';
 
     export let id: number;
