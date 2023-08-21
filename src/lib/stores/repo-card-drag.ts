@@ -53,7 +53,7 @@ export class RepoCardDragData {
     };
 }
 
-export class RepoCardDrag {
+export class RepoCardDragStore {
     private store = writable<RepoCardDragData | null>(null);
 
     /**
@@ -113,4 +113,4 @@ export class RepoCardDrag {
     };
 }
 
-export const repo_drag = new RepoCardDrag();
+export const repo_drag = new RepoCardDragStore();

@@ -172,7 +172,7 @@ function write_to_local_storage({ lists, list_order }: RepositoryListsData) {
     localStorage.setItem(REPO_LISTS_KEY, JSON.stringify(Object.values(data)));
 };
 
-export class RepositoryLists {
+export class RepositoryListsStore {
     /**
      * The store for the repository lists data.
      */
@@ -253,7 +253,7 @@ export class RepositoryLists {
 /**
  * The repository lists store API.
  */
-export const repo_lists = new RepositoryLists();
+export const repo_lists = new RepositoryListsStore();
 
 /**
  * The repository lists array store.
