@@ -16,6 +16,7 @@ export const rand = {
     choice: <T>(array: T[]): T => array[rand.number(array.length - 1)],
 
     model: {
+        repo: () => new Repo(generateMock(repoSchema)),
         repoList: () => new RepoList(generateMock(repoListSchema)),
     },
 
@@ -48,4 +49,19 @@ export function createMockConsoleError() {
     });
 
     return mock;
+}
+
+/**
+ * [Source](https://github.com/testing-library/svelte-testing-library/issues/206#issuecomment-1470158576)
+ */
+export function mockAnimations() {
+    beforeEach(() => {
+        vi.stubGlobal('requestAnimationFrame', (fn: FrameRequestCallback) => {
+            return window.setTimeout(() => fn(Date.now()), 0);
+        });
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
 }

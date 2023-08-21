@@ -44,6 +44,7 @@
 
 <div
     id={repo.id.toString()}
+    data-testid="card"
     class="card"
     class:card_dragging
     class:card_disabled
@@ -55,11 +56,12 @@
     role="listitem"
 >
     <div class="card-header">
-        <span>{repo.name}</span>
+        <span data-testid="name">{repo.name}</span>
         <div class="open-button-wrapper">
             {#if card_hover}
                 <a
                     href={repo.html_url}
+                    data-testid="open-link"
                     class="open-button"
                     transition:fly={{ x: 8, duration: 200 }}
                 >
@@ -71,11 +73,11 @@
     <div class="card-content">
         <div class="card-content-item">
             <GitStarSvg />
-            <span>{repo.stargazers_count}</span>
+            <span data-testid="stargazers-count">{repo.stargazers_count}</span>
         </div>
         <div class="card-content-item">
             <GitForkSvg />
-            <span>{repo.forks_count}</span>
+            <span data-testid="forks-count">{repo.forks_count}</span>
         </div>
     </div>
 </div>
