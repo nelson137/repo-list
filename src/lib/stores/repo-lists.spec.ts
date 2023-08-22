@@ -22,15 +22,6 @@ describe('RepositoryListsData', () => {
     });
 
     describe('load', () => {
-        it('should load repositories', () => {
-            const repos = rand.array.repo();
-            const expectedReposMap = Object.fromEntries(repos.map(r => [r.id, r]));
-
-            sut.load(repos, []);
-
-            expect(sut.repositories).toEqual(expectedReposMap);
-        });
-
         it('should load lists', () => {
             const lists = rand.array.repoListStorage();
             const expectedListsMap = Object.fromEntries(lists.map(l => [l.id, l]));
@@ -84,25 +75,6 @@ describe('RepositoryListsData', () => {
             expect(mockConsoleError.mock.lastCall.join(' ')).toContain(unexpectedId);
             expect(actualLists).toHaveLength(1);
             expect(actualLists[0].id).toEqual(ALL_REPOS_LIST_ID);
-        });
-    });
-
-    describe('get_repo', () => {
-        it('should return the repository with the given ID', () => {
-            fillSut();
-            const expectedRepo = rand.choice(Object.values(sut.repositories));
-
-            const actualRepo = sut.get_repo(expectedRepo.id);
-
-            expect(actualRepo).toEqual(expectedRepo);
-        });
-
-        it('should return undefined for an unexpected ID', () => {
-            const unexpectedId = rand.uuid();
-
-            const actualRepo = sut.get_repo(unexpectedId);
-
-            expect(actualRepo).toBeUndefined();
         });
     });
 

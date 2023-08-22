@@ -8,6 +8,7 @@
     import { ALL_REPOS_LIST_ID, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
+    import { repos } from '$lib/stores/repos';
 
     export let list: RepoList;
 
@@ -207,7 +208,7 @@
                         id={r_id}
                         list_id={list.id}
                         index={i}
-                        repo={repo_lists.get_repo(r_id)}
+                        repo={repos.get_repo(r_id)}
                         card_disabled={dragging_in_list && is_all_repos_list}
                         on:card_drag_start={card_drag_start}
                         on:card_drag_end={card_drag_end}

@@ -2,14 +2,10 @@ import type { Repo } from "$lib/models/repo";
 import { RepoList, RepoListStorage } from "$lib/models/repo-list";
 import * as _ from 'lodash-es';
 import { derived, get, writable } from "svelte/store";
+import { cloneMapObj } from "./utils";
+import { repos as repos_store } from "./repos";
 
 export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
-
-function cloneMapObj<T extends { clone: () => T }>(
-    map: { [key: string]: T }
-): { [key: string]: T } {
-    return Object.fromEntries(Object.entries(map).map(([k, v]) => [`${k}`, v.clone()]));
-}
 
 export class RepositoryListsData {
     /**
@@ -24,17 +20,8 @@ export class RepositoryListsData {
      */
     public lists: { [id: string]: RepoList } = {};
 
-    /**
-     * A dictionary of the repositories.
-     *
-     * Repositories are stored in the lists by ID only. This allows for quick
-     * access to a repo by ID.
-     */
-    public repositories: { [id: string]: Repo } = {};
-
     public clone = (): RepositoryListsData => {
         const new_data = new RepositoryListsData();
-        new_data.repositories = cloneMapObj(this.repositories);
         new_data.lists = cloneMapObj(this.lists);
         new_data.list_order = JSON.parse(JSON.stringify(this.list_order));
         return new_data;
@@ -50,12 +37,10 @@ export class RepositoryListsData {
      * - Append the special All Repos list to the lists map and order array.
      */
     public load = (repos: Repo[], lists: RepoListStorage[]) => {
-        this.repositories = _.keyBy(repos, r => r.id.toString());
-
         this.lists = _.keyBy(lists.map(s => new RepoList(s)), rl => rl.id);
         this.lists[ALL_REPOS_LIST_ID] = RepoList.from(
             'All',
-            Object.values(this.repositories).map(r => r.id),
+            repos.map(r => r.id),
             ALL_REPOS_LIST_ID
         );
 
@@ -85,12 +70,6 @@ export class RepositoryListsData {
                 return true;
             })
             .map(id => this.lists[id]);
-
-    /**
-     * Get a repository by ID.
-     * @param id The ID of the repository.
-     */
-    public get_repo = (id: number | string): Repo => this.repositories[id.toString()];
 
     /**
      * Get a repository list by ID.
@@ -128,6 +107,17 @@ export class RepositoryListsData {
 };
 
 export const REPO_LISTS_KEY = 'repo-lists';
+
+/**
+ * Load the repository lists store and the repositories store from local storage
+ * using `repos`.
+ * @param repos The repositories from the GitHub API.
+ */
+export function load_local_storage(repos: Repo[]) {
+    const list_storages = read_local_storage();
+    repo_lists.load(repos, list_storages);
+    repos_store.load(repos);
+}
 
 /**
  * Load repository lists store data from local storage.
@@ -196,23 +186,17 @@ export class RepositoryListsStore {
         });
 
     /**
-     * Load the repository lists store from local storage using `repos`.
+     * Load the repository lists data.
      * @param repos The repositories from the GitHub API.
+     * @param list_storages The repository lists from local storage.
      */
-    public load_local_storage = (repos: Repo[]) => {
-        this.update(data => data.load(repos, read_local_storage()));
-    };
+    public load = (repos: Repo[], list_storages: RepoListStorage[]) =>
+        this.update(data => data.load(repos, list_storages));
 
     /**
      * Write the repository lists store to local storage.
      */
     public write_to_local_storage = () => write_to_local_storage(get(this.store));
-
-    /**
-     * Get a repository by ID from the store.
-     * @param id The ID of the repository.
-     */
-    public get_repo = (id: number): Readonly<Repo> => get(this.store).get_repo(id);
 
     /**
      * Get a repository list by ID from the store.
