@@ -22,24 +22,22 @@
 </script>
 
 {#if data?.logged_in}
-    {#if $lists}
-        <div class="create-list-wrapper">
-            <div class="create-list">
-                <div class="create-list-line-wrapper">
-                    <div class="create-list-line" />
-                </div>
-                <div class="create-list-icon-wrapper">
-                    <Modal>
-                        <CreateListDialogTrigger on:ok={create_list} />
-                    </Modal>
-                </div>
+    <div class="create-list-wrapper">
+        <div class="create-list">
+            <div class="create-list-line-wrapper">
+                <div class="create-list-line" />
+            </div>
+            <div class="create-list-icon-wrapper">
+                <Modal>
+                    <CreateListDialogTrigger on:ok={create_list} />
+                </Modal>
             </div>
         </div>
+    </div>
 
-        {#each $lists as list}
-            <RepoListCard {list} />
-        {/each}
-    {/if}
+    {#each $lists as list}
+        <RepoListCard {list} />
+    {/each}
 {:else}
     <h1>Please log in.</h1>
 {/if}
