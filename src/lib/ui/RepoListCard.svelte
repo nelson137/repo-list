@@ -248,11 +248,14 @@
             .list-header {
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
                 border-bottom: 1px solid var(--color-border);
+                justify-content: space-around;
+                gap: calc($repoCardGap / 2);
+                padding: 0px $repoCardGap;
 
                 .list-title {
-                    padding: 12px 24px;
+                    padding: 12px 0px;
+                    flex-grow: 1;
                 }
             }
 
@@ -297,8 +300,10 @@
      */
     @for $cols from 1 through 10 {
         @media screen and (min-width: calc($cols * ($repoCardWidth + $repoCardGap) + $repoCardGap + 2 * $mainPadding)) {
+            $w: calc($cols * ($repoCardWidth + $repoCardGap) - $repoCardGap);
+            .list-header,
             .list {
-                width: calc($cols * ($repoCardWidth + $repoCardGap) - $repoCardGap);
+                width: $w;
             }
         }
     }
