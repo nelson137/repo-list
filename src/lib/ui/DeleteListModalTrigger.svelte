@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { get_popup_state, PopupState, set_popup_state } from '$lib/stores/delete-popup-state';
+    import { get_modal_state, ModalState, set_modal_state } from '$lib/stores/delete-modal-state';
     import TrashSvg from '$lib/ui/svgs/TrashSvg.svelte';
     import { createEventDispatcher, getContext } from 'svelte';
-    import DeleteListPopup from './DeleteListPopup.svelte';
+    import DeleteListModal from './DeleteListModal.svelte';
     import type { DeleteListEvents } from './events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
@@ -14,19 +14,19 @@
     const { open } = getContext<ModalContext>('simple-modal');
 
     const on_modal_close = () => {
-        let state = get_popup_state(list_id);
-        if (state === PopupState.Deciding) {
-            state = PopupState.Canceled;
-            set_popup_state(list_id, PopupState.Canceled);
+        let state = get_modal_state(list_id);
+        if (state === ModalState.Deciding) {
+            state = ModalState.Canceled;
+            set_modal_state(list_id, ModalState.Canceled);
         }
         switch (state) {
-            case PopupState.Canceled:
+            case ModalState.Canceled:
                 dispatch('canceled');
                 break;
-            case PopupState.No:
+            case ModalState.No:
                 dispatch('no');
                 break;
-            case PopupState.Yes:
+            case ModalState.Yes:
                 dispatch('yes');
                 break;
         }
@@ -34,9 +34,9 @@
 
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
-        set_popup_state(list_id, PopupState.Deciding);
+        set_modal_state(list_id, ModalState.Deciding);
         open(
-            DeleteListPopup,
+            DeleteListModal,
             {
                 list_id,
                 list_name,

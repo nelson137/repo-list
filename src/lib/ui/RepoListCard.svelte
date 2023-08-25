@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Side, type _DragEvent } from '$lib/drag-and-drop';
-    import DeleteListPopupTrigger from '$lib/ui/DeleteListPopupTrigger.svelte';
+    import DeleteListModalTrigger from '$lib/ui/DeleteListModalTrigger.svelte';
     import RepoCard from '$lib/ui/RepoCard.svelte';
     import { dist } from '$lib/util';
     import Modal from 'svelte-simple-modal';
@@ -177,7 +177,7 @@
                 <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
             </Modal>
             <Modal>
-                <DeleteListPopupTrigger
+                <DeleteListModalTrigger
                     list_id={list.id}
                     list_name={list.name}
                     on:yes={() => delete_list(list.id)}

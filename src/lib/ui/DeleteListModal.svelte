@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { PopupState, set_popup_state } from '$lib/stores/delete-popup-state';
+    import { ModalState, set_modal_state } from '$lib/stores/delete-modal-state';
     import { getContext } from 'svelte';
     import CheckSvg from './svgs/CheckSvg.svelte';
     import XSvg from './svgs/XSvg.svelte';
@@ -11,12 +11,12 @@
     const { close } = getContext<ModalContext>('simple-modal');
 
     const on_no = () => {
-        set_popup_state(list_id, PopupState.No);
+        set_modal_state(list_id, ModalState.No);
         close();
     };
 
     const on_yes = () => {
-        set_popup_state(list_id, PopupState.Yes);
+        set_modal_state(list_id, ModalState.Yes);
         close();
     };
 </script>
