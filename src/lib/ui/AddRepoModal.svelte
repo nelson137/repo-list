@@ -52,9 +52,6 @@
         clearable
         selectOnTab={TAB_SELECT_NAVIGATE}
     >
-        <!--
-        listOffset={6}
-        -->
         <div slot="clear-icon" class="icons-container">
             <button on:click|preventDefault><XSvg /></button>
             <button type="submit" on:click|stopPropagation><CheckSvg /></button>
