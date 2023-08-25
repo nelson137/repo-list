@@ -5,20 +5,13 @@
     import { dist } from '$lib/util';
     import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
-    import { ALL_REPOS_LIST_ID, repo_lists } from '$lib/stores/repo-lists';
+    import { repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
     import { repos } from '$lib/stores/repos';
     import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
 
     export let list: RepoList;
-
-    $: is_all_repos_list = list.id === ALL_REPOS_LIST_ID;
-
-    /**
-     * Wether a card is being dragged within this list.
-     */
-    let dragging_in_list = false;
 
     const add_repos_to_list = (event: CustomEvent<number[]>) =>
         repo_lists.insert_repos(list.id, event.detail);
@@ -41,22 +34,16 @@
     };
 
     const drag_enter = (event: _DragEvent) => {
-        dragging_in_list = true;
-        if (is_all_repos_list) {
-            return;
-        }
         event.preventDefault();
     };
 
     const drag_leave = (event: _DragEvent) => {
         if (_element_is_in_list(event.relatedTarget)) return;
-        dragging_in_list = false;
         list_clear_drag_indicator(event.currentTarget);
     };
 
     const drag_over = (event: _DragEvent) => {
         const list_el = event.currentTarget;
-        if (list_el.id === ALL_REPOS_LIST_ID) return;
 
         event.preventDefault();
 
@@ -148,9 +135,9 @@
                 src_repo_ids.splice(new_index, 0, src_repo_ids[repo_index]);
                 src_repo_ids.splice(repo_index + (new_index < repo_index ? 1 : 0), 1);
             } else {
-                // Move or copy (if src is the special "All" list) to current list
+                // Move to current list
                 repo_lists.get_list(cur_list_id).repo_ids.splice(new_index, 0, repo_id);
-                if (src_list_id !== ALL_REPOS_LIST_ID) src_repo_ids.splice(repo_index, 1);
+                src_repo_ids.splice(repo_index, 1);
             }
 
             repo_lists.update_list_repos(src_list_id, src_repo_ids);
@@ -174,7 +161,6 @@
     };
 
     const card_drag_end = (_event: CustomEvent<undefined>) => {
-        dragging_in_list = false;
         const list_elements = document.getElementsByClassName('list');
         for (let l = 0; l < list_elements.length; l++) {
             const list_el = list_elements.item(l) as HTMLElement | null;
@@ -184,21 +170,19 @@
 </script>
 
 <div class="list-wrapper">
-    <div class="list-card" class:list-disabled={dragging_in_list && is_all_repos_list}>
+    <div class="list-card">
         <div class="list-header">
             <span class="list-title">{list.name}</span>
-            {#if list.id !== ALL_REPOS_LIST_ID}
-                <Modal>
-                    <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
-                </Modal>
-                <Modal>
-                    <DeleteListPopupTrigger
-                        list_id={list.id}
-                        list_name={list.name}
-                        on:yes={() => delete_list(list.id)}
-                    />
-                </Modal>
-            {/if}
+            <Modal>
+                <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
+            </Modal>
+            <Modal>
+                <DeleteListPopupTrigger
+                    list_id={list.id}
+                    list_name={list.name}
+                    on:yes={() => delete_list(list.id)}
+                />
+            </Modal>
         </div>
         <div
             id={list.id}
@@ -216,7 +200,6 @@
                         list_id={list.id}
                         index={i}
                         repo={repos.get_repo(r_id)}
-                        card_disabled={dragging_in_list && is_all_repos_list}
                         on:card_drag_start={card_drag_start}
                         on:card_drag_end={card_drag_end}
                     />
@@ -240,17 +223,6 @@
         .list-card {
             border: 1px solid var(--color-border);
             border-radius: 16px;
-
-            &.list-disabled {
-                --color-red: rgb(229, 115, 115, 0.2);
-                background: repeating-linear-gradient(
-                    135deg,
-                    transparent,
-                    transparent 12px,
-                    var(--color-red) 12px,
-                    var(--color-red) 24px
-                );
-            }
 
             .list-header {
                 display: flex;

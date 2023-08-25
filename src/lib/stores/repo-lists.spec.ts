@@ -1,4 +1,4 @@
-import { ALL_REPOS_LIST_ID, REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from "./repo-lists";
+import { REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from "./repo-lists";
 import { createMockConsoleError, rand } from "$test/utils";
 
 describe('RepositoryListsData', () => {
@@ -14,7 +14,7 @@ describe('RepositoryListsData', () => {
         let i = 0;
         for (const id of repo_ids) repos[i++].id = id;
 
-        sut.load(repos, lists);
+        sut.load(lists);
     }
 
     beforeEach(() => {
@@ -26,7 +26,7 @@ describe('RepositoryListsData', () => {
             const lists = rand.array.repoListStorage();
             const expectedListsMap = Object.fromEntries(lists.map(l => [l.id, l]));
 
-            sut.load([], lists);
+            sut.load(lists);
 
             expect(sut.lists).toMatchObject(expectedListsMap);
         });
@@ -36,19 +36,19 @@ describe('RepositoryListsData', () => {
             lists[0].index = 2;
             lists[1].index = 1;
             lists[2].index = 0;
-            const expectedListOrder = lists.map(l => l.id).reverse().concat([ALL_REPOS_LIST_ID]);
+            const expectedListOrder = lists.map(l => l.id).reverse();
 
-            sut.load([], lists);
+            sut.load(lists);
 
             expect(sut.list_order).toMatchObject(expectedListOrder);
         });
 
         it('should automatically load the special All Repos list', () => {
-            sut.load([], []);
+            sut.load([]);
             const actualLists = Object.keys(sut.lists);
 
-            expect(actualLists).toEqual([ALL_REPOS_LIST_ID]);
-            expect(sut.list_order).toEqual([ALL_REPOS_LIST_ID]);
+            expect(actualLists).toEqual([]);
+            expect(sut.list_order).toEqual([]);
         });
     });
 
@@ -65,7 +65,7 @@ describe('RepositoryListsData', () => {
         });
 
         it('should log and ignore a list ID that does not exist', () => {
-            sut.load([], []);
+            sut.load([]);
             const unexpectedId = rand.uuid();
             sut.list_order.push(unexpectedId);
 
@@ -73,8 +73,7 @@ describe('RepositoryListsData', () => {
 
             expect(mockConsoleError).toHaveBeenCalledOnce();
             expect(mockConsoleError.mock.lastCall.join(' ')).toContain(unexpectedId);
-            expect(actualLists).toHaveLength(1);
-            expect(actualLists[0].id).toEqual(ALL_REPOS_LIST_ID);
+            expect(actualLists).toEqual([]);
         });
     });
 

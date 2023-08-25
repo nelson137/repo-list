@@ -5,8 +5,6 @@ import { derived, get, writable } from "svelte/store";
 import { cloneMapObj } from "./utils";
 import { repos as repos_store } from "./repos";
 
-export const ALL_REPOS_LIST_ID = '80ff2230-8456-451c-b2ac-eba72e26bcb9';
-
 export class RepositoryListsData {
     /**
      * An array of list IDs indicating the order in which they should be displayed.
@@ -29,20 +27,13 @@ export class RepositoryListsData {
 
     /**
      * Load data.
-     * @param repos The array of repositories.
      * @param lists The repository lists from storage.
      *
      * - Insert `lists` into the list map.
      * - Calculate the list order.
-     * - Append the special All Repos list to the lists map and order array.
      */
-    public load = (repos: Repo[], lists: RepoListStorage[]) => {
+    public load = (lists: RepoListStorage[]) => {
         this.lists = _.keyBy(lists.map(s => new RepoList(s)), rl => rl.id);
-        this.lists[ALL_REPOS_LIST_ID] = RepoList.from(
-            'All',
-            repos.map(r => r.id),
-            ALL_REPOS_LIST_ID
-        );
 
         type IndexedRepoListStorage = RepoListStorage & { index: number };
         this.list_order = lists
@@ -52,8 +43,7 @@ export class RepositoryListsData {
                 return rls.index !== null;
             }) as (_: RepoListStorage) => _ is IndexedRepoListStorage)
             .sort((a, b) => a.index - b.index)
-            .map(l => l.id)
-            .concat([ALL_REPOS_LIST_ID]);
+            .map(l => l.id);
     };
 
     /**
@@ -115,7 +105,7 @@ export const REPO_LISTS_KEY = 'repo-lists';
  */
 export function load_local_storage(repos: Repo[]) {
     const list_storages = read_local_storage();
-    repo_lists.load(repos, list_storages);
+    repo_lists.load(list_storages);
     repos_store.load(repos);
 }
 
@@ -141,14 +131,11 @@ export function read_local_storage(): RepoListStorage[] {
  */
 function write_to_local_storage({ lists, list_order }: RepositoryListsData) {
     const data = Object.fromEntries(
-        Object.values(lists)
-            .filter(l => l.id !== ALL_REPOS_LIST_ID)
-            .map(l => [l.id, new RepoListStorage({ ...l, index: null })])
+        Object.values(lists).map(l => [l.id, new RepoListStorage({ ...l, index: null })])
     );
 
     for (let i = 0; i < list_order.length; i++) {
         const id = list_order[i];
-        if (id === ALL_REPOS_LIST_ID) continue;
         if (data[id] === undefined) {
             console.error(
                 'Failed to commit lists to local storage, list not found for id:',
@@ -190,8 +177,8 @@ export class RepositoryListsStore {
      * @param repos The repositories from the GitHub API.
      * @param list_storages The repository lists from local storage.
      */
-    public load = (repos: Repo[], list_storages: RepoListStorage[]) =>
-        this.update(data => data.load(repos, list_storages));
+    public load = (list_storages: RepoListStorage[]) =>
+        this.update(data => data.load(list_storages));
 
     /**
      * Write the repository lists store to local storage.

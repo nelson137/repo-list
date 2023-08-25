@@ -7,15 +7,11 @@
     import { fly } from 'svelte/transition';
     import ExternalLink from './svgs/ExternalLink.svelte';
     import type { DragSource } from '$lib/stores/repo-drag';
-    import { ALL_REPOS_LIST_ID } from '$lib/stores/repo-lists';
 
     export let id: number;
     export let list_id: string;
     export let index: number;
     export let repo: Repo;
-    export let card_disabled: boolean;
-
-    $: is_in_all_repos_list = list_id === ALL_REPOS_LIST_ID;
 
     const dispatch = createEventDispatcher<{
         card_drag_start: DragSource;
@@ -31,7 +27,7 @@
     const drag_start = (event: _DragEvent) => {
         card_dragging = true;
         if (event.dataTransfer) {
-            event.dataTransfer.effectAllowed = is_in_all_repos_list ? 'copy' : 'move';
+            event.dataTransfer.effectAllowed = 'move';
         }
         dispatch('card_drag_start', { list_id, repo_id: id, repo_index: index });
     };
@@ -46,7 +42,6 @@
     data-testid="card"
     class="card"
     class:card_dragging
-    class:card_disabled
     draggable="true"
     on:mouseenter={card_enter}
     on:mouseleave={card_leave}
@@ -159,10 +154,6 @@
             opacity: 40%;
             border: 2px dashed var(--color-border);
             background-color: var(--color-bg-light-translucent);
-        }
-
-        &.card_disabled {
-            opacity: 25%;
         }
     }
 </style>
