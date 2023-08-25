@@ -2,7 +2,8 @@
     "extends": "./.svelte-kit/tsconfig.json",
     "files": ["./test-setup.ts"],
     "compilerOptions": {
-        "types": ["vitest/globals", "@testing-library/jest-dom"],
+        "typeRoots": ["./src/types", "./node_modules/@types"],
+        "types": ["../vitest/globals", "../@testing-library/jest-dom"],
         "allowJs": true,
         "checkJs": true,
         "esModuleInterop": true,

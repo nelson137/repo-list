@@ -10,6 +10,11 @@ export type CreateListEvents = {
     ok: CreateListOkData;
 };
 
+export type AddRepoEvents = {
+    submit: number[];
+    canceled: undefined;
+};
+
 export type DeleteListEvents = {
     canceled: undefined;
     no: undefined;

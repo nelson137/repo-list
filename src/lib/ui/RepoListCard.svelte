@@ -9,6 +9,7 @@
     import type { RepoList } from '$lib/models/repo-list';
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
     import { repos } from '$lib/stores/repos';
+    import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
 
     export let list: RepoList;
 
@@ -18,6 +19,9 @@
      * Wether a card is being dragged within this list.
      */
     let dragging_in_list = false;
+
+    const add_repos_to_list = (event: CustomEvent<number[]>) =>
+        repo_lists.insert_repos(list.id, event.detail);
 
     const delete_list = (id: string) => repo_lists.delete_list(id);
 
@@ -184,6 +188,9 @@
         <div class="list-header">
             <span class="list-title">{list.name}</span>
             {#if list.id !== ALL_REPOS_LIST_ID}
+                <Modal>
+                    <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
+                </Modal>
                 <Modal>
                     <DeleteListPopupTrigger
                         list_id={list.id}

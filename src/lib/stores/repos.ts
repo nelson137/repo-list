@@ -31,6 +31,11 @@ export class RepositoriesData {
     };
 
     /**
+     * Get all repositories.
+     */
+    public get_all = (): Repo[] => Object.values(this.repositories);
+
+    /**
      * Get a repository by ID.
      * @param id The ID of the repository.
      */
@@ -56,6 +61,11 @@ export class RepositoriesStore {
         });
 
     public load = (repos: Repo[]) => this.update(data => data.load(repos));
+
+    /**
+     * Get all repositories.
+     */
+    public get_all = (): Repo[] => get(this.data).get_all();
 
     /**
      * Get a repository by ID from the store.
