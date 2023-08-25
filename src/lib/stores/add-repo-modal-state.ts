@@ -1,15 +1,9 @@
 import { get, writable, type Writable } from 'svelte/store';
 
-export enum ModalAction {
-    Canceled,
-    Deciding,
-    Submitted,
-}
-
 export type ModalState = {
-    action: ModalAction.Canceled | ModalAction.Deciding,
+    action: 'canceled' | 'deciding',
 } | {
-    action: ModalAction.Submitted,
+    action: 'submitted',
     repo_ids: number[],
 };
 

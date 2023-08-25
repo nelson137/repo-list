@@ -3,11 +3,7 @@
     import PlusSvg from './svgs/PlusSvg.svelte';
     import type { AddRepoEvents } from './events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
-    import {
-        get_modal_state,
-        ModalAction,
-        set_modal_state,
-    } from '$lib/stores/add-repo-modal-state';
+    import { get_modal_state, set_modal_state } from '$lib/stores/add-repo-modal-state';
     import AddRepoModal from './AddRepoModal.svelte';
 
     export let list_id: string;
@@ -18,15 +14,15 @@
 
     const on_modal_close = () => {
         let state = get_modal_state(list_id);
-        if (state.action === ModalAction.Deciding) {
-            state.action = ModalAction.Canceled;
+        if (state.action === 'deciding') {
+            state.action = 'canceled';
             set_modal_state(list_id, state);
         }
         switch (state.action) {
-            case ModalAction.Canceled:
+            case 'canceled':
                 dispatch('canceled');
                 break;
-            case ModalAction.Submitted:
+            case 'submitted':
                 dispatch('submit', state.repo_ids);
                 break;
         }
@@ -34,7 +30,7 @@
 
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
-        set_modal_state(list_id, { action: ModalAction.Deciding });
+        set_modal_state(list_id, { action: 'deciding' });
         open(
             AddRepoModal,
             {
