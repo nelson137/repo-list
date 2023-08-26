@@ -280,22 +280,14 @@
      * [Source](https://stackoverflow.com/a/32811002/5673922)
      */
 
-    @function listInnerWidth($cols) {
-        @return $cols * ($repoCardWidth + $repoCardGap) - $repoCardGap;
-    }
-
-    @media screen and (max-width: calc(
-        $repoCardWidth + 2 * $repoCardGap + 2 * $mainPadding - 1px
-    )) {
+    @media screen and (max-width: maxBaseQueryWidth()) {
         .list-card > * {
             width: listInnerWidth(1);
         }
     }
 
     @for $cols from 1 through 10 {
-        @media screen and (min-width: calc(
-            $cols * ($repoCardWidth + $repoCardGap) + $repoCardGap + 2 * $mainPadding
-        )) {
+        @media screen and (min-width: minSteppedQueryWidth($cols)) {
             .list-card > * {
                 width: listInnerWidth($cols);
             }

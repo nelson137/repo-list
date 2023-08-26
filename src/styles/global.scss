@@ -1,3 +1,15 @@
 $mainPadding: 48px;
 $repoCardWidth: 256px; // 292px;
 $repoCardGap: 24px;
+
+@function maxBaseQueryWidth() {
+    @return $repoCardWidth + 2 * $repoCardGap + 2 * $mainPadding - 1px;
+}
+
+@function minSteppedQueryWidth($cols) {
+    @return $cols * ($repoCardWidth + $repoCardGap) + $repoCardGap + 2 * $mainPadding;
+}
+
+@function listInnerWidth($cols) {
+    @return $cols * ($repoCardWidth + $repoCardGap) - $repoCardGap;
+}
