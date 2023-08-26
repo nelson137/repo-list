@@ -11,5 +11,5 @@ $repoCardGap: 24px;
 }
 
 @function listInnerWidth($cols) {
-    @return $cols * ($repoCardWidth + $repoCardGap) - $repoCardGap;
+    @return $cols * ($repoCardWidth + $repoCardGap) + $repoCardGap;
 }
