@@ -1,12 +1,9 @@
 export type CreateListOkData = {
-    /**
-     * The name of the new list to be created from the user.
-     */
+    /** The name of the new repository list to be created. */
     name: string;
 };
 
-export type CreateListEvents = {
-    canceled: undefined;
+export type CreateListModalEvents = {
     ok: CreateListOkData;
 };
 

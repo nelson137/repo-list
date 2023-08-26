@@ -1,51 +1,29 @@
 <script lang="ts">
-    import {
-        DialogAction,
-        get_dialog_state,
-        set_dialog_state,
-    } from '$lib/stores/create-dialog-state';
     import { createEventDispatcher, getContext } from 'svelte';
     import CreateListDialog from './CreateListDialog.svelte';
-    import type { CreateListEvents } from './events';
+    import type { CreateListModalEvents } from './events';
     import CirclePlusSvg from './svgs/CirclePlusSvg.svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
-    const dispatch = createEventDispatcher<CreateListEvents>();
+    const dispatch = createEventDispatcher<CreateListModalEvents>();
 
     const { open } = getContext<ModalContext>('simple-modal');
 
-    const on_modal_close = () => {
-        let { action, name } = get_dialog_state();
-        switch (action) {
-            case DialogAction.Ok:
-                if (name === null) {
-                    name = '';
-                    console.warn('State for dialog name is null, defaulting to empty string.');
-                }
-                dispatch('ok', { name });
-                break;
-            default:
-                dispatch('canceled');
-                break;
-        }
-        set_dialog_state(DialogAction.NotOpen, null);
-    };
+    const on_ok = (name: string) => dispatch('ok', { name });
 
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
-        set_dialog_state(DialogAction.Waiting, null);
         open(
             CreateListDialog,
-            {},
+            {
+                on_ok,
+            },
             {
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
                 classWindowWrap: 'modal-wrap',
                 classWindow: 'modal-window',
-            },
-            {
-                onClose: on_modal_close,
             }
         );
     };

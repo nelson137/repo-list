@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { DialogAction, set_dialog_state } from '$lib/stores/create-dialog-state';
     import { getContext, onMount } from 'svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
+
+    export let on_ok: (name: string) => void;
 
     let input_value: string | undefined;
 
@@ -13,18 +14,15 @@
         first_input.focus();
     });
 
-    const on_cancel = () => {
-        set_dialog_state(DialogAction.Canceled);
-        close();
-    };
+    const on_cancel = () => close();
 
-    const on_ok = () => {
-        set_dialog_state(DialogAction.Ok, input_value?.trim() ?? '');
+    const on_form_submit = () => {
+        on_ok(input_value?.trim() ?? '');
         close();
     };
 </script>
 
-<form on:submit|preventDefault={on_ok}>
+<form on:submit|preventDefault={on_form_submit}>
     <div class="input-wrapper">
         <label for="new-list-name">New list name:&nbsp;&nbsp;</label>
         <input id="new-list-name" bind:this={first_input} bind:value={input_value} />
