@@ -10,14 +10,15 @@
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
     import { repos } from '$lib/stores/repos';
     import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
-    import type { AddRepoSubmitData } from './events';
+    import type { AddRepoSubmitData, DeleteListYesData } from './events';
 
     export let list: RepoList;
 
     const add_repos_to_list = (event: CustomEvent<AddRepoSubmitData>) =>
         repo_lists.insert_repos(list.id, event.detail.repo_ids);
 
-    const delete_list = (id: string) => repo_lists.delete_list(id);
+    const delete_list = (event: CustomEvent<DeleteListYesData>) =>
+        repo_lists.delete_list(event.detail.list_id);
 
     const list_set_drag_indicator = (list: HTMLElement, x: number, y: number) => {
         list.style.setProperty('--closest-x', `${x}px`);
@@ -181,7 +182,7 @@
                 <DeleteListModalTrigger
                     list_id={list.id}
                     list_name={list.name}
-                    on:yes={() => delete_list(list.id)}
+                    on:yes={delete_list}
                 />
             </Modal>
         </div>

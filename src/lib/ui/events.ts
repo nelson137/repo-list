@@ -19,8 +19,11 @@ export type AddRepoModalEvents = {
     submit: AddRepoSubmitData;
 };
 
-export type DeleteListEvents = {
-    canceled: undefined;
-    no: undefined;
-    yes: undefined;
+export type DeleteListYesData = {
+    /** The ID of the repository list. */
+    list_id: string;
+};
+
+export type DeleteListModalEvents = {
+    yes: DeleteListYesData;
 };
