@@ -19,6 +19,7 @@
     $: options = repos
         .get_all()
         .filter(r => !current_repos.has(r.id))
+        .sort((a, b) => a.name.localeCompare(b.name))
         .map(r => ({ value: r, label: r.name }));
 
     let value: typeof options | undefined;
