@@ -2,7 +2,6 @@
     import { createEventDispatcher, getContext } from 'svelte';
     import CreateListDialog from './CreateListDialog.svelte';
     import type { CreateListModalEvents } from './events';
-    import CirclePlusSvg from './svgs/CirclePlusSvg.svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
     const dispatch = createEventDispatcher<CreateListModalEvents>();
@@ -29,28 +28,51 @@
     };
 </script>
 
-<button class="create-list-icon" on:click={on_click}>
-    <CirclePlusSvg />
-</button>
+<div class="create-list-wrapper">
+    <button on:click={on_click}>New list</button>
+</div>
 
 <style lang="scss">
-    :global(div.modal-wrap div.modal-window) {
-        max-width: 512px;
+    @import '../../styles/global.scss';
+
+    .create-list-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        button {
+            --color: var(--color-border);
+            background-color: transparent;
+            border: 2px dashed var(--color);
+            border-radius: 18px;
+            padding: 20px 0px;
+            font-size: 1.5em;
+            color: var(--color);
+            transition: all 150ms ease 0ms;
+            transition: width 0ms;
+
+            // Overridden by media query when cols > 2
+            $w: listInnerWidth(1);
+            width: $w;
+            min-width: $w;
+            max-width: 600px; // capped at the 3-column width
+
+            &:hover {
+                --color: rgba(var(--color-green-500-rgb) / 0.7);
+            }
+        }
     }
 
-    .create-list-icon {
-        background-color: var(--color-bg-dark);
-        border: none;
-        padding: 2px;
-
-        &:hover :global(svg.icon-circle-plus) {
-            stroke: rgb(var(--color-green-500-rgb) / 0.85);
+    @for $cols from 2 through 10 {
+        @media screen and (min-width: minSteppedQueryWidth($cols)) {
+            .create-list-wrapper > button {
+                width: 0.65 * listInnerWidth($cols);
+            }
         }
+    }
 
-        :global(svg.icon-circle-plus) {
-            width: 42px;
-            height: 42px;
-            stroke: var(--color-border-opaque);
-        }
+    :global(div.modal-wrap div.modal-window) {
+        max-width: 512px;
     }
 </style>

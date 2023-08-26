@@ -22,18 +22,9 @@
 </script>
 
 {#if data?.logged_in}
-    <div class="create-list-wrapper">
-        <div class="create-list">
-            <div class="create-list-line-wrapper">
-                <div class="create-list-line" />
-            </div>
-            <div class="create-list-icon-wrapper">
-                <Modal>
-                    <CreateListDialogTrigger on:ok={create_list} />
-                </Modal>
-            </div>
-        </div>
-    </div>
+    <Modal>
+        <CreateListDialogTrigger on:ok={create_list} />
+    </Modal>
 
     {#each $lists as list}
         <RepoListCard {list} />
@@ -41,42 +32,3 @@
 {:else}
     <h1>Please log in.</h1>
 {/if}
-
-<style lang="scss">
-    .create-list-wrapper {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-
-        .create-list {
-            width: 90%;
-            display: grid;
-            grid-template-rows: 1fr;
-            grid-template-columns: 1fr;
-
-            > * {
-                grid-row: 1;
-                grid-column: 1;
-                grid-auto-flow: column;
-            }
-
-            .create-list-line-wrapper {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-
-                .create-list-line {
-                    width: 100%;
-                    height: 0;
-                    border-top: 2px solid var(--color-border-opaque);
-                }
-            }
-
-            .create-list-icon-wrapper {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-            }
-        }
-    }
-</style>
