@@ -276,15 +276,28 @@
     }
 
     /**
-     * This is the best approach to a centered flexbox with left-adjusted items:
-     *     https://stackoverflow.com/a/32811002/5673922
+     * This is the best approach to a centered flexbox with left-adjusted items.
+     * [Source](https://stackoverflow.com/a/32811002/5673922)
      */
+
+    @function listInnerWidth($cols) {
+        @return $cols * ($repoCardWidth + $repoCardGap) - $repoCardGap;
+    }
+
+    @media screen and (max-width: calc(
+        $repoCardWidth + 2 * $repoCardGap + 2 * $mainPadding - 1px
+    )) {
+        .list-card > * {
+            width: listInnerWidth(1);
+        }
+    }
+
     @for $cols from 1 through 10 {
-        @media screen and (min-width: calc($cols * ($repoCardWidth + $repoCardGap) + $repoCardGap + 2 * $mainPadding)) {
-            $w: calc($cols * ($repoCardWidth + $repoCardGap) - $repoCardGap);
-            .list-header,
-            .list {
-                width: $w;
+        @media screen and (min-width: calc(
+            $cols * ($repoCardWidth + $repoCardGap) + $repoCardGap + 2 * $mainPadding
+        )) {
+            .list-card > * {
+                width: listInnerWidth($cols);
             }
         }
     }
