@@ -10,11 +10,12 @@
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
     import { repos } from '$lib/stores/repos';
     import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
+    import type { AddRepoSubmitData } from './events';
 
     export let list: RepoList;
 
-    const add_repos_to_list = (event: CustomEvent<number[]>) =>
-        repo_lists.insert_repos(list.id, event.detail);
+    const add_repos_to_list = (event: CustomEvent<AddRepoSubmitData>) =>
+        repo_lists.insert_repos(list.id, event.detail.repo_ids);
 
     const delete_list = (id: string) => repo_lists.delete_list(id);
 

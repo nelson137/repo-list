@@ -3,13 +3,14 @@
     import { TAB_SELECT_NAVIGATE } from 'svelecte';
     import { repos } from '$lib/stores/repos';
     import CheckSvg from './svgs/CheckSvg.svelte';
-    import { set_modal_state } from '$lib/stores/add-repo-modal-state';
     import { getContext, onMount } from 'svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
     import { repo_lists } from '$lib/stores/repo-lists';
     import XSvg from './svgs/XSvg.svelte';
 
     export let list_id: string;
+
+    export let on_submit: (repo_ids: number[]) => void;
 
     const { close } = getContext<ModalContext>('simple-modal');
 
@@ -34,14 +35,13 @@
         focus();
     });
 
-    function on_submit(_event: SubmitEvent) {
-        const repo_ids = value?.map(x => x.value.id) ?? [];
-        set_modal_state(list_id, { action: 'submitted', repo_ids });
+    function on_submit_form(_event: SubmitEvent) {
+        on_submit(value?.map(x => x.value.id) ?? []);
         close();
     }
 </script>
 
-<form on:submit|preventDefault={on_submit}>
+<form on:submit|preventDefault={on_submit_form}>
     <Svelecte
         bind:this={select_component}
         class="svelecte-control control"

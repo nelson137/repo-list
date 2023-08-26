@@ -1,40 +1,25 @@
 <script lang="ts">
     import { createEventDispatcher, getContext } from 'svelte';
     import PlusSvg from './svgs/PlusSvg.svelte';
-    import type { AddRepoEvents } from './events';
+    import type { AddRepoModalEvents } from './events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
-    import { get_modal_state, set_modal_state } from '$lib/stores/add-repo-modal-state';
     import AddRepoModal from './AddRepoModal.svelte';
 
     export let list_id: string;
 
-    const dispatch = createEventDispatcher<AddRepoEvents>();
+    const dispatch = createEventDispatcher<AddRepoModalEvents>();
 
     const { open } = getContext<ModalContext>('simple-modal');
 
-    const on_modal_close = () => {
-        let state = get_modal_state(list_id);
-        if (state.action === 'deciding') {
-            state.action = 'canceled';
-            set_modal_state(list_id, state);
-        }
-        switch (state.action) {
-            case 'canceled':
-                dispatch('canceled');
-                break;
-            case 'submitted':
-                dispatch('submit', state.repo_ids);
-                break;
-        }
-    };
+    const on_submit = (repo_ids: number[]) => dispatch('submit', { repo_ids });
 
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
-        set_modal_state(list_id, { action: 'deciding' });
         open(
             AddRepoModal,
             {
                 list_id,
+                on_submit,
             },
             {
                 classBg: 'modal-bg',
@@ -44,9 +29,6 @@
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
-            },
-            {
-                onClose: on_modal_close,
             }
         );
     };

@@ -10,9 +10,13 @@ export type CreateListEvents = {
     ok: CreateListOkData;
 };
 
-export type AddRepoEvents = {
-    submit: number[];
-    canceled: undefined;
+export type AddRepoSubmitData = {
+    /** The IDs of the repositories to add. */
+    repo_ids: number[];
+};
+
+export type AddRepoModalEvents = {
+    submit: AddRepoSubmitData;
 };
 
 export type DeleteListEvents = {
