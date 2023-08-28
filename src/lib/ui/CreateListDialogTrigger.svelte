@@ -35,6 +35,10 @@
 <style lang="scss">
     @import '../../styles/global.scss';
 
+    @function dashedBackgroundImage($color) {
+        @return url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='#{$color}' stroke-width='4' stroke-dasharray='6 13' stroke-dashoffset='0' stroke-linecap='square' /%3e%3c/svg%3e");
+    }
+
     .create-list-wrapper {
         width: 100%;
         display: flex;
@@ -42,14 +46,15 @@
         justify-content: center;
 
         button {
-            --color: var(--color-border);
+            height: 72px;
             background-color: transparent;
-            border: 2px dashed var(--color);
+            border-style: hidden;
             border-radius: 18px;
-            padding: 20px 0px;
+            padding: 0px;
             font-size: 1.5em;
-            color: var(--color);
-            transition: color 150ms ease-in-out, border-color 150ms ease-in-out;
+            color: $colorBorder;
+            background-image: dashedBackgroundImage($colorBorder);
+            transition: color 150ms ease-in-out, background-image 150ms ease-in-out;
 
             // Overridden by media query when cols > 2
             $w: listInnerWidth(1);
@@ -58,7 +63,8 @@
             max-width: 600px; // capped at the 3-column width
 
             &:hover {
-                --color: rgba(var(--color-green-500-rgb) / 0.7);
+                color: $colorBorderHover;
+                background-image: dashedBackgroundImage($colorBorderHover);
             }
         }
     }

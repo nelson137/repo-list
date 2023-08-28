@@ -2,6 +2,9 @@ $mainPadding: 48px;
 $repoCardWidth: 256px; // 292px;
 $repoCardGap: 24px;
 
+$colorBorder: rgba(139, 148, 158, 0.4);
+$colorBorderHover: rgba(139, 148, 158, 0.8);
+
 @function maxBaseQueryWidth() {
     @return $repoCardWidth + 2 * $repoCardGap + 2 * $mainPadding - 1px;
 }
