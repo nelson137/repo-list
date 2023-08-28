@@ -16,7 +16,7 @@
 
     let select_component: Svelecte;
 
-    $: current_repos = new Set(repo_lists.get_list_repos(list_id));
+    $: current_repos = new Set(repo_lists.get_list_repo_ids(list_id));
     $: options = repos
         .get_all()
         .filter(r => !current_repos.has(r.id))

@@ -195,7 +195,7 @@ export class RepositoryListsStore {
      * Get the repository IDs for a list.
      * @param id The ID of the repository list.
      */
-    public get_list_repos = (id: string): Readonly<number[]> => this.get_list(id).repo_ids;
+    public get_list_repo_ids = (id: string): Readonly<number[]> => this.get_list(id).repo_ids;
 
     /**
      * Prepend a repository list to the store and update local storage.
