@@ -49,8 +49,7 @@
             padding: 20px 0px;
             font-size: 1.5em;
             color: var(--color);
-            transition: all 150ms ease 0ms;
-            transition: width 0ms;
+            transition: color 150ms ease-in-out, border-color 150ms ease-in-out;
 
             // Overridden by media query when cols > 2
             $w: listInnerWidth(1);
