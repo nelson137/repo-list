@@ -11,7 +11,7 @@
         "dev": "vite dev",
         "test": "vitest",
         "coverage": "vitest run --coverage",
-        "preview": "svelte-kit preview",
+        "preview": "svelte-kit sync && vite preview",
         "prepare": "svelte-kit sync",
         "package": "svelte-kit package"
     },
