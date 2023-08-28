@@ -10,6 +10,7 @@
     import { repo_lists, lists, load_local_storage } from '$lib/stores/repo-lists';
     import RepoListCard from '$lib/ui/RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
+    import DebugDataButtons from '$lib/ui/debug/DebugDataButtons.svelte';
 
     export let data: PageData;
 
@@ -22,6 +23,10 @@
 </script>
 
 {#if data?.logged_in}
+    {#if import.meta.env.DEV}
+        <DebugDataButtons />
+    {/if}
+
     <Modal>
         <CreateListDialogTrigger on:ok={create_list} />
     </Modal>

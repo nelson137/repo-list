@@ -129,7 +129,7 @@ export function read_local_storage(): RepoListStorage[] {
 /**
  * Write repository lists store data to local storage.
  */
-function write_to_local_storage({ lists, list_order }: RepositoryListsData) {
+export function write_to_local_storage({ lists, list_order }: RepositoryListsData) {
     const data = Object.fromEntries(
         Object.values(lists).map(l => [l.id, new RepoListStorage({ ...l, index: null })])
     );
