@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { _DragEvent } from '$lib/drag-and-drop';
+    import type { _DragEvent } from '$lib/ui/drag-and-drop';
     import type { Repo } from '$lib/models/repo';
     import GitForkSvg from '$lib/ui/svgs/GitForkSvg.svelte';
     import GitStarSvg from '$lib/ui/svgs/GitStarSvg.svelte';

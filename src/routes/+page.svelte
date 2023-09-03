@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { type _DragEvent } from '$lib/drag-and-drop';
+    import { type _DragEvent } from '$lib/ui/drag-and-drop';
     import { RepoList } from '$lib/models/repo-list';
     import CreateListDialogTrigger from './CreateListDialogTrigger.svelte';
     import type { CreateListOkData } from '$lib/ui/events';

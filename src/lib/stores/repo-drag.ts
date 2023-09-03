@@ -1,4 +1,4 @@
-import type { Side } from "$lib/drag-and-drop";
+import type { Side } from "$lib/ui/drag-and-drop";
 import { get, writable } from "svelte/store";
 
 export type DragSource = {

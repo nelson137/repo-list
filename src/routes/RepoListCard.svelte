@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Side, type _DragEvent } from '$lib/drag-and-drop';
+    import { Side, type _DragEvent } from '$lib/ui/drag-and-drop';
     import DeleteListModalTrigger from './DeleteListModalTrigger.svelte';
     import RepoCard from './RepoCard.svelte';
     import { dist } from '$lib/util';
