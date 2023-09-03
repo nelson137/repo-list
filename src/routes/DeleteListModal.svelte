@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext } from 'svelte';
-    import CheckSvg from './svgs/CheckSvg.svelte';
-    import XSvg from './svgs/XSvg.svelte';
+    import CheckSvg from '$lib/ui/svgs/CheckSvg.svelte';
+    import XSvg from '$lib/ui/svgs/XSvg.svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
     export let list_name: string;

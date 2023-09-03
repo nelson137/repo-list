@@ -2,7 +2,7 @@
     import TrashSvg from '$lib/ui/svgs/TrashSvg.svelte';
     import { createEventDispatcher, getContext } from 'svelte';
     import DeleteListModal from './DeleteListModal.svelte';
-    import type { DeleteListModalEvents } from './events';
+    import type { DeleteListModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
     export let list_id: string;

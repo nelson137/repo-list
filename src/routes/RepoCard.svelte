@@ -5,7 +5,7 @@
     import GitStarSvg from '$lib/ui/svgs/GitStarSvg.svelte';
     import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
-    import ExternalLink from './svgs/ExternalLink.svelte';
+    import ExternalLink from '$lib/ui/svgs/ExternalLink.svelte';
     import type { DragSource } from '$lib/stores/repo-drag';
 
     export let id: number;

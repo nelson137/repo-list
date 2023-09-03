@@ -1,14 +1,14 @@
 <script lang="ts">
     import { type _DragEvent } from '$lib/drag-and-drop';
     import { RepoList } from '$lib/models/repo-list';
-    import CreateListDialogTrigger from '$lib/ui/CreateListDialogTrigger.svelte';
+    import CreateListDialogTrigger from './CreateListDialogTrigger.svelte';
     import type { CreateListOkData } from '$lib/ui/events';
     import { onMount } from 'svelte';
     import Modal from 'svelte-simple-modal';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
     import { repo_lists, lists, load_local_storage } from '$lib/stores/repo-lists';
-    import RepoListCard from '$lib/ui/RepoListCard.svelte';
+    import RepoListCard from './RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
     import DebugDataButtons from '$lib/ui/debug/DebugDataButtons.svelte';
 

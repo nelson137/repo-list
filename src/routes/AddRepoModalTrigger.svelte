@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, getContext } from 'svelte';
-    import PlusSvg from './svgs/PlusSvg.svelte';
-    import type { AddRepoModalEvents } from './events';
+    import PlusSvg from '$lib/ui/svgs/PlusSvg.svelte';
+    import type { AddRepoModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
     import AddRepoModal from './AddRepoModal.svelte';
 

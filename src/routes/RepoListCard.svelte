@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Side, type _DragEvent } from '$lib/drag-and-drop';
-    import DeleteListModalTrigger from '$lib/ui/DeleteListModalTrigger.svelte';
-    import RepoCard from '$lib/ui/RepoCard.svelte';
+    import DeleteListModalTrigger from './DeleteListModalTrigger.svelte';
+    import RepoCard from './RepoCard.svelte';
     import { dist } from '$lib/util';
     import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
@@ -10,7 +10,7 @@
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
     import { repos } from '$lib/stores/repos';
     import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
-    import type { AddRepoSubmitData, DeleteListYesData } from './events';
+    import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
 
     export let list: RepoList;
 
@@ -212,7 +212,7 @@
 </div>
 
 <style lang="scss">
-    @import '../../styles/global.scss';
+    @import '../styles/global.scss';
 
     .list-wrapper {
         display: flex;
