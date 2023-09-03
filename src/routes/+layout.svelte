@@ -5,10 +5,9 @@
     import CheckSvg from '$lib/ui/svgs/CheckSvg.svelte';
     import XSvg from '$lib/ui/svgs/XSvg.svelte';
     import { fly } from 'svelte/transition';
+    import { edit_mode } from '$lib/stores/edit';
 
     export let data: LayoutData;
-
-    let edit_mode = false;
 
     let profile_menu_details: HTMLElement;
     let profile_menu_summary: HTMLElement;
@@ -27,16 +26,16 @@
     };
 
     function on_click_edit() {
-        edit_mode = true;
+        edit_mode.set(true);
     }
 
     function on_click_edit_submit() {
-        edit_mode = false;
+        edit_mode.set(false);
         console.log('TODO: submit');
     }
 
     function on_click_edit_cancel() {
-        edit_mode = false;
+        edit_mode.set(false);
         console.log('TODO: cancel');
     }
 </script>
@@ -53,7 +52,7 @@
     <div class="flex-spacer" />
     {#if data.logged_in}
         <div class="edit-controls-container">
-            {#if edit_mode}
+            {#if $edit_mode}
                 <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                     <button on:click={on_click_edit_submit}><CheckSvg /></button>
                     <button on:click={on_click_edit_cancel}><XSvg /></button>

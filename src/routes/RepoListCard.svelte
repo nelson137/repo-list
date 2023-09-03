@@ -11,6 +11,8 @@
     import { repos } from '$lib/stores/repos';
     import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
     import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
+    import { edit_mode } from '$lib/stores/edit';
+    import { fly } from 'svelte/transition';
 
     export let list: RepoList;
 
@@ -175,16 +177,25 @@
     <div class="list-card">
         <div class="list-header">
             <span class="list-title">{list.name}</span>
-            <Modal>
-                <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
-            </Modal>
-            <Modal>
-                <DeleteListModalTrigger
-                    list_id={list.id}
-                    list_name={list.name}
-                    on:yes={delete_list}
-                />
-            </Modal>
+            <div class="list-controls-container">
+                {#if $edit_mode}
+                    <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
+                        <Modal>
+                            <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
+                        </Modal>
+                    </div>
+                {:else}
+                    <div class="list-controls" transition:fly={{ x: 16, duration: 200 }}>
+                        <Modal>
+                            <DeleteListModalTrigger
+                                list_id={list.id}
+                                list_name={list.name}
+                                on:yes={delete_list}
+                            />
+                        </Modal>
+                    </div>
+                {/if}
+            </div>
         </div>
         <div
             id={list.id}
@@ -237,6 +248,20 @@
                 .list-title {
                     padding: 12px 0px;
                     flex-grow: 1;
+                }
+
+                .list-controls-container {
+                    display: grid;
+                    grid: 1fr / 1fr;
+                    grid-template-areas: 'slot';
+                    justify-items: end;
+
+                    .list-controls {
+                        grid-area: slot;
+                        display: flex;
+                        flex-direction: row;
+                        gap: calc($repoCardGap / 2);
+                    }
                 }
             }
 
