@@ -1,8 +1,14 @@
 <script lang="ts">
     import type { LayoutData } from './$types';
     import '../app.css';
+    import EditSvg from '$lib/ui/svgs/EditSvg.svelte';
+    import CheckSvg from '$lib/ui/svgs/CheckSvg.svelte';
+    import XSvg from '$lib/ui/svgs/XSvg.svelte';
+    import { fly } from 'svelte/transition';
 
     export let data: LayoutData;
+
+    let edit_mode = false;
 
     let profile_menu_details: HTMLElement;
     let profile_menu_summary: HTMLElement;
@@ -19,6 +25,20 @@
             profile_menu_details.removeAttribute('open');
         }
     };
+
+    function on_click_edit() {
+        edit_mode = true;
+    }
+
+    function on_click_edit_submit() {
+        edit_mode = false;
+        console.log('TODO: submit');
+    }
+
+    function on_click_edit_cancel() {
+        edit_mode = false;
+        console.log('TODO: cancel');
+    }
 </script>
 
 <svelte:window on:click={onWindowClick} />
@@ -32,6 +52,21 @@
     <span>Repo List</span>
     <div class="flex-spacer" />
     {#if data.logged_in}
+        <div class="edit-controls-container">
+            {#if edit_mode}
+                <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
+                    <button on:click={on_click_edit_submit}><CheckSvg /></button>
+                    <button on:click={on_click_edit_cancel}><XSvg /></button>
+                </div>
+            {:else}
+                <button
+                    class="edit-button"
+                    on:click={on_click_edit}
+                    transition:fly={{ x: 16, duration: 200 }}><EditSvg /></button
+                >
+            {/if}
+        </div>
+
         <details class="profile" bind:this={profile_menu_details}>
             <summary class="dropdown-trigger" bind:this={profile_menu_summary}>
                 <img src={data.user?.avatar_url} alt="@{data.user?.login}" />
@@ -65,10 +100,54 @@
         padding: 0 32px;
         display: flex;
         align-items: center;
+        gap: 24px;
 
         .flex-spacer {
             height: 0;
             flex-grow: 1;
+        }
+
+        .edit-controls-container {
+            display: grid;
+            grid: 1fr / 1fr;
+            grid-template-areas: 'slot';
+            justify-items: end;
+
+            button {
+                background-color: transparent;
+                border: none;
+                padding: 0px;
+
+                :global(.icon) {
+                    stroke: var(--color-text-secondary);
+                }
+
+                &:hover :global(.icon) {
+                    stroke: var(--color-text);
+                }
+            }
+
+            .edit-button {
+                // Fix extra height on parent element caused by default display of
+                // `inline-block`.
+                display: block;
+
+                grid-area: slot;
+            }
+
+            .edit-controls {
+                grid-area: slot;
+                display: flex;
+                gap: 8px;
+
+                button:hover :global(.icon.icon-check) {
+                    stroke: rgba(var(--color-green-500-rgb) / 0.8);
+                }
+
+                button:hover :global(.icon.icon-x) {
+                    stroke: rgba(var(--color-red-500-rgb) / 0.8);
+                }
+            }
         }
 
         .login-link {
