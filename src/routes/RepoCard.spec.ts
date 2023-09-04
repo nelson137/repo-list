@@ -12,7 +12,6 @@ describe('RepoCard component', () => {
         id: number;
         list_id: string;
         index: number;
-        card_disabled: boolean;
     };
 
     beforeEach(() => {
@@ -22,7 +21,6 @@ describe('RepoCard component', () => {
             id: repo.id,
             list_id: rand.uuid(),
             index: rand.number(9),
-            card_disabled: false,
         };
     });
 
