@@ -11,7 +11,7 @@
         load_local_storage(repos.get_all());
     }
 
-    function on_click_reset() {
+    function on_click_clear() {
         write_to_local_storage(new RepositoryListsData());
         load_store();
     }
@@ -47,7 +47,7 @@
 </script>
 
 <div class="container">
-    <button on:click={on_click_reset}>Reset</button>
+    <button on:click={on_click_clear}>Clear</button>
     <button on:click={on_click_defaults}>Default Lists</button>
 </div>
 
