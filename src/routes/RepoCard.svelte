@@ -7,6 +7,8 @@
     import { fly } from 'svelte/transition';
     import ExternalLink from '$lib/ui/svgs/ExternalLink.svelte';
     import type { DragSource } from '$lib/stores/repo-drag';
+    import { get } from 'svelte/store';
+    import { edit_mode } from '$lib/stores/edit';
 
     export let id: number;
     export let list_id: string;
@@ -25,6 +27,11 @@
     let card_dragging = false;
 
     const drag_start = (event: _DragEvent) => {
+        if (!get(edit_mode)) {
+            event.preventDefault();
+            return;
+        }
+
         card_dragging = true;
         if (event.dataTransfer) {
             event.dataTransfer.effectAllowed = 'move';
@@ -41,8 +48,8 @@
 <div
     data-testid="card"
     class="card"
-    class:card_dragging
-    draggable="true"
+    class:card_dragging={$edit_mode && card_dragging}
+    draggable={$edit_mode ? 'true' : undefined}
     on:mouseenter={card_enter}
     on:mouseleave={card_leave}
     on:dragstart={drag_start}
