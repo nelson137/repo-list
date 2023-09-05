@@ -6,6 +6,7 @@
     import XSvg from '$lib/ui/svgs/XSvg.svelte';
     import { fly } from 'svelte/transition';
     import { edit_mode } from '$lib/stores/edit';
+    import { repo_lists } from '$lib/stores/repo-lists';
 
     export let data: LayoutData;
 
@@ -27,16 +28,17 @@
 
     function on_click_edit() {
         edit_mode.set(true);
+        repo_lists.start_edit();
     }
 
     function on_click_edit_submit() {
         edit_mode.set(false);
-        console.log('TODO: submit');
+        repo_lists.submit_edit();
     }
 
     function on_click_edit_cancel() {
         edit_mode.set(false);
-        console.log('TODO: cancel');
+        repo_lists.cancel_edit();
     }
 </script>
 

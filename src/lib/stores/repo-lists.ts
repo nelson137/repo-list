@@ -156,6 +156,12 @@ export class RepositoryListsStore {
     private store = writable(new RepositoryListsData());
 
     /**
+     * A backup of the store at the beginning of the current edit mode.
+     * `null` if not in edit mode.
+     */
+    private backup: RepositoryListsData | null = null;
+
+    /**
      * The store for repository lists as an array.
      */
     public lists = derived(this.store, rl => rl.get_repo_lists());
@@ -215,6 +221,22 @@ export class RepositoryListsStore {
         write_to_local_storage(data);
     });
 
+    public start_edit = () => {
+        this.backup = get(this.store).clone();
+    };
+
+    public cancel_edit = () => {
+        if (this.backup == null) return console.warn('Unable to cancel edit when not in edit mode');
+        this.store.set(this.backup);
+        this.backup = null;
+    };
+
+    public submit_edit = () => {
+        if (this.backup == null) return console.warn('Unable to submit edit when not in edit mode');
+        write_to_local_storage(get(this.store));
+        this.backup = null;
+    };
+
     /**
      * Append repositories to a list.
      * @param list_id The ID of the repository list.
@@ -223,7 +245,6 @@ export class RepositoryListsStore {
     public insert_repos = (list_id: string, repo_ids: number[]) => this.update(data => {
         const list = data.lists[list_id];
         list.repo_ids = list.repo_ids.concat(repo_ids);
-        write_to_local_storage(data);
     });
 
     /**
@@ -234,7 +255,6 @@ export class RepositoryListsStore {
      */
     public update_list_repos = (list_id: string, repo_ids: number[]) => this.update(data => {
         data.lists[list_id].repo_ids = repo_ids;
-        write_to_local_storage(data);
     });
 }
 
