@@ -1,7 +1,7 @@
 <script lang="ts">
     import { RepoList } from '$lib/models/repo-list';
     import { edit_mode } from '$lib/stores/edit';
-    import { repo_lists } from '$lib/stores/repo-lists';
+    import { lists, repo_lists } from '$lib/stores/repo-lists';
     import { get } from 'svelte/store';
 
     function delete_all_lists() {
@@ -34,11 +34,20 @@
             repo_lists.write_to_local_storage();
         }
     }
+
+    function on_click_clear_first_list() {
+        const first_id = get(lists)[0].id;
+        repo_lists.update_list_repos(first_id, []);
+        if (!get(edit_mode)) {
+            repo_lists.write_to_local_storage();
+        }
+    }
 </script>
 
 <div class="container">
     <button on:click={on_click_clear}>Clear</button>
     <button on:click={on_click_defaults}>Default Lists</button>
+    <button on:click={on_click_clear_first_list}>Clear First List</button>
 </div>
 
 <style lang="scss">
