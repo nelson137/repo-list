@@ -5,8 +5,7 @@
     import CheckSvg from '$lib/ui/svgs/CheckSvg.svelte';
     import XSvg from '$lib/ui/svgs/XSvg.svelte';
     import { fly } from 'svelte/transition';
-    import { edit_mode } from '$lib/stores/edit';
-    import { repo_lists } from '$lib/stores/repo-lists';
+    import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
 
     export let data: LayoutData;
 
@@ -27,17 +26,14 @@
     };
 
     function on_click_edit() {
-        edit_mode.set(true);
         repo_lists.start_edit();
     }
 
     function on_click_edit_submit() {
-        edit_mode.set(false);
         repo_lists.submit_edit();
     }
 
     function on_click_edit_cancel() {
-        edit_mode.set(false);
         repo_lists.cancel_edit();
     }
 </script>
@@ -54,7 +50,7 @@
     <div class="flex-spacer" />
     {#if data.logged_in}
         <div class="edit-controls-container">
-            {#if $edit_mode}
+            {#if $in_edit_mode}
                 <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                     <button on:click={on_click_edit_submit}><CheckSvg /></button>
                     <button on:click={on_click_edit_cancel}><XSvg /></button>

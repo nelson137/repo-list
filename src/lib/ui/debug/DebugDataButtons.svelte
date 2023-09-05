@@ -1,7 +1,6 @@
 <script lang="ts">
     import { RepoList } from '$lib/models/repo-list';
-    import { edit_mode } from '$lib/stores/edit';
-    import { lists, repo_lists } from '$lib/stores/repo-lists';
+    import { in_edit_mode, lists, repo_lists } from '$lib/stores/repo-lists';
     import { get } from 'svelte/store';
 
     function delete_all_lists() {
@@ -10,7 +9,7 @@
 
     function on_click_clear() {
         delete_all_lists();
-        if (!get(edit_mode)) {
+        if (!get(in_edit_mode)) {
             repo_lists.write_to_local_storage();
         }
     }
@@ -30,7 +29,7 @@
             RepoList.from('Games', [529015461, 532099005, 79787322, 486775307, 486736755])
         );
         repo_lists.add_list(RepoList.from('Pinned', [102030669, 532099005, 202956385]));
-        if (!get(edit_mode)) {
+        if (!get(in_edit_mode)) {
             repo_lists.write_to_local_storage();
         }
     }
@@ -38,7 +37,7 @@
     function on_click_clear_first_list() {
         const first_id = get(lists)[0].id;
         repo_lists.update_list_repos(first_id, []);
-        if (!get(edit_mode)) {
+        if (!get(in_edit_mode)) {
             repo_lists.write_to_local_storage();
         }
     }

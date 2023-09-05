@@ -7,8 +7,8 @@
     import { fly } from 'svelte/transition';
     import ExternalLink from '$lib/ui/svgs/ExternalLink.svelte';
     import type { DragSource } from '$lib/stores/repo-drag';
+    import { in_edit_mode } from '$lib/stores/repo-lists';
     import { get } from 'svelte/store';
-    import { edit_mode } from '$lib/stores/edit';
 
     export let id: number;
     export let list_id: string;
@@ -27,7 +27,7 @@
     let card_dragging = false;
 
     const drag_start = (event: _DragEvent) => {
-        if (!get(edit_mode)) {
+        if (!get(in_edit_mode)) {
             event.preventDefault();
             return;
         }
@@ -48,8 +48,8 @@
 <div
     data-testid="card"
     class="card"
-    class:card_dragging={$edit_mode && card_dragging}
-    draggable={$edit_mode ? 'true' : undefined}
+    class:card_dragging={$in_edit_mode && card_dragging}
+    draggable={$in_edit_mode ? 'true' : undefined}
     on:mouseenter={card_enter}
     on:mouseleave={card_leave}
     on:dragstart={drag_start}

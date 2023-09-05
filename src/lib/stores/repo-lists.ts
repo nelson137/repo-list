@@ -159,7 +159,9 @@ export class RepositoryListsStore {
      * A backup of the store at the beginning of the current edit mode.
      * `null` if not in edit mode.
      */
-    private backup: RepositoryListsData | null = null;
+    private backup = writable<RepositoryListsData | null>(null);
+
+    public in_edit_mode = derived(this.backup, b => !!b);
 
     /**
      * The store for repository lists as an array.
@@ -222,19 +224,21 @@ export class RepositoryListsStore {
     });
 
     public start_edit = () => {
-        this.backup = get(this.store).clone();
+        this.backup.set(get(this.store).clone());
     };
 
     public cancel_edit = () => {
-        if (this.backup == null) return console.warn('Unable to cancel edit when not in edit mode');
-        this.store.set(this.backup);
-        this.backup = null;
+        const backup = get(this.backup);
+        if (backup === null) return console.warn('Unable to cancel edit when not in edit mode');
+        this.store.set(backup);
+        this.backup.set(null);
     };
 
     public submit_edit = () => {
-        if (this.backup == null) return console.warn('Unable to submit edit when not in edit mode');
+        const backup = get(this.backup);
+        if (backup === null) return console.warn('Unable to submit edit when not in edit mode');
         write_to_local_storage(get(this.store));
-        this.backup = null;
+        this.backup.set(null);
     };
 
     /**
@@ -267,3 +271,5 @@ export const repo_lists = new RepositoryListsStore();
  * The repository lists array store.
  */
 export const lists = repo_lists.lists;
+
+export const in_edit_mode = repo_lists.in_edit_mode;

@@ -4,12 +4,11 @@
     import RepoCard from './RepoCard.svelte';
     import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
-    import { repo_lists } from '$lib/stores/repo-lists';
+    import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
     import { repos } from '$lib/stores/repos';
     import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
     import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
-    import { edit_mode } from '$lib/stores/edit';
     import { fly } from 'svelte/transition';
     import RepoListDragContainer from './RepoListDragContainer.svelte';
 
@@ -27,7 +26,7 @@
         <div class="list-header">
             <span class="list-title">{list.name}</span>
             <div class="list-controls-container">
-                {#if $edit_mode}
+                {#if $in_edit_mode}
                     <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
                         <Modal>
                             <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
