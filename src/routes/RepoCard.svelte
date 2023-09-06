@@ -43,7 +43,7 @@
     data-testid="card"
     class="card"
     class:card_dragging={$in_edit_mode && card_dragging}
-    href={repo.html_url}
+    href={$in_edit_mode ? undefined : repo.html_url}
     target="_blank"
     draggable={$in_edit_mode ? 'true' : undefined}
     on:dragstart={drag_start}
@@ -91,10 +91,10 @@
             transition: all 0.2s ease-out;
             border-color: var(--color-border-hover);
             box-shadow: 0 0 16px #ffffff30;
+        }
 
-            .card-title {
-                text-decoration: underline;
-            }
+        &[href]:hover .card-title {
+            text-decoration: underline;
         }
 
         .card-header {
