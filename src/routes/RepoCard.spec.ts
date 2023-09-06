@@ -12,6 +12,7 @@ describe('RepoCard component', () => {
         id: string;
         list_id: string;
         index: number;
+        bulk_delete_selected: boolean;
     };
 
     beforeEach(() => {
@@ -21,6 +22,7 @@ describe('RepoCard component', () => {
             id: repo.id,
             list_id: rand.uuid(),
             index: rand.number(9),
+            bulk_delete_selected: false,
         };
     });
 

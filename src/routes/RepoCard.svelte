@@ -12,6 +12,7 @@
     export let list_id: string;
     export let index: number;
     export let repo: Repo;
+    export let bulk_delete_selected: boolean;
 
     const dispatch = createEventDispatcher<{
         card_drag_start: DragSource;
@@ -49,19 +50,24 @@
     on:dragstart={drag_start}
     on:dragend={drag_end}
 >
-    <div class="card-header">
-        <span class="card-title" data-testid="name">{repo.name}</span>
-    </div>
-    <div class="card-content">
-        <div class="card-content-item">
-            <GitStarSvg />
-            <span data-testid="stargazers-count">{repo.stargazers_count}</span>
+    <label>
+        <div class="card-header">
+            <span class="card-title" data-testid="name">{repo.name}</span>
+            {#if $in_edit_mode}
+                <input type="checkbox" bind:checked={bulk_delete_selected} />
+            {/if}
         </div>
-        <div class="card-content-item">
-            <GitForkSvg />
-            <span data-testid="forks-count">{repo.forks_count}</span>
+        <div class="card-content">
+            <div class="card-content-item">
+                <GitStarSvg />
+                <span data-testid="stargazers-count">{repo.stargazers_count}</span>
+            </div>
+            <div class="card-content-item">
+                <GitForkSvg />
+                <span data-testid="forks-count">{repo.forks_count}</span>
+            </div>
         </div>
-    </div>
+    </label>
 </a>
 
 <style lang="scss">
@@ -76,7 +82,6 @@
         box-sizing: border-box;
         width: $repoCardWidth;
         border-radius: 8px;
-        padding: 16px;
         background-clip: padding-box;
         --border-width: 2px;
         border: var(--border-width) solid var(--color-border);
@@ -97,6 +102,11 @@
             text-decoration: underline;
         }
 
+        label {
+            display: block;
+            padding: 16px;
+        }
+
         .card-header {
             display: flex;
             flex-direction: row;
@@ -110,6 +120,14 @@
                  * https://developer.mozilla.org/en-US/docs/Web/CSS/user-select#browser_compatibility
                  */
                 user-select: text;
+            }
+
+            input[type='checkbox'] {
+                margin: 0px;
+                opacity: 40%;
+                &:checked {
+                    opacity: 100%;
+                }
             }
         }
 

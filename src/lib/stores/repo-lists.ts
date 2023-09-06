@@ -244,11 +244,22 @@ export class RepositoryListsStore {
     /**
      * Append repositories to a list.
      * @param list_id The ID of the repository list.
-     * @repo_ids The list of repository IDs to append to the list.
+     * @param repo_ids The list of repository IDs to append.
      */
     public insert_repos = (list_id: string, repo_ids: string[]) => this.update(data => {
         const list = data.lists[list_id];
         list.repo_ids = list.repo_ids.concat(repo_ids);
+    });
+
+    /**
+     * Remove repositories from a list.
+     * @param list_id The ID of the repository list.
+     * @param repo_ids The list of repository IDs to remove.
+     */
+    public remove_repos = (list_id: string, repo_ids: string[]) => this.update(data => {
+        const repo_ids_to_remove = new Set(repo_ids);
+        const list = data.lists[list_id];
+        list.repo_ids = list.repo_ids.filter(id => !repo_ids_to_remove.has(id));
     });
 
     /**

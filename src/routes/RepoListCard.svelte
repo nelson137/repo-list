@@ -11,11 +11,33 @@
     import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
     import { fly } from 'svelte/transition';
     import RepoListDragContainer from './RepoListDragContainer.svelte';
+    import { onMount } from 'svelte';
+    import BackspaceSvg from '$lib/ui/svgs/BackspaceSvg.svelte';
 
     export let list: RepoList;
 
+    let bulk_delete_selection: { [repo_id: string]: boolean } = {};
+
+    $: any_repos_selected = Object.values(bulk_delete_selection).some(v => v);
+
+    onMount(() =>
+        in_edit_mode.subscribe(edit_mode => {
+            if (edit_mode) {
+                // Clear selections when edit mode is enabled
+                bulk_delete_selection = {};
+            }
+        })
+    );
+
     const add_repos_to_list = (event: CustomEvent<AddRepoSubmitData>) =>
         repo_lists.insert_repos(list.id, event.detail.repo_ids);
+
+    const remove_repos_from_list = (_event: MouseEvent) => {
+        const selected_repo_ids = Object.entries(bulk_delete_selection)
+            .filter(([_id, selected]) => selected)
+            .map(([id, _selected]) => id);
+        repo_lists.remove_repos(list.id, selected_repo_ids);
+    };
 
     const delete_list = (event: CustomEvent<DeleteListYesData>) =>
         repo_lists.delete_list(event.detail.list_id);
@@ -28,6 +50,11 @@
             <div class="list-controls-container">
                 {#if $in_edit_mode}
                     <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
+                        {#if any_repos_selected}
+                            <button class="remove-repos-button" on:click={remove_repos_from_list}
+                                ><BackspaceSvg /></button
+                            >
+                        {/if}
                         <Modal>
                             <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
                         </Modal>
@@ -53,6 +80,7 @@
                         list_id={list.id}
                         index={i}
                         repo={repos.get_repo(r_id)}
+                        bind:bulk_delete_selected={bulk_delete_selection[r_id]}
                         on:card_drag_start={card_drag_start}
                         on:card_drag_end={card_drag_end}
                     />
@@ -101,6 +129,12 @@
                         display: flex;
                         flex-direction: row;
                         gap: calc($repoCardGap / 2);
+
+                        .remove-repos-button {
+                            background-color: transparent;
+                            border: none;
+                            padding: 0px;
+                        }
                     }
                 }
             }
