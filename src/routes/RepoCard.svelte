@@ -12,7 +12,7 @@
     export let list_id: string;
     export let index: number;
     export let repo: Repo;
-    export let bulk_delete_selected: boolean;
+    export let bulk_delete_selected = false;
 
     const dispatch = createEventDispatcher<{
         card_drag_start: DragSource;
