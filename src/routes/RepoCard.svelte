@@ -57,7 +57,7 @@
     role="listitem"
 >
     <div class="card-header">
-        <span data-testid="name">{repo.name}</span>
+        <span class="card-title" data-testid="name">{repo.name}</span>
         <div class="open-button-wrapper">
             {#if card_hover}
                 <a
@@ -103,6 +103,7 @@
         cursor: grab;
         transition: all 0.2s ease-out;
         position: relative;
+        user-select: none;
 
         &:hover {
             transition: all 0.2s ease-out;
@@ -115,6 +116,15 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: flex-start;
+
+            .card-title {
+                /**
+                 * Ideally this would be `contain` but no browsers currently
+                 * support it. See MDN for browser support:
+                 * https://developer.mozilla.org/en-US/docs/Web/CSS/user-select#browser_compatibility
+                 */
+                user-select: text;
+            }
 
             .open-button-wrapper {
                 width: 22px;
