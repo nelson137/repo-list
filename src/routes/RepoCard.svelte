@@ -4,8 +4,6 @@
     import GitForkSvg from '$lib/ui/svgs/GitForkSvg.svelte';
     import GitStarSvg from '$lib/ui/svgs/GitStarSvg.svelte';
     import { createEventDispatcher } from 'svelte';
-    import { fly } from 'svelte/transition';
-    import ExternalLink from '$lib/ui/svgs/ExternalLink.svelte';
     import type { DragSource } from '$lib/stores/repo-drag';
     import { in_edit_mode } from '$lib/stores/repo-lists';
     import { get } from 'svelte/store';
@@ -19,10 +17,6 @@
         card_drag_start: DragSource;
         card_drag_end: undefined;
     }>();
-
-    let card_hover = false;
-    const card_enter = () => (card_hover = true);
-    const card_leave = () => (card_hover = false);
 
     let card_dragging = false;
 
@@ -45,31 +39,18 @@
     };
 </script>
 
-<div
+<a
     data-testid="card"
     class="card"
     class:card_dragging={$in_edit_mode && card_dragging}
+    href={repo.html_url}
+    target="_blank"
     draggable={$in_edit_mode ? 'true' : undefined}
-    on:mouseenter={card_enter}
-    on:mouseleave={card_leave}
     on:dragstart={drag_start}
     on:dragend={drag_end}
-    role="listitem"
 >
     <div class="card-header">
         <span class="card-title" data-testid="name">{repo.name}</span>
-        <div class="open-button-wrapper">
-            {#if card_hover}
-                <a
-                    href={repo.html_url}
-                    data-testid="open-link"
-                    class="open-button"
-                    transition:fly={{ x: 8, duration: 200 }}
-                >
-                    <ExternalLink />
-                </a>
-            {/if}
-        </div>
     </div>
     <div class="card-content">
         <div class="card-content-item">
@@ -81,7 +62,7 @@
             <span data-testid="forks-count">{repo.forks_count}</span>
         </div>
     </div>
-</div>
+</a>
 
 <style lang="scss">
     @import 'src/styles/global.scss';
@@ -91,6 +72,7 @@
     }
 
     .card {
+        display: block;
         box-sizing: border-box;
         width: $repoCardWidth;
         border-radius: 8px;
@@ -109,6 +91,10 @@
             transition: all 0.2s ease-out;
             border-color: var(--color-border-hover);
             box-shadow: 0 0 16px #ffffff30;
+
+            .card-title {
+                text-decoration: underline;
+            }
         }
 
         .card-header {
@@ -124,23 +110,6 @@
                  * https://developer.mozilla.org/en-US/docs/Web/CSS/user-select#browser_compatibility
                  */
                 user-select: text;
-            }
-
-            .open-button-wrapper {
-                width: 22px;
-                height: 22px;
-                flex-shrink: 0;
-                .open-button {
-                    display: block;
-                    :global(svg.icon-external-link) {
-                        // Fix for extra height added by an anchor:
-                        // https://stackoverflow.com/a/27999850/5673922
-                        vertical-align: top;
-                        &:hover {
-                            filter: brightness(1.3);
-                        }
-                    }
-                }
             }
         }
 

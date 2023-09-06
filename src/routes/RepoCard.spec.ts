@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitForElementToBeRemoved } from '@testing-library/svelte';
+import { render, screen } from '@testing-library/svelte';
 import RepoCard from './RepoCard.svelte';
 import { mockAnimations, rand } from '$test/utils';
 import type { Repo } from '$lib/models/repo';
@@ -15,7 +15,7 @@ describe('RepoCard component', () => {
     };
 
     beforeEach(() => {
-        repo = rand.model.repo()
+        repo = rand.model.repo();
         props = {
             repo,
             id: repo.id,
@@ -40,17 +40,5 @@ describe('RepoCard component', () => {
         render(RepoCard, props);
         const element = screen.getByTestId('forks-count');
         expect(element).toHaveTextContent(`${repo.forks_count}`);
-    });
-
-    it('should show the open link on hover and hide it on unhover', async () => {
-        render(RepoCard, props);
-        const card = screen.getByTestId('card');
-
-        await fireEvent.mouseEnter(card);
-        const element = screen.getByTestId<HTMLAnchorElement>('open-link');
-        expect(element.href).toMatch(repo.html_url);
-
-        await fireEvent.mouseLeave(card);
-        await waitForElementToBeRemoved(() => screen.getByTestId('open-link'));
     });
 });
