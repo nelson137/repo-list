@@ -39,7 +39,7 @@ export class RepositoriesData {
      * Get a repository by ID.
      * @param id The ID of the repository.
      */
-    public get_repo = (id: number | string): Repo => this.repositories[id.toString()];
+    public get_repo = (id: string): Repo => this.repositories[id];
 };
 
 export class RepositoriesStore {
@@ -71,7 +71,7 @@ export class RepositoriesStore {
      * Get a repository by ID from the store.
      * @param id The ID of the repository.
      */
-    public get_repo = (id: number): Readonly<Repo> => get(this.data).get_repo(id);
+    public get_repo = (id: string): Readonly<Repo> => get(this.data).get_repo(id);
 }
 
 /**

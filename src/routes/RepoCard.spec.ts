@@ -9,7 +9,7 @@ describe('RepoCard component', () => {
     let repo: Repo;
     let props: {
         repo: Repo;
-        id: number;
+        id: string;
         list_id: string;
         index: number;
     };

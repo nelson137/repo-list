@@ -5,13 +5,13 @@ import type { z } from 'zod';
  */
 
 export interface ZClass<Shape extends z.ZodRawShape> extends Omit<z.ZodObject<Shape>, 'parse'> {
-    new(data: z.ZodObject<Shape>['_input']): z.infer<z.ZodObject<Shape>>;
+    new(data: z.input<z.ZodObject<Shape>>): z.output<z.ZodObject<Shape>>;
 }
 
 export function ZClass<T>() {
     return function <Shape extends z.ZodRawShape>(_schema: z.ZodObject<Shape>): ZClass<Shape> {
         return class {
-            constructor(data: z.ZodObject<Shape>['_input']) {
+            constructor(data: z.input<z.ZodObject<Shape>>) {
                 return Object.assign(this, data);
             };
         } as any;

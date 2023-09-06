@@ -6,11 +6,11 @@ import { ZClass } from './zod-utils';
 export const repoListSchema = z.object({
     id: z.string().uuid().optional().default(() => uuid()).describe('The UUID of this list.'),
     name: z.string().describe('The name of this list.'),
-    repo_ids: z.array(z.number().describe('The IDs of the [Repos](./repo.ts) in this list.')),
+    repo_ids: z.array(z.string().regex(/\d+/).describe('The IDs of the [Repos](./repo.ts) in this list.')),
 });
 
 export class RepoList extends ZClass<RepoList>()(repoListSchema) {
-    public static from(name: string, repo_ids: number[] = [], id?: string): RepoList {
+    public static from(name: string, repo_ids: string[] = [], id?: string): RepoList {
         return new RepoList({
             name,
             id: id ?? uuid(),

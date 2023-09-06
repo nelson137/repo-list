@@ -9,7 +9,7 @@ export type CreateListModalEvents = {
 
 export type AddRepoSubmitData = {
     /** The IDs of the repositories to add. */
-    repo_ids: number[];
+    repo_ids: string[];
 };
 
 export type AddRepoModalEvents = {

@@ -1,11 +1,11 @@
 import { octokitFactory } from '$lib/server/api/octokit';
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
-import { Repo } from '$lib/models/repo';
+import { ApiRepo } from '$lib/models/repo';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { ZodError } from 'zod';
 
-export type ResponsePayload = { repos: Repo[] } | App.Error;
+export type ResponsePayload = { repos: ApiRepo[] } | App.Error;
 
 export const GET = (async ({ locals }) => {
     const octokit = octokitFactory(locals.token!);
@@ -14,7 +14,7 @@ export const GET = (async ({ locals }) => {
             per_page: 100,
             affiliation: 'owner',
         });
-        const repos = repos_data.map(Repo.parse);
+        const repos = repos_data.map(ApiRepo.parse);
         return json({ repos });
     } catch (error: any) {
         if (error instanceof ZodError) {

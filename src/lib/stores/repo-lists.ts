@@ -203,7 +203,7 @@ export class RepositoryListsStore {
      * Get the repository IDs for a list.
      * @param id The ID of the repository list.
      */
-    public get_list_repo_ids = (id: string): Readonly<number[]> => this.get_list(id).repo_ids;
+    public get_list_repo_ids = (id: string): Readonly<string[]> => this.get_list(id).repo_ids;
 
     /**
      * Prepend a repository list to the store and update local storage.
@@ -246,7 +246,7 @@ export class RepositoryListsStore {
      * @param list_id The ID of the repository list.
      * @repo_ids The list of repository IDs to append to the list.
      */
-    public insert_repos = (list_id: string, repo_ids: number[]) => this.update(data => {
+    public insert_repos = (list_id: string, repo_ids: string[]) => this.update(data => {
         const list = data.lists[list_id];
         list.repo_ids = list.repo_ids.concat(repo_ids);
     });
@@ -257,7 +257,7 @@ export class RepositoryListsStore {
      * @param list_id The ID of the repository list.
      * @param repo_ids The new array of repository IDs for the list.
      */
-    public update_list_repos = (list_id: string, repo_ids: number[]) => this.update(data => {
+    public update_list_repos = (list_id: string, repo_ids: string[]) => this.update(data => {
         data.lists[list_id].repo_ids = repo_ids;
     });
 }

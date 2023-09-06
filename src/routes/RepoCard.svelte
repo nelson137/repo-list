@@ -8,7 +8,7 @@
     import { in_edit_mode } from '$lib/stores/repo-lists';
     import { get } from 'svelte/store';
 
-    export let id: number;
+    export let id: string;
     export let list_id: string;
     export let index: number;
     export let repo: Repo;

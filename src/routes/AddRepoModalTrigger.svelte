@@ -11,7 +11,7 @@
 
     const { open } = getContext<ModalContext>('simple-modal');
 
-    const on_submit = (repo_ids: number[]) => dispatch('submit', { repo_ids });
+    const on_submit = (repo_ids: string[]) => dispatch('submit', { repo_ids });
 
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {

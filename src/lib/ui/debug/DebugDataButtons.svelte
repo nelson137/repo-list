@@ -17,18 +17,23 @@
     function on_click_defaults() {
         delete_all_lists();
         repo_lists.add_list(
-            RepoList.from(
-                'School',
-                [
-                    258009459, 530779943, 399959884, 439224243, 481792595, 332090987, 414866981,
-                    558219478, 486775307, 486736755,
-                ]
-            )
+            RepoList.from('School', [
+                '258009459',
+                '530779943',
+                '399959884',
+                '439224243',
+                '481792595',
+                '332090987',
+                '414866981',
+                '558219478',
+                '486775307',
+                '486736755',
+            ])
         );
         repo_lists.add_list(
-            RepoList.from('Games', [529015461, 532099005, 79787322, 486775307, 486736755])
+            RepoList.from('Games', ['529015461', '532099005', '79787322', '486775307', '486736755'])
         );
-        repo_lists.add_list(RepoList.from('Pinned', [102030669, 532099005, 202956385]));
+        repo_lists.add_list(RepoList.from('Pinned', ['102030669', '532099005', '202956385']));
         if (!get(in_edit_mode)) {
             repo_lists.write_to_local_storage();
         }

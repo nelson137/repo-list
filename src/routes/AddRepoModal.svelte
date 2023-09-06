@@ -10,7 +10,7 @@
 
     export let list_id: string;
 
-    export let on_submit: (repo_ids: number[]) => void;
+    export let on_submit: (repo_ids: string[]) => void;
 
     const { close } = getContext<ModalContext>('simple-modal');
 

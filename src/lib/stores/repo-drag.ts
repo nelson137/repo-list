@@ -10,7 +10,7 @@ export type DragSource = {
     /**
      * The ID of the repository being dragged.
      */
-    repo_id: number;
+    repo_id: string;
 
     /**
      * The index of the card being dragged in the source list.
