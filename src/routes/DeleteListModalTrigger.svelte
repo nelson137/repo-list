@@ -33,10 +33,8 @@
     };
 </script>
 
-<button class="wrapper" on:click={on_click}>
-    <div class="click-wrapper">
-        <TrashSvg />
-    </div>
+<button on:click={on_click}>
+    <TrashSvg />
 </button>
 
 <style lang="scss">
@@ -44,16 +42,14 @@
         max-width: 512px;
     }
 
-    .wrapper {
+    button {
         display: flex;
         flex-direction: column;
         justify-content: center;
 
-        .click-wrapper {
-            :global(svg.icon-trash) {
-                width: 18px;
-                height: 18px;
-            }
+        :global(svg.icon-trash) {
+            width: 18px;
+            height: 18px;
         }
     }
 </style>
