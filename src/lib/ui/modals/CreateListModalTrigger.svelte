@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, getContext } from 'svelte';
-    import CreateListModal from './CreateListModal.svelte';
+    import CreateListModalContent from './CreateListModalContent.svelte';
     import type { CreateListModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
@@ -13,7 +13,7 @@
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         open(
-            CreateListModal,
+            CreateListModalContent,
             {
                 on_ok,
             },
@@ -33,7 +33,7 @@
 </div>
 
 <style lang="scss">
-    @import '../styles/global.scss';
+    @import '../../../styles/global.scss';
 
     @function dashedBackgroundImage($color) {
         @return url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='#{$color}' stroke-width='4' stroke-dasharray='6 13' stroke-dashoffset='0' stroke-linecap='square' /%3e%3c/svg%3e");

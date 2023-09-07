@@ -1,10 +1,9 @@
 <script lang="ts">
     import { type _DragEvent } from '$lib/ui/drag-and-drop';
     import { RepoList } from '$lib/models/repo-list';
-    import CreateListModalTrigger from './CreateListModalTrigger.svelte';
+    import CreateListModal from '$lib/ui/modals/CreateListModal.svelte';
     import type { CreateListOkData } from '$lib/ui/events';
     import { onMount } from 'svelte';
-    import Modal from 'svelte-simple-modal';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
     import { repo_lists, lists, load_local_storage, in_edit_mode } from '$lib/stores/repo-lists';
@@ -44,9 +43,7 @@
         <DebugDataButtons />
     {/if}
 
-    <Modal>
-        <CreateListModalTrigger on:ok={create_list} />
-    </Modal>
+    <CreateListModal on:ok={create_list} />
 
     {#each $lists as list}
         <RepoListCard {list} />
