@@ -111,10 +111,6 @@
             justify-items: end;
 
             button {
-                background-color: transparent;
-                border: none;
-                padding: 0px;
-
                 :global(.icon) {
                     stroke: var(--color-text-secondary);
                 }

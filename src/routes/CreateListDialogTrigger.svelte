@@ -47,10 +47,7 @@
 
         button {
             height: 72px;
-            background-color: transparent;
-            border-style: hidden;
             border-radius: 18px;
-            padding: 0px;
             font-size: 1.5em;
             color: $colorBorder;
             background-image: dashedBackgroundImage($colorBorder);

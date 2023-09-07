@@ -48,3 +48,9 @@ body {
 body {
     background-color: var(--color-bg-dark);
 }
+
+button {
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+}

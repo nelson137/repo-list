@@ -70,7 +70,6 @@
             color: white;
             padding: 6px 8px;
             border-radius: 8px;
-            border-width: 0;
             opacity: 90%;
             &:hover {
                 opacity: 100%;

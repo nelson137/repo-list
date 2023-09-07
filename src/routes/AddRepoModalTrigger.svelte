@@ -34,7 +34,7 @@
     };
 </script>
 
-<button class="button" on:click={on_click}>
+<button on:click={on_click}>
     <PlusSvg />
 </button>
 
@@ -57,14 +57,8 @@
         }
     }
 
-    button {
-        border: none;
-        background-color: transparent;
-        padding: 0px;
-
-        :global(svg.icon-plus) {
-            width: 18px;
-            height: 18px;
-        }
+    button :global(svg.icon-plus) {
+        width: 18px;
+        height: 18px;
     }
 </style>

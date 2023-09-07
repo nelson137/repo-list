@@ -95,9 +95,6 @@
         margin-right: 4px;
 
         button {
-            background: transparent;
-            border: none;
-            margin: 0px;
             padding: 4px;
             border-radius: 8px;
             transition: background-color 150ms ease 0ms;

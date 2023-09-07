@@ -48,9 +48,6 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 0px;
-        border: none;
-        background-color: transparent;
 
         .click-wrapper {
             :global(svg.icon-trash) {

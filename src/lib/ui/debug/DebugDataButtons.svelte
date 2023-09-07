@@ -69,6 +69,7 @@
             color: var(--color);
             border: 1px solid var(--color);
             border-radius: 6px;
+            padding: revert;
 
             &:hover {
                 --color: lightgray;

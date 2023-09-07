@@ -51,9 +51,7 @@
                 {#if $in_edit_mode}
                     <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
                         {#if any_repos_selected}
-                            <button class="remove-repos-button" on:click={remove_repos_from_list}
-                                ><BackspaceSvg /></button
-                            >
+                            <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
                         {/if}
                         <Modal>
                             <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
@@ -129,12 +127,6 @@
                         display: flex;
                         flex-direction: row;
                         gap: calc($repoCardGap / 2);
-
-                        .remove-repos-button {
-                            background-color: transparent;
-                            border: none;
-                            padding: 0px;
-                        }
                     }
                 }
             }

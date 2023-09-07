@@ -54,11 +54,10 @@
             border-radius: 50%;
             border: 1px solid rgb(var(--stroke-rgb));
             stroke: rgb(var(--stroke-rgb));
-            background-color: transparent;
             &:hover {
                 background-color: rgb(var(--stroke-rgb) / 0.1);
             }
-            :global(svg) {
+            :global(svg.icon) {
                 stroke: rgb(var(--stroke-rgb));
             }
         }
