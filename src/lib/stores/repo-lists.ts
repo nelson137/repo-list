@@ -220,7 +220,6 @@ export class RepositoryListsStore {
      */
     public delete_list = (id: string) => this.update(data => {
         data.delete_list(id);
-        write_to_local_storage(data);
     });
 
     public start_edit = () => {

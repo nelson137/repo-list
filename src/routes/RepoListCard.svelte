@@ -56,9 +56,6 @@
                         <Modal>
                             <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
                         </Modal>
-                    </div>
-                {:else}
-                    <div class="list-controls" transition:fly={{ x: 16, duration: 200 }}>
                         <Modal>
                             <DeleteListModalTrigger
                                 list_id={list.id}
