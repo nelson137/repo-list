@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, getContext } from 'svelte';
-    import CreateListDialog from './CreateListDialog.svelte';
+    import CreateListModal from './CreateListModal.svelte';
     import type { CreateListModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
@@ -13,7 +13,7 @@
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         open(
-            CreateListDialog,
+            CreateListModal,
             {
                 on_ok,
             },

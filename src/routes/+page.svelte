@@ -1,7 +1,7 @@
 <script lang="ts">
     import { type _DragEvent } from '$lib/ui/drag-and-drop';
     import { RepoList } from '$lib/models/repo-list';
-    import CreateListDialogTrigger from './CreateListDialogTrigger.svelte';
+    import CreateListModalTrigger from './CreateListModalTrigger.svelte';
     import type { CreateListOkData } from '$lib/ui/events';
     import { onMount } from 'svelte';
     import Modal from 'svelte-simple-modal';
@@ -45,7 +45,7 @@
     {/if}
 
     <Modal>
-        <CreateListDialogTrigger on:ok={create_list} />
+        <CreateListModalTrigger on:ok={create_list} />
     </Modal>
 
     {#each $lists as list}
