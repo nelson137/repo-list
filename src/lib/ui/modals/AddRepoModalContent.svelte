@@ -9,7 +9,6 @@
     import XSvg from '$lib/ui/svgs/XSvg.svelte';
 
     export let list_id: string;
-
     export let on_submit: (repo_ids: string[]) => void;
 
     const { close } = getContext<ModalContext>('simple-modal');

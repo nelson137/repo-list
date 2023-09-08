@@ -3,7 +3,7 @@
     import PlusSvg from '$lib/ui/svgs/PlusSvg.svelte';
     import type { AddRepoModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
-    import AddRepoModal from './AddRepoModal.svelte';
+    import AddRepoModalContent from './AddRepoModalContent.svelte';
 
     export let list_id: string;
 
@@ -16,7 +16,7 @@
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         open(
-            AddRepoModal,
+            AddRepoModalContent,
             {
                 list_id,
                 on_submit,

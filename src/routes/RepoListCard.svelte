@@ -7,7 +7,7 @@
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
     import { repos } from '$lib/stores/repos';
-    import AddRepoModalTrigger from './AddRepoModalTrigger.svelte';
+    import AddRepoModal from '$lib/ui/modals/AddRepoModal.svelte';
     import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
     import { fly } from 'svelte/transition';
     import RepoListDragContainer from './RepoListDragContainer.svelte';
@@ -53,9 +53,7 @@
                         {#if any_repos_selected}
                             <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
                         {/if}
-                        <Modal>
-                            <AddRepoModalTrigger list_id={list.id} on:submit={add_repos_to_list} />
-                        </Modal>
+                        <AddRepoModal list_id={list.id} on:submit={add_repos_to_list} />
                         <Modal>
                             <DeleteListModalTrigger
                                 list_id={list.id}
