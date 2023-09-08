@@ -1,8 +1,7 @@
 <script lang="ts">
     import { type _DragEvent } from '$lib/ui/drag-and-drop';
-    import DeleteListModalTrigger from './DeleteListModalTrigger.svelte';
+    import DeleteListModal from '$lib/ui/modals/DeleteListModal.svelte';
     import RepoCard from './RepoCard.svelte';
-    import Modal from 'svelte-simple-modal';
     import { flip } from 'svelte/animate';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
@@ -54,13 +53,11 @@
                             <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
                         {/if}
                         <AddRepoModal list_id={list.id} on:submit={add_repos_to_list} />
-                        <Modal>
-                            <DeleteListModalTrigger
-                                list_id={list.id}
-                                list_name={list.name}
-                                on:yes={delete_list}
-                            />
-                        </Modal>
+                        <DeleteListModal
+                            list_id={list.id}
+                            list_name={list.name}
+                            on:yes={delete_list}
+                        />
                     </div>
                 {/if}
             </div>

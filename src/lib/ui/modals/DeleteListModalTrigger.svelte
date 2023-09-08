@@ -1,7 +1,7 @@
 <script lang="ts">
     import TrashSvg from '$lib/ui/svgs/TrashSvg.svelte';
     import { createEventDispatcher, getContext } from 'svelte';
-    import DeleteListModal from './DeleteListModal.svelte';
+    import DeleteListModalContent from './DeleteListModalContent.svelte';
     import type { DeleteListModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
 
@@ -17,7 +17,7 @@
     type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     const on_click = (_event: _ClickEvent) => {
         open(
-            DeleteListModal,
+            DeleteListModalContent,
             {
                 list_name,
                 on_yes,
