@@ -12,7 +12,7 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                includePaths: ['src/styles'],
+                includePaths: ['assets/_scss'],
             },
         },
     },
