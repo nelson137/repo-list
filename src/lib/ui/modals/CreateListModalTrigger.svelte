@@ -34,7 +34,7 @@
 </button>
 
 <style lang="scss">
-    @import '../../../styles/global.scss';
+    @use 'global' as *;
 
     button :global(.icon-list-plus) {
         stroke: var(--color-text-secondary);

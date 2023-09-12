@@ -94,7 +94,7 @@
 </main>
 
 <style lang="scss">
-    @import 'src/styles/global.scss';
+    @use 'global' as *;
 
     header {
         background-color: var(--color-bg-medium);

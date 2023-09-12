@@ -71,7 +71,7 @@
 </a>
 
 <style lang="scss">
-    @import 'src/styles/global.scss';
+    @use 'global' as *;
 
     a {
         text-decoration: none;

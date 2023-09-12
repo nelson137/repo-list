@@ -170,7 +170,7 @@
 </div>
 
 <style lang="scss">
-    @import '../styles/global.scss';
+    @use 'global' as *;
 
     .list {
         margin: 0 auto;

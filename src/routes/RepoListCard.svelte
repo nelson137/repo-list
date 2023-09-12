@@ -81,7 +81,7 @@
 </div>
 
 <style lang="scss">
-    @import '../styles/global.scss';
+    @use 'global' as *;
 
     .list-wrapper {
         display: flex;

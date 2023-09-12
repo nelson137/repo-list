@@ -9,6 +9,13 @@ export default defineConfig({
             '$test': fileURLToPath(new URL('./src/test', import.meta.url)),
         },
     },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                includePaths: ['src/styles'],
+            },
+        },
+    },
     server: {
         port: 5173,
     },
