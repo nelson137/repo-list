@@ -211,7 +211,6 @@ export class RepositoryListsStore {
      */
     public add_list = (list: RepoList) => this.update(data => {
         data.add_list(list);
-        write_to_local_storage(data);
     });
 
     /**

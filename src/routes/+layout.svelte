@@ -6,6 +6,9 @@
     import XSvg from '$lib/ui/svgs/XSvg.svelte';
     import { fly } from 'svelte/transition';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
+    import CreateListModal from '$lib/ui/modals/CreateListModal.svelte';
+    import type { CreateListOkData } from '$lib/ui/events';
+    import { RepoList } from '$lib/models/repo-list';
 
     export let data: LayoutData;
 
@@ -27,6 +30,10 @@
 
     function on_click_edit() {
         repo_lists.start_edit();
+    }
+
+    function on_click_new_list(event: CustomEvent<CreateListOkData>) {
+        repo_lists.add_list(RepoList.from(event.detail.name));
     }
 
     function on_click_edit_submit() {
@@ -52,6 +59,8 @@
         <div class="edit-controls-container">
             {#if $in_edit_mode}
                 <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
+                    <CreateListModal on:ok={on_click_new_list} />
+                    <div class="edit-controls-spacer" />
                     <button on:click={on_click_edit_submit}><CheckSvg /></button>
                     <button on:click={on_click_edit_cancel}><XSvg /></button>
                 </div>
@@ -131,7 +140,14 @@
             .edit-controls {
                 grid-area: slot;
                 display: flex;
-                gap: 8px;
+                --gap: 8px;
+                gap: var(--gap);
+
+                .edit-controls-spacer {
+                    width: 1.5px;
+                    margin: 0px var(--gap);
+                    background-color: var(--color-border);
+                }
 
                 button:hover :global(.icon.icon-check) {
                     stroke: rgba(var(--color-green-500-rgb) / 0.8);

@@ -1,12 +1,9 @@
 <script lang="ts">
     import { type _DragEvent } from '$lib/ui/drag-and-drop';
-    import { RepoList } from '$lib/models/repo-list';
-    import CreateListModal from '$lib/ui/modals/CreateListModal.svelte';
-    import type { CreateListOkData } from '$lib/ui/events';
     import { onMount } from 'svelte';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
-    import { repo_lists, lists, load_local_storage, in_edit_mode } from '$lib/stores/repo-lists';
+    import { lists, load_local_storage, in_edit_mode } from '$lib/stores/repo-lists';
     import RepoListCard from './RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
     import DebugDataButtons from '$lib/ui/debug/DebugDataButtons.svelte';
@@ -31,9 +28,6 @@
          */
         return (event.returnValue = '');
     }
-
-    const create_list = (event: CustomEvent<CreateListOkData>) =>
-        repo_lists.add_list(RepoList.from(event.detail.name));
 </script>
 
 <svelte:window on:beforeunload={on_before_unload} />
@@ -42,8 +36,6 @@
     {#if import.meta.env.DEV}
         <DebugDataButtons />
     {/if}
-
-    <CreateListModal on:ok={create_list} />
 
     {#each $lists as list}
         <RepoListCard {list} />

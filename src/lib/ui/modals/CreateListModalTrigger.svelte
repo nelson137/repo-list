@@ -3,6 +3,7 @@
     import CreateListModalContent from './CreateListModalContent.svelte';
     import type { CreateListModalEvents } from '$lib/ui/events';
     import type { Context as ModalContext } from 'svelte-simple-modal';
+    import ListPlusSvg from '../svgs/ListPlusSvg.svelte';
 
     const dispatch = createEventDispatcher<CreateListModalEvents>();
 
@@ -28,49 +29,19 @@
     };
 </script>
 
-<div class="create-list-wrapper">
-    <button on:click={on_click}>New list</button>
-</div>
+<button on:click={on_click}>
+    <ListPlusSvg />
+</button>
 
 <style lang="scss">
     @import '../../../styles/global.scss';
 
-    @function dashedBackgroundImage($color) {
-        @return url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='#{$color}' stroke-width='4' stroke-dasharray='6 13' stroke-dashoffset='0' stroke-linecap='square' /%3e%3c/svg%3e");
-    }
+    button :global(.icon-list-plus) {
+        stroke: var(--color-text-secondary);
+        transition: stroke 150ms ease-in-out;
 
-    .create-list-wrapper {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-
-        button {
-            height: 72px;
-            border-radius: 18px;
-            font-size: 1.5em;
-            color: $colorBorder;
-            background-image: dashedBackgroundImage($colorBorder);
-            transition: color 150ms ease-in-out, background-image 150ms ease-in-out;
-
-            // Overridden by media query when cols > 2
-            $w: listInnerWidth(1);
-            width: $w;
-            min-width: $w;
-            max-width: 600px; // capped at the 3-column width
-
-            &:hover {
-                color: $colorBorderHover;
-                background-image: dashedBackgroundImage($colorBorderHover);
-            }
-        }
-    }
-
-    @for $cols from 2 through 10 {
-        @media screen and (min-width: minSteppedQueryWidth($cols)) {
-            .create-list-wrapper > button {
-                width: 0.65 * listInnerWidth($cols);
-            }
+        &:hover {
+            stroke: var(--color-text);
         }
     }
 
