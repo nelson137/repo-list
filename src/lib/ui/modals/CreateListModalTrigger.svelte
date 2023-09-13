@@ -11,8 +11,7 @@
 
     const on_ok = (name: string) => dispatch('ok', { name });
 
-    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
-    const on_click = (_event: _ClickEvent) => {
+    const on_click = (_event: MouseEvent) => {
         open(
             CreateListModalContent,
             {

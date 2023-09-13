@@ -14,8 +14,7 @@
 
     const on_yes = () => dispatch('yes', { list_id });
 
-    type _ClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
-    const on_click = (_event: _ClickEvent) => {
+    const on_click = (_event: MouseEvent) => {
         open(
             DeleteListModalContent,
             {
