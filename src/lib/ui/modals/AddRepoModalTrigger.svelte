@@ -56,6 +56,10 @@
         }
     }
 
+    button:hover :global(svg.icon-plus) {
+        stroke: rgba(var(--color-green-500-rgb) / 0.8);
+    }
+
     button :global(svg.icon-plus) {
         width: 18px;
         height: 18px;

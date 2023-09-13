@@ -41,6 +41,10 @@
         max-width: 512px;
     }
 
+    button:hover :global(svg.icon-trash) {
+        stroke: rgba(var(--color-red-500-rgb) / 0.8);
+    }
+
     button :global(svg.icon-trash) {
         width: 18px;
         height: 18px;
