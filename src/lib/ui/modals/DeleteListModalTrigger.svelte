@@ -42,14 +42,8 @@
         max-width: 512px;
     }
 
-    button {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-
-        :global(svg.icon-trash) {
-            width: 18px;
-            height: 18px;
-        }
+    button :global(svg.icon-trash) {
+        width: 18px;
+        height: 18px;
     }
 </style>
