@@ -2,11 +2,11 @@
     import Svelecte from 'svelecte';
     import { TAB_SELECT_NAVIGATE } from 'svelecte';
     import { repos } from '$lib/stores/repos';
-    import CheckSvg from '$lib/ui/svgs/CheckSvg.svelte';
+    import CheckSvg from '$components/svgs/CheckSvg.svelte';
     import { getContext, onMount } from 'svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
     import { repo_lists } from '$lib/stores/repo-lists';
-    import XSvg from '$lib/ui/svgs/XSvg.svelte';
+    import XSvg from '$components/svgs/XSvg.svelte';
 
     export let list_id: string;
     export let on_submit: (repo_ids: string[]) => void;

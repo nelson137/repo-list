@@ -6,7 +6,7 @@
     import { lists, load_local_storage, in_edit_mode } from '$lib/stores/repo-lists';
     import RepoListCard from './RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
-    import DebugDataButtons from '$lib/ui/debug/DebugDataButtons.svelte';
+    import DebugDataButtons from '$components/debug/DebugDataButtons.svelte';
     import { get } from 'svelte/store';
 
     export let data: PageData;

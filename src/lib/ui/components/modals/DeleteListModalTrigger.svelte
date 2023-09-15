@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TrashSvg from '$lib/ui/svgs/TrashSvg.svelte';
+    import TrashSvg from '$components/svgs/TrashSvg.svelte';
     import { createEventDispatcher, getContext } from 'svelte';
     import DeleteListModalContent from './DeleteListModalContent.svelte';
     import type { DeleteListModalEvents } from '$lib/ui/events';

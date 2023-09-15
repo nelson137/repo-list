@@ -1,12 +1,13 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import { fileURLToPath } from 'url';
+import path from 'path';
 
 export default defineConfig({
     plugins: [sveltekit()],
     resolve: {
         alias: {
-            '$test': fileURLToPath(new URL('./src/test', import.meta.url)),
+            '$test': path.resolve('./src/test'),
+            '$components': path.resolve('./src/lib/ui/components'),
         },
     },
     css: {

@@ -1,17 +1,17 @@
 <script lang="ts">
     import { type _DragEvent } from '$lib/ui/drag-and-drop';
-    import DeleteListModal from '$lib/ui/modals/DeleteListModal.svelte';
+    import DeleteListModal from '$components/modals/DeleteListModal.svelte';
     import RepoCard from './RepoCard.svelte';
     import { flip } from 'svelte/animate';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
     import { repos } from '$lib/stores/repos';
-    import AddRepoModal from '$lib/ui/modals/AddRepoModal.svelte';
+    import AddRepoModal from '$components/modals/AddRepoModal.svelte';
     import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
     import { fly } from 'svelte/transition';
     import RepoListDragContainer from './RepoListDragContainer.svelte';
     import { onMount } from 'svelte';
-    import BackspaceSvg from '$lib/ui/svgs/BackspaceSvg.svelte';
+    import BackspaceSvg from '$components/svgs/BackspaceSvg.svelte';
 
     export let list: RepoList;
 

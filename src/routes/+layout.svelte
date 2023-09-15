@@ -1,12 +1,12 @@
 <script lang="ts">
     import type { LayoutData } from './$types';
     import '../app.css';
-    import EditSvg from '$lib/ui/svgs/EditSvg.svelte';
-    import CheckSvg from '$lib/ui/svgs/CheckSvg.svelte';
-    import XSvg from '$lib/ui/svgs/XSvg.svelte';
+    import EditSvg from '$components/svgs/EditSvg.svelte';
+    import CheckSvg from '$components/svgs/CheckSvg.svelte';
+    import XSvg from '$components/svgs/XSvg.svelte';
     import { fly } from 'svelte/transition';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
-    import CreateListModal from '$lib/ui/modals/CreateListModal.svelte';
+    import CreateListModal from '$components/modals/CreateListModal.svelte';
     import type { CreateListOkData } from '$lib/ui/events';
     import { RepoList } from '$lib/models/repo-list';
 
