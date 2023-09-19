@@ -21,8 +21,8 @@
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
-                classWindowWrap: 'modal-wrap',
-                classWindow: 'modal-window',
+                classWindowWrap: 'create-list-modal-wrap',
+                classWindow: 'create-list-modal-window',
             }
         );
     };
@@ -44,7 +44,7 @@
         }
     }
 
-    :global(div.modal-wrap div.modal-window) {
+    :global(div.create-list-modal-wrap div.create-list-modal-window) {
         max-width: 512px;
     }
 </style>

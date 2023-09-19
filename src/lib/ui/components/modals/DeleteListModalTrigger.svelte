@@ -25,8 +25,7 @@
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
-                classWindowWrap: 'modal-wrap',
-                classWindow: 'modal-window',
+                classWindow: 'delete-list-modal-window',
             }
         );
     };
@@ -37,7 +36,7 @@
 </button>
 
 <style lang="scss">
-    :global(div.modal-wrap div.modal-window) {
+    :global(div.delete-list-modal-window) {
         max-width: 512px;
     }
 

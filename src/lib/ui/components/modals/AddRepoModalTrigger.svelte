@@ -21,10 +21,10 @@
                 on_submit,
             },
             {
-                classBg: 'modal-bg',
-                classContent: 'modal-content',
-                classWindow: 'modal-window',
-                classWindowWrap: 'modal-window-wrap',
+                classBg: 'add-repo-modal-bg',
+                classContent: 'add-repo-modal-content',
+                classWindow: 'add-repo-modal-window',
+                classWindowWrap: 'add-repo-modal-window-wrap',
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
@@ -38,17 +38,17 @@
 </button>
 
 <style lang="scss">
-    :global(div.bg.modal-bg) {
+    :global(div.bg.add-repo-modal-bg) {
         background: rgba(0, 0, 0, 0.4);
         justify-content: flex-start;
 
-        :global(div.wrap.modal-window-wrap) {
+        :global(div.wrap.add-repo-modal-window-wrap) {
             top: 24vh;
 
-            :global(div.window.modal-window) {
+            :global(div.window.add-repo-modal-window) {
                 background: transparent;
 
-                :global(div.content.modal-content) {
+                :global(div.content.add-repo-modal-content) {
                     padding: 0px;
                     overflow: visible;
                 }
