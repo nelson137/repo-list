@@ -5,6 +5,8 @@ $repoCardGap: 24px;
 $colorBorder: rgba(139, 148, 158, 0.4);
 $colorBorderHover: rgba(139, 148, 158, 0.8);
 
+$colorModalBg: rgba(51, 59, 70, 0.4); // color.scale(#21262d, $lightness: 10%);
+
 @function maxBaseQueryWidth() {
     @return $repoCardWidth + 2 * $repoCardGap + 2 * $mainPadding - 1px;
 }

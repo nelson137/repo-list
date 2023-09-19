@@ -22,6 +22,7 @@
                 on_yes,
             },
             {
+                classBg: 'delete-list-modal-bg',
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
@@ -36,8 +37,17 @@
 </button>
 
 <style lang="scss">
-    :global(div.delete-list-modal-window) {
-        max-width: 512px;
+    @use 'global' as *;
+
+    :global(div.bg.delete-list-modal-bg) {
+        background-color: rgba(0, 0, 0, 0.5);
+
+        :global(div.delete-list-modal-window) {
+            max-width: 512px;
+            background: $colorModalBg;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(6px);
+        }
     }
 
     button:hover :global(svg.icon-trash) {

@@ -31,10 +31,6 @@
 </div>
 
 <style lang="scss">
-    :global(.message-wrapper *) {
-        color: black;
-    }
-
     .modal-buttons {
         display: flex;
         flex-flow: row wrap;
