@@ -1,0 +1,23 @@
+<script lang="ts">
+    import IconButton, { type Props as IconButtonProps } from './IconButton.svelte';
+    import XSvg from './svgs/XSvg.svelte';
+
+    interface $$Props extends IconButtonProps {}
+</script>
+
+<!-- Wrapper div necessary to ensure `:global` styles only target this component -->
+<div>
+    <IconButton {...$$restProps} on:click><XSvg /></IconButton>
+</div>
+
+<style lang="scss">
+    div {
+        :global(button[data-variant='icon']:hover svg.icon) {
+            stroke: rgba(var(--color-red-500-rgb) / 0.8);
+        }
+
+        :global(button[data-variant='colorbox']:hover) {
+            background-color: rgba(var(--color-red-500-rgb) / 0.5);
+        }
+    }
+</style>

@@ -2,11 +2,11 @@
     import Svelecte from 'svelecte';
     import { TAB_SELECT_NAVIGATE } from 'svelecte';
     import { repos } from '$lib/stores/repos';
-    import CheckSvg from '$components/svgs/CheckSvg.svelte';
+    import CheckButton from '../CheckButton.svelte';
+    import XButton from '../XButton.svelte';
     import { getContext, onMount } from 'svelte';
     import type { Context as ModalContext } from 'svelte-simple-modal';
     import { repo_lists } from '$lib/stores/repo-lists';
-    import XSvg from '$components/svgs/XSvg.svelte';
 
     export let list_id: string;
     export let on_submit: (repo_ids: string[]) => void;
@@ -53,8 +53,8 @@
         selectOnTab={TAB_SELECT_NAVIGATE}
     >
         <div slot="clear-icon" class="icons-container">
-            <button on:click|preventDefault><XSvg /></button>
-            <button type="submit" on:click|stopPropagation><CheckSvg /></button>
+            <XButton variant="colorbox" preventDefault />
+            <CheckButton variant="colorbox" type="submit" on:click stopPropagation />
         </div>
     </Svelecte>
 </form>
@@ -92,26 +92,5 @@
         gap: 8px;
         height: 100%;
         margin-right: 4px;
-
-        button {
-            padding: 4px;
-            border-radius: 8px;
-            transition: background-color 150ms ease 0ms;
-
-            :global(svg.icon) {
-                width: 18px;
-                height: 18px;
-                stroke: var(--color-text);
-                stroke-width: 3px;
-            }
-
-            &:hover:has(svg.icon-x) {
-                background-color: rgba(var(--color-red-500-rgb) / 0.5);
-            }
-
-            &:hover:has(svg.icon-check) {
-                background-color: rgba(var(--color-green-500-rgb) / 0.5);
-            }
-        }
     }
 </style>

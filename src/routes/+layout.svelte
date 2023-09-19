@@ -2,8 +2,8 @@
     import type { LayoutData } from './$types';
     import '../app.css';
     import EditSvg from '$components/svgs/EditSvg.svelte';
-    import CheckSvg from '$components/svgs/CheckSvg.svelte';
-    import XSvg from '$components/svgs/XSvg.svelte';
+    import CheckButton from '$lib/ui/components/CheckButton.svelte';
+    import XButton from '$lib/ui/components/XButton.svelte';
     import { fly } from 'svelte/transition';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import CreateListModal from '$components/modals/CreateListModal.svelte';
@@ -61,8 +61,8 @@
                 <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                     <CreateListModal on:ok={on_click_new_list} />
                     <div class="edit-controls-spacer" />
-                    <button on:click={on_click_edit_submit}><CheckSvg /></button>
-                    <button on:click={on_click_edit_cancel}><XSvg /></button>
+                    <CheckButton variant="icon" on:click={on_click_edit_submit} />
+                    <XButton variant="icon" on:click={on_click_edit_cancel} />
                 </div>
             {:else}
                 <button
