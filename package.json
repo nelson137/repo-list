@@ -44,6 +44,8 @@
     "dependencies": {
         "@github/details-menu-element": "^1.0.12",
         "@octokit/auth-oauth-app": "^4.3.2",
+        "@svelteuidev/composables": "^0.15.3",
+        "@svelteuidev/core": "^0.15.3",
         "cookie": "^0.5.0",
         "lodash-es": "^4.17.21",
         "octokit": "^1.8.1",
