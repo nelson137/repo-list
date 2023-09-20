@@ -9,6 +9,7 @@
     import CreateListModal from '$components/modals/CreateListModal.svelte';
     import type { CreateListOkData } from '$lib/ui/events';
     import { RepoList } from '$lib/models/repo-list';
+    import { SvelteUIProvider } from '@svelteuidev/core';
 
     export let data: LayoutData;
 
@@ -89,9 +90,11 @@
     {/if}
 </header>
 
-<main>
-    <slot />
-</main>
+<SvelteUIProvider themeObserver="dark">
+    <main>
+        <slot />
+    </main>
+</SvelteUIProvider>
 
 <style lang="scss">
     @use 'global' as *;
