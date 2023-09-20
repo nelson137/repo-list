@@ -72,7 +72,7 @@
         :global(svg) {
             width: 18px;
             height: 18px;
-            stroke: var(--color-text); // var(--color-text-secondary);
+            stroke: var(--color-text-secondary);
             stroke-width: 3px;
             transition: stroke 150ms ease 0ms;
         }
