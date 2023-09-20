@@ -65,7 +65,7 @@
     }
 
     :global(button[data-variant='colorbox']) {
-        padding: 4px;
+        padding: 3px;
         border-radius: 8px;
         transition: background-color 150ms ease 0ms;
 
