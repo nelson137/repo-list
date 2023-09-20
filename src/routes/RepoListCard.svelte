@@ -12,6 +12,11 @@
     import RepoListDragContainer from './RepoListDragContainer.svelte';
     import { onMount } from 'svelte';
     import BackspaceSvg from '$components/svgs/BackspaceSvg.svelte';
+    import PencilSvg from '$lib/ui/components/svgs/PencilSvg.svelte';
+    import { TextInput } from '@svelteuidev/core';
+    import CheckButton from '$lib/ui/components/CheckButton.svelte';
+    import XButton from '$lib/ui/components/XButton.svelte';
+    import { clickoutside } from '@svelteuidev/composables';
 
     export let list: RepoList;
 
@@ -24,9 +29,37 @@
             if (edit_mode) {
                 // Clear selections when edit mode is enabled
                 bulk_delete_selection = {};
+            } else {
+                in_title_edit = false;
             }
         })
     );
+
+    let in_title_edit = false;
+    let title_new_name = '';
+
+    const start_title_edit = (_event: MouseEvent) => {
+        // Delayed so as not to interfere with the click outside handler
+        setTimeout(() => {
+            title_new_name = list.name;
+            in_title_edit = true;
+        }, 0);
+    };
+
+    const submit_title_edit = (_event: CustomEvent<MouseEvent>) => {
+        console.log('submit');
+        in_title_edit = false;
+    };
+
+    const cancel_title_edit = (_event: CustomEvent<MouseEvent>) => {
+        console.log('cancel');
+        in_title_edit = false;
+    };
+
+    const click_outside_title_edit_input = (_el?: HTMLElement) => {
+        console.log('cancel (click outside)');
+        in_title_edit = false;
+    };
 
     const add_repos_to_list = (event: CustomEvent<AddRepoSubmitData>) =>
         repo_lists.insert_repos(list.id, event.detail.repo_ids);
@@ -45,22 +78,45 @@
 <div class="list-wrapper">
     <div class="list-card">
         <div class="list-header">
-            <span class="list-title">{list.name}</span>
-            <div class="list-controls-container">
-                {#if $in_edit_mode}
-                    <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
-                        {#if any_repos_selected}
-                            <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
-                        {/if}
-                        <AddRepoModal list_id={list.id} on:submit={add_repos_to_list} />
-                        <DeleteListModal
-                            list_id={list.id}
-                            list_name={list.name}
-                            on:yes={delete_list}
-                        />
-                    </div>
-                {/if}
-            </div>
+            {#if in_title_edit}
+                <div
+                    class="list-title-edit-input"
+                    use:clickoutside={{
+                        enabled: in_title_edit,
+                        callback: click_outside_title_edit_input,
+                    }}
+                >
+                    <TextInput variant="filled" bind:value={title_new_name} />
+                </div>
+                <div class="list-title-edit-controls-container">
+                    <CheckButton variant="icon" size={20} on:click={submit_title_edit} />
+                    <XButton variant="icon" size={20} on:click={cancel_title_edit} />
+                </div>
+            {:else}
+                <div class="list-title-container">
+                    <span>{list.name}</span>
+                    {#if $in_edit_mode}
+                        <button class="title-edit-button" on:click={start_title_edit}
+                            ><PencilSvg /></button
+                        >
+                    {/if}
+                </div>
+                <div class="list-controls-container">
+                    {#if $in_edit_mode}
+                        <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
+                            {#if any_repos_selected}
+                                <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
+                            {/if}
+                            <AddRepoModal list_id={list.id} on:submit={add_repos_to_list} />
+                            <DeleteListModal
+                                list_id={list.id}
+                                list_name={list.name}
+                                on:yes={delete_list}
+                            />
+                        </div>
+                    {/if}
+                </div>
+            {/if}
         </div>
         <RepoListDragContainer list_id={list.id} let:card_drag_start let:card_drag_end>
             {#each list.repo_ids as r_id, i (r_id)}
@@ -99,13 +155,32 @@
                 display: flex;
                 flex-direction: row;
                 border-bottom: 1px solid var(--color-border);
-                justify-content: space-around;
-                gap: calc($repoCardGap / 2);
+                justify-content: space-between;
+                align-items: center;
+                height: 48px;
                 padding: 0px $repoCardGap;
 
-                .list-title {
-                    padding: 12px 0px;
+                .list-title-container {
                     flex-grow: 1;
+                    display: flex;
+                    height: 100%;
+                    align-items: center;
+                    gap: 8px;
+
+                    .title-edit-button {
+                        height: 100%;
+
+                        :global(svg.icon-pencil) {
+                            width: 18px;
+                            height: 18px;
+                            stroke: var(--color-text-secondary);
+                            transition: stroke 150ms ease-in-out;
+                        }
+
+                        &:hover :global(svg.icon-pencil) {
+                            stroke: var(--color-text);
+                        }
+                    }
                 }
 
                 .list-controls-container {
@@ -120,6 +195,20 @@
                         flex-direction: row;
                         gap: calc($repoCardGap / 2);
                     }
+                }
+
+                .list-title-edit-input {
+                    flex: 1;
+                    :global(input) {
+                        font-size: 16px;
+                    }
+                }
+
+                .list-title-edit-controls-container {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 8px;
+                    margin-left: 10px;
                 }
             }
         }
