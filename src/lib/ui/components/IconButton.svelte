@@ -11,6 +11,8 @@
          */
         variant?: 'icon' | 'colorbox';
 
+        size?: number;
+
         // Pass-through button element attributes
         /** The type attribute for the HTML button element. */
         type?: HTMLButtonElement['type'];
@@ -24,6 +26,7 @@
 
     export const defaults: Props = {
         variant: 'icon',
+        size: undefined,
         type: undefined,
         stopPropagation: false,
         preventDefault: false,
@@ -37,6 +40,7 @@
 
     const D = defaults;
     export let variant: $$Props['variant'] = D.variant;
+    export let size: $$Props['size'] = D.size;
     export let type: $$Props['type'] = D.type;
     export let stopPropagation: $$Props['stopPropagation'] = D.stopPropagation;
     export let preventDefault: $$Props['preventDefault'] = D.preventDefault;
@@ -50,11 +54,15 @@
     }
 </script>
 
-<button data-variant={variant} {type} on:click={on_click}><slot /></button>
+<button data-variant={variant} {type} on:click={on_click} style={size ? `--size: ${size}px` : ''}
+    ><slot /></button
+>
 
 <style lang="scss">
     button[data-variant='icon'] {
         :global(svg) {
+            width: var(--size, 24px);
+            height: var(--size, 24px);
             stroke: var(--color-text-secondary);
             stroke-width: 2px;
         }
@@ -70,8 +78,8 @@
         transition: background-color 150ms ease 0ms;
 
         :global(svg) {
-            width: 18px;
-            height: 18px;
+            width: var(--size, 18px);
+            height: var(--size, 18px);
             stroke: var(--color-text-secondary);
             stroke-width: 3px;
             transition: stroke 150ms ease 0ms;
