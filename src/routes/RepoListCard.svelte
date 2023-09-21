@@ -57,6 +57,10 @@
         in_title_edit = false;
     };
 
+    const title_edit_keyup = ((event: KeyboardEvent) => {
+        if (event.key === 'Enter') submit_title_edit();
+    }) as unknown as (_: CustomEvent) => void;
+
     const add_repos_to_list = (event: CustomEvent<AddRepoSubmitData>) =>
         repo_lists.insert_repos(list.id, event.detail.repo_ids);
 
@@ -82,7 +86,11 @@
                         callback: cancel_title_edit,
                     }}
                 >
-                    <TextInput variant="filled" bind:value={title_edit_value} />
+                    <TextInput
+                        variant="filled"
+                        bind:value={title_edit_value}
+                        on:keyup={title_edit_keyup}
+                    />
                 </div>
                 <div class="list-title-edit-controls-container">
                     <CheckButton variant="icon" size={20} on:click={submit_title_edit} />
