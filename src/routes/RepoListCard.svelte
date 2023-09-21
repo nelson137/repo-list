@@ -78,10 +78,10 @@
 
 <div class="list-wrapper">
     <div class="list-card">
-        <div class="list-header">
+        <div class="header">
             {#if in_title_edit}
                 <div
-                    class="list-title-edit-input"
+                    class="title-edit-input"
                     use:clickoutside={{
                         enabled: in_title_edit,
                         callback: cancel_title_edit,
@@ -95,13 +95,13 @@
                         use={[[focus]]}
                     />
                 </div>
-                <div class="list-title-edit-controls-container">
+                <div class="title-edit-controls">
                     <CheckButton variant="icon" size={20} on:click={submit_title_edit} />
                     <XButton variant="icon" size={20} on:click={cancel_title_edit} />
                 </div>
             {:else}
                 <button
-                    class="list-title-container"
+                    class="title-container"
                     role={$in_edit_mode ? undefined : 'presentation'}
                     tabindex={$in_edit_mode ? undefined : -1}
                     on:click={start_title_edit}
@@ -111,9 +111,9 @@
                         <PencilSvg />
                     {/if}
                 </button>
-                <div class="list-controls-container">
+                <div class="edit-controls-container">
                     {#if $in_edit_mode}
-                        <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
+                        <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                             {#if any_repos_selected}
                                 <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
                             {/if}
@@ -161,7 +161,7 @@
             border: 1px solid var(--color-border);
             border-radius: 16px;
 
-            .list-header {
+            .header {
                 display: flex;
                 flex-direction: row;
                 border-bottom: 1px solid var(--color-border);
@@ -170,7 +170,7 @@
                 height: 48px;
                 padding: 0px $repoCardGap;
 
-                .list-title-container {
+                .title-container {
                     display: flex;
                     height: 100%;
                     align-items: center;
@@ -191,13 +191,13 @@
                     }
                 }
 
-                .list-controls-container {
+                .edit-controls-container {
                     display: grid;
                     grid: 1fr / 1fr;
                     grid-template-areas: 'slot';
                     justify-items: end;
 
-                    .list-controls {
+                    .edit-controls {
                         grid-area: slot;
                         display: flex;
                         flex-direction: row;
@@ -205,14 +205,14 @@
                     }
                 }
 
-                .list-title-edit-input {
+                .title-edit-input {
                     flex: 1;
                     :global(input) {
                         font-size: 16px;
                     }
                 }
 
-                .list-title-edit-controls-container {
+                .title-edit-controls {
                     display: flex;
                     flex-direction: row;
                     gap: 8px;
