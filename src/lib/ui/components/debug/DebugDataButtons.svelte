@@ -49,9 +49,9 @@
 </script>
 
 <div class="container">
-    <button on:click={on_click_clear}>Clear</button>
-    <button on:click={on_click_defaults}>Default Lists</button>
-    <button on:click={on_click_clear_first_list}>Clear First List</button>
+    <button tabindex="-1" on:click={on_click_clear}>Clear</button>
+    <button tabindex="-1" on:click={on_click_defaults}>Default Lists</button>
+    <button tabindex="-1" on:click={on_click_clear_first_list}>Clear First List</button>
 </div>
 
 <style lang="scss">
