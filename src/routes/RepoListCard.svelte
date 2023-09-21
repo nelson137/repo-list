@@ -88,6 +88,7 @@
                 >
                     <TextInput
                         variant="filled"
+                        size="sm"
                         bind:value={title_edit_value}
                         on:keyup={title_edit_keyup}
                         use={[[focus]]}
