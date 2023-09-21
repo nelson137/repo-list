@@ -215,7 +215,7 @@ export class RepositoryListsStore {
     public get_list_repo_ids = (id: string): Readonly<string[]> => this.get_list(id).repo_ids;
 
     /**
-     * Prepend a repository list to the store and update local storage.
+     * Prepend a repository list to the store.
      * @param list The repository list.
      */
     public add_list = (list: RepoList) => this.update(data => {
@@ -223,7 +223,7 @@ export class RepositoryListsStore {
     });
 
     /**
-     * Delete a repository list by ID from the store and update local storage.
+     * Delete a repository list by ID from the store.
      * @param list The ID of the repository list.
      */
     public delete_list = (id: string) => this.update(data => {
@@ -279,8 +279,7 @@ export class RepositoryListsStore {
     });
 
     /**
-     * Update the array of repositories for a list by ID in the store and update
-     * local storage.
+     * Update the array of repositories for a list by ID in the store.
      * @param list_id The ID of the repository list.
      * @param repo_ids The new array of repository IDs for the list.
      */
