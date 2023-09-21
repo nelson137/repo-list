@@ -59,6 +59,7 @@
 
     const title_edit_keyup = ((event: KeyboardEvent) => {
         if (event.key === 'Enter') submit_title_edit();
+        else if (event.key === 'Escape') cancel_title_edit();
     }) as unknown as (_: CustomEvent) => void;
 
     const add_repos_to_list = (event: CustomEvent<AddRepoSubmitData>) =>
