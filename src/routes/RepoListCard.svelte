@@ -36,30 +36,24 @@
     );
 
     let in_title_edit = false;
-    let title_new_name = '';
+    let title_edit_value = '';
 
     const start_title_edit = (_event: MouseEvent) => {
         if (!$in_edit_mode) return;
 
         // Delayed so as not to interfere with the click outside handler
         setTimeout(() => {
-            title_new_name = list.name;
+            title_edit_value = list.name;
             in_title_edit = true;
         }, 0);
     };
 
-    const submit_title_edit = (_event: CustomEvent<MouseEvent>) => {
-        console.log('submit');
+    const submit_title_edit = () => {
+        repo_lists.rename_list(list.id, title_edit_value);
         in_title_edit = false;
     };
 
-    const cancel_title_edit = (_event: CustomEvent<MouseEvent>) => {
-        console.log('cancel');
-        in_title_edit = false;
-    };
-
-    const click_outside_title_edit_input = (_el?: HTMLElement) => {
-        console.log('cancel (click outside)');
+    const cancel_title_edit = () => {
         in_title_edit = false;
     };
 
@@ -85,10 +79,10 @@
                     class="list-title-edit-input"
                     use:clickoutside={{
                         enabled: in_title_edit,
-                        callback: click_outside_title_edit_input,
+                        callback: cancel_title_edit,
                     }}
                 >
-                    <TextInput variant="filled" bind:value={title_new_name} />
+                    <TextInput variant="filled" bind:value={title_edit_value} />
                 </div>
                 <div class="list-title-edit-controls-container">
                     <CheckButton variant="icon" size={20} on:click={submit_title_edit} />

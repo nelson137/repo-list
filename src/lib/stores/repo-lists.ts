@@ -94,6 +94,15 @@ export class RepositoryListsData {
             delete this.lists[id];
         }
     };
+
+    /**
+     * Rename a repository list.
+     * @param id The ID of the repository list.
+     * @param name The new name of the repository list.
+     */
+    public rename_list = (id: string, name: string) => {
+        this.lists[id].name = name;
+    };
 };
 
 export const REPO_LISTS_KEY = 'repo-lists';
@@ -219,6 +228,15 @@ export class RepositoryListsStore {
      */
     public delete_list = (id: string) => this.update(data => {
         data.delete_list(id);
+    });
+
+    /**
+     * Rename a repository list by ID.
+     * @param id The ID of the repository list.
+     * @param name The new name of the repository list.
+     */
+    public rename_list = (id: string, name: string) => this.update(data => {
+        data.rename_list(id, name);
     });
 
     public start_edit = () => {
