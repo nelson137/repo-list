@@ -16,7 +16,7 @@
     import { TextInput } from '@svelteuidev/core';
     import CheckButton from '$lib/ui/components/CheckButton.svelte';
     import XButton from '$lib/ui/components/XButton.svelte';
-    import { clickoutside } from '@svelteuidev/composables';
+    import { clickoutside, focus } from '@svelteuidev/composables';
 
     export let list: RepoList;
 
@@ -90,6 +90,7 @@
                         variant="filled"
                         bind:value={title_edit_value}
                         on:keyup={title_edit_keyup}
+                        use={[[focus]]}
                     />
                 </div>
                 <div class="list-title-edit-controls-container">
