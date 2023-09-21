@@ -39,6 +39,8 @@
     let title_new_name = '';
 
     const start_title_edit = (_event: MouseEvent) => {
+        if (!$in_edit_mode) return;
+
         // Delayed so as not to interfere with the click outside handler
         setTimeout(() => {
             title_new_name = list.name;
@@ -93,14 +95,17 @@
                     <XButton variant="icon" size={20} on:click={cancel_title_edit} />
                 </div>
             {:else}
-                <div class="list-title-container">
+                <button
+                    class="list-title-container"
+                    role={$in_edit_mode ? undefined : 'presentation'}
+                    tabindex={$in_edit_mode ? undefined : -1}
+                    on:click={start_title_edit}
+                >
                     <span>{list.name}</span>
                     {#if $in_edit_mode}
-                        <button class="title-edit-button" on:click={start_title_edit}
-                            ><PencilSvg /></button
-                        >
+                        <PencilSvg />
                     {/if}
-                </div>
+                </button>
                 <div class="list-controls-container">
                     {#if $in_edit_mode}
                         <div class="list-controls" transition:fly={{ x: -16, duration: 200 }}>
@@ -161,25 +166,23 @@
                 padding: 0px $repoCardGap;
 
                 .list-title-container {
-                    flex-grow: 1;
                     display: flex;
                     height: 100%;
                     align-items: center;
                     gap: 8px;
 
-                    .title-edit-button {
-                        height: 100%;
+                    // Override browser default size for buttons
+                    font-size: 16px;
 
-                        :global(svg.icon-pencil) {
-                            width: 18px;
-                            height: 18px;
-                            stroke: var(--color-text-secondary);
-                            transition: stroke 150ms ease-in-out;
-                        }
+                    :global(svg.icon-pencil) {
+                        width: 18px;
+                        height: 18px;
+                        stroke: var(--color-text-secondary);
+                        transition: stroke 150ms ease-in-out;
+                    }
 
-                        &:hover :global(svg.icon-pencil) {
-                            stroke: var(--color-text);
-                        }
+                    &:hover :global(svg.icon-pencil) {
+                        stroke: var(--color-text);
                     }
                 }
 
