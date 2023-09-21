@@ -45,7 +45,7 @@
         setTimeout(() => {
             title_edit_value = list.name;
             in_title_edit = true;
-        }, 0);
+        }, 50);
     };
 
     const submit_title_edit = () => {
@@ -58,6 +58,8 @@
     };
 
     const title_edit_keyup = ((event: KeyboardEvent) => {
+        if (!in_title_edit) return;
+
         if (event.key === 'Enter') submit_title_edit();
         else if (event.key === 'Escape') cancel_title_edit();
     }) as unknown as (_: CustomEvent) => void;
