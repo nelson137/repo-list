@@ -18,6 +18,10 @@ export class RepositoryListsData {
      */
     public lists: { [id: string]: RepoList } = {};
 
+    /**
+     * Create a deep clone.
+     * @returns A deep clone of this object.
+     */
     public clone = (): RepositoryListsData => {
         const new_data = new RepositoryListsData();
         new_data.lists = cloneMapObj(this.lists);
@@ -182,6 +186,9 @@ export class RepositoryListsStore {
      */
     private backup = writable<RepositoryListsData | null>(null);
 
+    /**
+     * The store for whether the repository lists data is in edit mode.
+     */
     public in_edit_mode = derived(this.backup, b => !!b);
 
     /**
@@ -281,10 +288,17 @@ export class RepositoryListsStore {
         data.rename_list(id, name);
     });
 
+    /**
+     * Start edit mode, save a backup of the current store state.
+     */
     public start_edit = () => {
         this.backup.set(get(this.store).clone());
     };
 
+    /**
+     * Finish edit mode & revert the store back to its state before edit mode
+     * was started.
+     */
     public cancel_edit = () => {
         const backup = get(this.backup);
         if (backup === null) return console.warn('Unable to cancel edit when not in edit mode');
@@ -292,6 +306,9 @@ export class RepositoryListsStore {
         this.backup.set(null);
     };
 
+    /**
+     * Finish edit mode & save the store data to local storage.
+     */
     public submit_edit = () => {
         const backup = get(this.backup);
         if (backup === null) return console.warn('Unable to submit edit when not in edit mode');
@@ -340,6 +357,9 @@ export const repo_lists = new RepositoryListsStore();
  */
 export const lists = repo_lists.lists;
 
+/**
+ * The repository lists edit mode store.
+ */
 export const in_edit_mode = repo_lists.in_edit_mode;
 
 /**
