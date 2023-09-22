@@ -33,13 +33,28 @@
 <svelte:window on:beforeunload={on_before_unload} />
 
 {#if data?.logged_in}
-    {#if import.meta.env.DEV}
-        <DebugDataButtons />
-    {/if}
-
     {#each $lists as list}
         <RepoListCard {list} />
     {/each}
+
+    {#if import.meta.env.DEV}
+        <div class="dev-container">
+            <DebugDataButtons />
+        </div>
+    {/if}
 {:else}
     <h1>Please log in.</h1>
 {/if}
+
+<style lang="scss">
+    .dev-container {
+        position: absolute;
+        --gap: 8px;
+        top: calc(62px + var(--gap));
+        left: var(--gap);
+        display: flex;
+        flex-direction: row;
+        gap: var(--gap);
+        align-items: center;
+    }
+</style>

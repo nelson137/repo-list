@@ -56,9 +56,6 @@
 
 <style lang="scss">
     .container {
-        position: absolute;
-        top: calc(62px + 8px);
-        left: 8px;
         display: flex;
         flex-direction: row;
         gap: 8px;
