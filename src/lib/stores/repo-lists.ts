@@ -2,7 +2,7 @@ import type { Repo } from "$lib/models/repo";
 import { RepoList, RepoListStorage } from "$lib/models/repo-list";
 import * as _ from 'lodash-es';
 import { derived, get, writable } from "svelte/store";
-import { cloneMapObj } from "./utils";
+import { async_derived, cloneMapObj, hash } from "./utils";
 import { repos as repos_store } from "./repos";
 
 export class RepositoryListsData {
@@ -23,6 +23,18 @@ export class RepositoryListsData {
         new_data.lists = cloneMapObj(this.lists);
         new_data.list_order = JSON.parse(JSON.stringify(this.list_order));
         return new_data;
+    };
+
+    /**
+     * Calculate a hash of the repository lists data.
+     * @returns a string hash digest of the data.
+     */
+    public hash = async (): Promise<string> => {
+        const list_order = JSON.stringify(this.list_order);
+        const lists = Object.entries(this.lists)
+            .map(([id, list]) => `${id}:${JSON.stringify(list)}`)
+            .join(',');
+        return await hash(list_order + lists);
     };
 
     /**
@@ -173,6 +185,36 @@ export class RepositoryListsStore {
     public in_edit_mode = derived(this.backup, b => !!b);
 
     /**
+     * The hash of the store backup for edit mode.
+     * `null` if not in edit mode.
+     */
+    private backup_hash = async_derived(
+        this.backup,
+        async backup => backup === null ? null : await backup.hash()
+    );
+
+    /**
+     * The hash of the current store state for edit mode.
+     * `null` if not in edit mode.
+     */
+    private edit_hash = async_derived(
+        [this.in_edit_mode, this.store],
+        async ([$in_edit_mode, $store]) => $in_edit_mode ? await $store.hash() : null
+    );
+
+    /**
+     * The store for whether the repository lists edit mode is dirty.
+     *
+     * - `false` when not in edit mode.
+     * - `true` when in edit mode and the current state is different from when
+     *   edit mode was initiated.
+     */
+    public is_edit_mode_dirty = derived(
+        [this.backup_hash, this.edit_hash],
+        ([$backup_hash, $edit_hash]) => $backup_hash !== $edit_hash
+    );
+
+    /**
      * The store for repository lists as an array.
      */
     public lists = derived(this.store, rl => rl.get_repo_lists());
@@ -299,3 +341,8 @@ export const repo_lists = new RepositoryListsStore();
 export const lists = repo_lists.lists;
 
 export const in_edit_mode = repo_lists.in_edit_mode;
+
+/**
+ * The repository lists edit mode is dirty store.
+ */
+export const is_edit_mode_dirty = repo_lists.is_edit_mode_dirty;

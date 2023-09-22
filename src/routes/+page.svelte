@@ -3,11 +3,10 @@
     import { onMount } from 'svelte';
     import type { PageData } from './$types';
     import { page } from '$app/stores';
-    import { lists, load_local_storage, in_edit_mode } from '$lib/stores/repo-lists';
+    import { lists, load_local_storage, is_edit_mode_dirty } from '$lib/stores/repo-lists';
     import RepoListCard from './RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
     import DebugDataButtons from '$components/debug/DebugDataButtons.svelte';
-    import { get } from 'svelte/store';
 
     export let data: PageData;
 
@@ -16,7 +15,7 @@
     });
 
     function on_before_unload(event: BeforeUnloadEvent) {
-        if (!get(in_edit_mode)) return;
+        if (!$is_edit_mode_dirty) return;
         event.preventDefault();
         /**
          * Required for browser compatibility.
