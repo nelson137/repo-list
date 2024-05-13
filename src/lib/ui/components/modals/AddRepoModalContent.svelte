@@ -24,6 +24,8 @@
 
     let value: typeof options | undefined;
 
+    // Proxy focus event through an invisible input element so that it appears
+    // to come from the input element inside the `Svelecte` component.
     const focus_trigger = document.createElement('input');
     focus_trigger.addEventListener('focus', (event: FocusEvent) => {
         select_component.focus(event);
@@ -54,7 +56,7 @@
     >
         <div slot="clear-icon" class="icons-container">
             <XButton variant="colorbox" preventDefault />
-            <CheckButton variant="colorbox" type="submit" on:click stopPropagation />
+            <CheckButton variant="colorbox" type="submit" stopPropagation />
         </div>
     </Svelecte>
 </form>
