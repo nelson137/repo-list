@@ -32,4 +32,4 @@ export type MoveReposSubmitData = {
 
 export type MoveReposModalEvents = {
     submit: MoveReposSubmitData;
-}
+};

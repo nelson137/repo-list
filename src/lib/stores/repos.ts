@@ -1,7 +1,7 @@
-import type { Repo } from "$lib/models/repo";
+import type { Repo } from '$lib/models/repo';
 import * as _ from 'lodash-es';
-import { get, writable } from "svelte/store";
-import { cloneMapObj } from "./utils";
+import { get, writable } from 'svelte/store';
+import { cloneMapObj } from './utils';
 
 export class RepositoriesData {
     /**
@@ -40,7 +40,7 @@ export class RepositoriesData {
      * @param id The ID of the repository.
      */
     public get_repo = (id: string): Repo => this.repositories[id];
-};
+}
 
 export class RepositoriesStore {
     /**

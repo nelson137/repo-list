@@ -1,5 +1,5 @@
-import { REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from "./repo-lists";
-import { createMockConsoleError, rand } from "$test/utils";
+import { REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from './repo-lists';
+import { createMockConsoleError, rand } from '$test/utils';
 
 describe('RepositoryListsData', () => {
     let sut: RepositoryListsData;
@@ -7,8 +7,7 @@ describe('RepositoryListsData', () => {
     function fillSut() {
         const lists = rand.array.repoListStorage();
         const repo_ids = new Set(lists.flatMap(l => l.repo_ids));
-        if (repo_ids.size === 0)
-            throw 'generated array of repo lists has no repositories';
+        if (repo_ids.size === 0) throw 'generated array of repo lists has no repositories';
 
         const repos = rand.array.repo(repo_ids.size);
         let i = 0;
@@ -201,8 +200,9 @@ describe('read_local_storage', () => {
         const actualLists = read_local_storage();
 
         expect(mockConsoleError).toHaveBeenCalledOnce();
-        expect(mockConsoleError.mock.lastCall.join(' '))
-            .toContain('Failed to load repository lists from local storage:');
+        expect(mockConsoleError.mock.lastCall.join(' ')).toContain(
+            'Failed to load repository lists from local storage:',
+        );
         expect(actualLists).toEqual([]);
     });
 

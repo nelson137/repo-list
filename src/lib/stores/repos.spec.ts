@@ -1,5 +1,5 @@
-import { rand } from "$test/utils";
-import { RepositoriesData } from "./repos";
+import { rand } from '$test/utils';
+import { RepositoriesData } from './repos';
 
 describe('RepositoriesData', () => {
     let sut: RepositoriesData;

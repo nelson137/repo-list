@@ -1,7 +1,7 @@
 import { ComponentType, SvelteComponent } from 'svelte';
 import type { Writable } from 'svelte/store';
 
-export { };
+export {};
 
 declare module 'svelecte' {
     type Item = {
@@ -45,13 +45,13 @@ declare module 'svelecte' {
         inputId?: string | null; // null
         keepCreated?: boolean; // true
         labelAsValue?: boolean; // false
-        labelField?: string | null, // null
+        labelField?: string | null; // null
         lazyDropdown?: boolean; // true
         max?: number; // 0
         minQuery?: number; // 1
         multiple?: boolean; // false
-        name?: string | null, // null
-        options?: Item[], // []
+        name?: string | null; // null
+        options?: Item[]; // []
         //parentValue?: unknown; // undefined
         placeholder?: string; // 'Select'
         renderer?: string | Function | null; // null
@@ -64,8 +64,8 @@ declare module 'svelecte' {
         sortField?: string | null; // null
         style?: string; // null
         validatorAction?: Function | null; // null
-        valueAsObject?: boolean, // false
-        valueField?: string | null, // null
+        valueAsObject?: boolean; // false
+        valueField?: string | null; // null
         virtualList?: boolean; // false
         vlHeight?: number | null; // null
         vlItemSize?: number | null; // null
@@ -94,9 +94,9 @@ declare module 'svelecte' {
     export default class Svelecte extends SvelteComponent<
         Svelecte_Props,
         Svelecte_Events,
-        Svelecte_Slots,
+        Svelecte_Slots
     > {
-        public const focus: (event: FocusEvent) => void;
+        public focus: (event: FocusEvent) => void;
     }
 
     export const TAB_SELECT_NAVIGATE: 'select-navigate';

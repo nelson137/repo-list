@@ -23,7 +23,7 @@
                 closeOnOuterClick: true,
                 classWindowWrap: 'create-list-modal-wrap',
                 classWindow: 'create-list-modal-window',
-            }
+            },
         );
     };
 </script>

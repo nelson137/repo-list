@@ -15,7 +15,13 @@ const repoBaseSchema = z.object({
 });
 
 export const apiRepoSchema = repoBaseSchema.extend({
-    id: z.number().int().positive().safe().transform(id => id.toString()).describe(`The repo's ID.`),
+    id: z
+        .number()
+        .int()
+        .positive()
+        .safe()
+        .transform(id => id.toString())
+        .describe(`The repo's ID.`),
 });
 
 export class ApiRepo extends ZClass<Repo>()(apiRepoSchema) {
@@ -27,7 +33,10 @@ export class ApiRepo extends ZClass<Repo>()(apiRepoSchema) {
     public static parse = (data: unknown): Repo => new Repo(apiRepoSchema.parse(data));
 
     public static parse_array = (data: unknown): Repo[] =>
-        z.array(apiRepoSchema).parse(data).map(d => new Repo(d));
+        z
+            .array(apiRepoSchema)
+            .parse(data)
+            .map(d => new Repo(d));
 
     public clone = (): Repo => new Repo(JSON.parse(JSON.stringify(this)));
 }
@@ -45,7 +54,10 @@ export class Repo extends ZClass<Repo>()(repoSchema) {
     public static parse = (data: unknown): Repo => new Repo(repoSchema.parse(data));
 
     public static parse_array = (data: unknown): Repo[] =>
-        z.array(repoSchema).parse(data).map(d => new Repo(d));
+        z
+            .array(repoSchema)
+            .parse(data)
+            .map(d => new Repo(d));
 
     public clone = (): Repo => new Repo(JSON.parse(JSON.stringify(this)));
 }

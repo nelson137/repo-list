@@ -29,5 +29,5 @@ export const GET = (async ({ locals }) => {
 }) satisfies RequestHandler;
 
 function path_to_string(path: (string | number)[]): string {
-    return path.map(p => typeof p === 'number' ? `[${p}]` : `.${p}`).join('');
+    return path.map(p => (typeof p === 'number' ? `[${p}]` : `.${p}`)).join('');
 }

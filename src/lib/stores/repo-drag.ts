@@ -1,5 +1,5 @@
-import type { Side } from "$lib/ui/drag-and-drop";
-import { get, writable } from "svelte/store";
+import type { Side } from '$lib/ui/drag-and-drop';
+import { get, writable } from 'svelte/store';
 
 export type DragSource = {
     /**
@@ -75,8 +75,7 @@ export class RepoDragStore {
      * @param list_id The ID of the list from which the card is being dragged.
      * @param index The index of the card in the source list.
      */
-    public drag_start = (source: DragSource) =>
-        this.store.set(new RepoDragData(source));
+    public drag_start = (source: DragSource) => this.store.set(new RepoDragData(source));
 
     /**
      * Update the indicator location.
@@ -85,9 +84,10 @@ export class RepoDragStore {
      * @param closest_side The side of the `closest_i`th card closest to the
      * mouse.
      */
-    public drag_over = (closest_i: number, closest_side: Side) => this.update(data => {
-        data.indicator = { index: closest_i, side: closest_side };
-    });
+    public drag_over = (closest_i: number, closest_side: Side) =>
+        this.update(data => {
+            data.indicator = { index: closest_i, side: closest_side };
+        });
 
     /**
      * End the current drag session.

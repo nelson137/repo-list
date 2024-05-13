@@ -27,7 +27,7 @@
                 closeOnEsc: true,
                 closeOnOuterClick: true,
                 classWindow: 'delete-list-modal-window',
-            }
+            },
         );
     };
 </script>

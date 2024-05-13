@@ -28,7 +28,7 @@
                 closeButton: false,
                 closeOnEsc: true,
                 closeOnOuterClick: true,
-            }
+            },
         );
     };
 </script>

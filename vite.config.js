@@ -6,8 +6,8 @@ export default defineConfig({
     plugins: [sveltekit()],
     resolve: {
         alias: {
-            '$test': path.resolve('./src/test'),
-            '$components': path.resolve('./src/lib/ui/components'),
+            $test: path.resolve('./src/test'),
+            $components: path.resolve('./src/lib/ui/components'),
         },
     },
     css: {
@@ -30,5 +30,5 @@ export default defineConfig({
         coverage: {
             reporter: ['text', 'html'],
         },
-    }
+    },
 });

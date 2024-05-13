@@ -24,12 +24,9 @@ function endpoint_err_message(reason: EndpointErrorReason, message?: string): st
     }
 }
 
-export function endpoint_err_body(
-    reason: EndpointErrorReason,
-    message?: string,
-): App.Error {
+export function endpoint_err_body(reason: EndpointErrorReason, message?: string): App.Error {
     return {
-        message: endpoint_err_message(reason, message)
+        message: endpoint_err_message(reason, message),
     };
 }
 

@@ -5,8 +5,7 @@ import type { PageServerLoad } from './$types';
 
 export const load = (async ({ url, cookies }) => {
     const code = url.searchParams.get('code');
-    if (!code)
-        return endpoint_err(500, EndpointErrorReason.Auth_Callback_InvalidCode);
+    if (!code) return endpoint_err(500, EndpointErrorReason.Auth_Callback_InvalidCode);
 
     try {
         const { token } = await auth({

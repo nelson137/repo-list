@@ -1,7 +1,12 @@
-import { Repo, repoSchema } from "$lib/models/repo";
-import { RepoList, RepoListStorage, repoListSchema, repoListStorageSchema } from "$lib/models/repo-list";
-import { generateMock } from "@anatine/zod-mock";
-import { z } from "zod";
+import { Repo, repoSchema } from '$lib/models/repo';
+import {
+    RepoList,
+    RepoListStorage,
+    repoListSchema,
+    repoListStorageSchema,
+} from '$lib/models/repo-list';
+import { generateMock } from '@anatine/zod-mock';
+import { z } from 'zod';
 
 export const rand = {
     array: {

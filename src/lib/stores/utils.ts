@@ -1,4 +1,4 @@
-import { derived, type Readable, type Stores, type StoresValues } from "svelte/store";
+import { derived, type Readable, type Stores, type StoresValues } from 'svelte/store';
 
 /**
  * Define a `derived` Svelte store whose update method is asynchronous.
@@ -11,7 +11,7 @@ import { derived, type Readable, type Stores, type StoresValues } from "svelte/s
 export function async_derived<S extends Stores, T>(
     stores: S,
     callback: (values: StoresValues<S>) => Promise<T>,
-    initial_value?: T
+    initial_value?: T,
 ): Readable<T> {
     let previous = 0;
     return derived(
@@ -25,13 +25,13 @@ export function async_derived<S extends Stores, T>(
                 }
             });
         },
-        initial_value
+        initial_value,
     );
 }
 
-export function cloneMapObj<T extends { clone: () => T }>(
-    map: { [key: string]: T }
-): { [key: string]: T } {
+export function cloneMapObj<T extends { clone: () => T }>(map: {
+    [key: string]: T;
+}): { [key: string]: T } {
     return Object.fromEntries(Object.entries(map).map(([k, v]) => [`${k}`, v.clone()]));
 }
 
@@ -43,6 +43,6 @@ export function cloneMapObj<T extends { clone: () => T }>(
 export async function hash(data: string): Promise<string> {
     var data_array = new TextEncoder().encode(data);
     const digest = await crypto.subtle.digest('SHA-1', data_array);
-    const digest_array = Array.from(new Uint8Array(digest))
+    const digest_array = Array.from(new Uint8Array(digest));
     return digest_array.map(b => b.toString(16).padStart(2, '0')).join('');
 }

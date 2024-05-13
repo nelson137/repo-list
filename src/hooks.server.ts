@@ -10,10 +10,7 @@ export const handle = (({ event, resolve }) => {
     const cookies = cookies_str ? Cookie.parse(cookies_str) : {};
 
     if (event.url.pathname.startsWith('/api/github') && !cookies.token) {
-        return json(
-            endpoint_err_body(EndpointErrorReason.Auth_NoToken),
-            { status: 401 }
-        );
+        return json(endpoint_err_body(EndpointErrorReason.Auth_NoToken), { status: 401 });
     }
 
     event.locals.token = cookies.token;
