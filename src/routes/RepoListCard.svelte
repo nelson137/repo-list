@@ -7,7 +7,7 @@
     import type { RepoList } from '$lib/models/repo-list';
     import { repos } from '$lib/stores/repos';
     import AddRepoModal from '$components/modals/AddRepoModal.svelte';
-    import type { AddRepoSubmitData, DeleteListYesData } from '$lib/ui/events';
+    import type { AddRepoSubmitData, DeleteListYesData, MoveReposSubmitData } from '$lib/ui/events';
     import { fly } from 'svelte/transition';
     import RepoListDragContainer from './RepoListDragContainer.svelte';
     import { onMount } from 'svelte';
@@ -17,22 +17,27 @@
     import CheckButton from '$lib/ui/components/CheckButton.svelte';
     import XButton from '$lib/ui/components/XButton.svelte';
     import { clickoutside, focus } from '@svelteuidev/composables';
+    import MoveReposModal from '$lib/ui/components/modals/MoveReposModal.svelte';
 
     export let list: RepoList;
 
-    let bulk_delete_selection: { [repo_id: string]: boolean } = {};
+    let selected_repos: { [repo_id: string]: boolean } = {};
 
-    $: any_repos_selected = Object.values(bulk_delete_selection).some(v => v);
+    $: selected_repo_ids = Object.entries(selected_repos)
+        .filter(([_id, selected]) => selected)
+        .map(([id, _selected]) => id);
+
+    $: any_repos_selected = Object.values(selected_repos).some(v => v);
 
     onMount(() =>
         in_edit_mode.subscribe(edit_mode => {
             if (edit_mode) {
                 // Clear selections when edit mode is enabled
-                bulk_delete_selection = {};
+                selected_repos = {};
             } else {
                 in_title_edit = false;
             }
-        })
+        }),
     );
 
     let in_title_edit = false;
@@ -68,10 +73,12 @@
         repo_lists.insert_repos(list.id, event.detail.repo_ids);
 
     const remove_repos_from_list = (_event: MouseEvent) => {
-        const selected_repo_ids = Object.entries(bulk_delete_selection)
-            .filter(([_id, selected]) => selected)
-            .map(([id, _selected]) => id);
         repo_lists.remove_repos(list.id, selected_repo_ids);
+    };
+
+    const move_repos_to_list = (event: CustomEvent<MoveReposSubmitData>) => {
+        repo_lists.remove_repos(list.id, selected_repo_ids);
+        repo_lists.insert_repos(event.detail.list_id, selected_repo_ids);
     };
 
     const delete_list = (event: CustomEvent<DeleteListYesData>) =>
@@ -117,6 +124,12 @@
                     {#if $in_edit_mode}
                         <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                             {#if any_repos_selected}
+                                <MoveReposModal
+                                    src_list_id={list.id}
+                                    on:submit={move_repos_to_list}
+                                />
+                            {/if}
+                            {#if any_repos_selected}
                                 <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
                             {/if}
                             <AddRepoModal list_id={list.id} on:submit={add_repos_to_list} />
@@ -138,7 +151,7 @@
                         list_id={list.id}
                         index={i}
                         repo={repos.get_repo(r_id)}
-                        bind:bulk_delete_selected={bulk_delete_selection[r_id]}
+                        bind:bulk_delete_selected={selected_repos[r_id]}
                         on:card_drag_start={card_drag_start}
                         on:card_drag_end={card_drag_end}
                     />

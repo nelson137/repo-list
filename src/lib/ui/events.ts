@@ -24,3 +24,12 @@ export type DeleteListYesData = {
 export type DeleteListModalEvents = {
     yes: DeleteListYesData;
 };
+
+export type MoveReposSubmitData = {
+    /** The ID of the repository list to which to move the repositories. */
+    list_id: string;
+};
+
+export type MoveReposModalEvents = {
+    submit: MoveReposSubmitData;
+}
