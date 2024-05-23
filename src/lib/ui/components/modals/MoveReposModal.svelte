@@ -3,7 +3,7 @@
     import type { MoveReposModalEvents } from '$lib/ui/events';
     import { Modal } from '@svelteuidev/core';
     import SquareRoundedArrowRightSvg from '../svgs/SquareRoundedArrowRightSvg.svelte';
-    import Svelecte, { TAB_SELECT_NAVIGATE } from 'svelecte';
+    import Svelecte from 'svelecte';
     import { lists } from '$lib/stores/repo-lists';
     import XButton from '../XButton.svelte';
     import CheckButton from '../CheckButton.svelte';
@@ -39,7 +39,7 @@
     let selected: (typeof options)[number] | undefined;
 
     const focus_trigger = document.createElement('input');
-    focus_trigger.addEventListener('focus', event => select_component.focus(event));
+    focus_trigger.addEventListener('focus', () => select_component.focus());
     function focus() {
         focus_trigger.dispatchEvent(new FocusEvent('focus'));
     }
@@ -76,7 +76,7 @@
             bind:value={selected}
             placeholder="Select a list"
             clearable
-            selectOnTab={TAB_SELECT_NAVIGATE}
+            selectOnTab="select-navigate"
         >
             <div slot="clear-icon" class="icons-container">
                 <XButton variant="colorbox" preventDefault />
@@ -124,15 +124,14 @@
         --sv-bg: var(--color-bg-light);
         --sv-color: var(--color-text);
         --sv-min-height: 48px;
-        --sv-border-color: var(--color-border);
-        --sv-border: 1px solid var(--sv-border-color);
+        --sv-border: 1px solid var(--color-border);
         --sv-active-border: 1px solid var(--color-border-hover);
         --sv-placeholder-color: var(--color-text-translucent);
         --sv-dropdown-height: 256px;
+        --sv-dropdown-active-bg: var(--color-border);
+        --sv-dropdown-selected-bg: var(--color-border);
         --sv-item-color: var(--sv-color);
         --sv-item-active-color: var(--sv-item-color);
-        --sv-item-active-bg: var(--sv-border-color);
-        --sv-item-selected-bg: var(--sv-border-color);
         --sv-item-btn-bg: transparent;
         --sv-item-btn-bg-hover: var(--color-border-hover);
         --sv-item-btn-icon: var(--sv-item-color);

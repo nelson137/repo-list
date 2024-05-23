@@ -1,6 +1,5 @@
 <script lang="ts">
     import Svelecte from 'svelecte';
-    import { TAB_SELECT_NAVIGATE } from 'svelecte';
     import { repos } from '$lib/stores/repos';
     import CheckButton from '../CheckButton.svelte';
     import XButton from '../XButton.svelte';
@@ -27,9 +26,7 @@
     // Proxy focus event through an invisible input element so that it appears
     // to come from the input element inside the `Svelecte` component.
     const focus_trigger = document.createElement('input');
-    focus_trigger.addEventListener('focus', (event: FocusEvent) => {
-        select_component.focus(event);
-    });
+    focus_trigger.addEventListener('focus', () => select_component.focus());
     const focus = () => focus_trigger.dispatchEvent(new FocusEvent('focus'));
 
     onMount(() => {
@@ -52,7 +49,7 @@
         placeholder="Select repositories to add"
         multiple
         clearable
-        selectOnTab={TAB_SELECT_NAVIGATE}
+        selectOnTab="select-navigate"
     >
         <div slot="clear-icon" class="icons-container">
             <XButton variant="colorbox" preventDefault />
