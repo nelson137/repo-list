@@ -1,7 +1,7 @@
 import { ComponentType, SvelteComponent } from 'svelte';
 import type { Writable } from 'svelte/store';
 
-export {};
+export { };
 
 declare module 'svelecte' {
     type Item = {
@@ -24,24 +24,31 @@ declare module 'svelecte' {
         controlItem?: ComponentType; // import('svelecte/components/Item.svelte')
         creatable?: boolean; // false
         creatablePrefix?: string; // '*'
-        createFilter?: Function | null; // null
-        createTransform?: Function | null; // null
+        createFilter?: ((inputValue: string) => boolean) | null; // null
+        createTransform?:
+            | ((
+                  inputValue: string,
+                  creatablePrefix: string,
+                  valueField: string,
+                  labelField: string,
+              ) => object)
+            | null; // null
         delimiter?: string; // ,
         disableHighlight?: boolean; // false
         disableSifter?: boolean; // false
         disabled?: boolean; // false
         disabledField?: string; // '$disabled'
-        dndzone?: () => { noop: boolean; destroy: () => {} }; // () => ({ noop: true, destroy: () => {}})
+        dndzone?: () => { noop: boolean; destroy: () => object }; // () => ({ noop: true, destroy: () => {}})
         dropdownItem?: ComponentType; // import('svelecte/components/Item.svelte')
-        fetch?: string | Function | null; // null
-        fetchCallback?: Function | null; // null
+        fetch?: string | null; // null
+        fetchCallback?: ((jsonResponse: object) => object[]) | null; // null
         fetchMode?: string; // 'auto'
         fetchResetOnBlur?: true; // true
         groupItemsField?: string; // 'options'
         groupLabelField?: string; // 'label'
         hasAnchor?: boolean; // false
         highlightFirstItem?: boolean; // true
-        i18n?: {} | null; // null
+        i18n?: object | null; // null
         inputId?: string | null; // null
         keepCreated?: boolean; // true
         labelAsValue?: boolean; // false
@@ -54,7 +61,10 @@ declare module 'svelecte' {
         options?: Item[]; // []
         //parentValue?: unknown; // undefined
         placeholder?: string; // 'Select'
-        renderer?: string | Function | null; // null
+        renderer?:
+            | string
+            | ((item: object | string, isSelected: bool, inputValue: string) => string)
+            | null; // null
         required?: bool; // false
         resetOnBlur?: boolean; // true
         resetOnSelect?: select; // true
@@ -63,7 +73,7 @@ declare module 'svelecte' {
         selectOnTab?: boolean | 'select-navigate' | null; // null
         sortField?: string | null; // null
         style?: string; // null
-        validatorAction?: Function | null; // null
+        validatorAction?: object[] | null; // null
         valueAsObject?: boolean; // false
         valueField?: string | null; // null
         virtualList?: boolean; // false
@@ -81,8 +91,8 @@ declare module 'svelecte' {
     }
 
     interface Svelecte_Slots {
-        icon: {};
-        'control-end': {};
+        icon: unknown;
+        'control-end': unknown;
         'indicator-icon': {
             hasDropdownOpened: Writable<boolean>;
         };

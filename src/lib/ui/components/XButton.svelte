@@ -2,7 +2,7 @@
     import IconButton, { type Props as IconButtonProps } from './IconButton.svelte';
     import XSvg from './svgs/XSvg.svelte';
 
-    interface $$Props extends IconButtonProps {}
+    type $$Props = IconButtonProps;
 </script>
 
 <!-- Wrapper div necessary to ensure `:global` styles only target this component -->

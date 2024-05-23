@@ -2,7 +2,7 @@
     import IconButton, { type Props as IconButtonProps } from './IconButton.svelte';
     import CheckSvg from './svgs/CheckSvg.svelte';
 
-    interface $$Props extends IconButtonProps {}
+    type $$Props = IconButtonProps;
 </script>
 
 <div>

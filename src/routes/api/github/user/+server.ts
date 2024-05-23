@@ -1,13 +1,13 @@
-import { octokitFactory } from '$lib/server/api/octokit';
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { User } from '$lib/models/user';
+import { octokitFactory } from '$lib/server/api/octokit';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export type ResponsePayload = { user: User } | App.Error;
 
 export const GET = (async ({ locals }) => {
-    const octokit = octokitFactory(locals.token!);
+    const octokit = octokitFactory(locals.token);
     try {
         const users_response = await octokit.rest.users.getAuthenticated();
         const user = User.parse(users_response.data);

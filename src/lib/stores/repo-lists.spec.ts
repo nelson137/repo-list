@@ -1,5 +1,5 @@
-import { REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from './repo-lists';
 import { createMockConsoleError, rand } from '$test/utils';
+import { REPO_LISTS_KEY, RepositoryListsData, read_local_storage } from './repo-lists';
 
 describe('RepositoryListsData', () => {
     let sut: RepositoryListsData;
@@ -82,7 +82,7 @@ describe('RepositoryListsData', () => {
             const id = rand.choice(sut.list_order);
             const expectedList = sut.lists[id];
 
-            let actualList = sut.get_list(id);
+            const actualList = sut.get_list(id);
 
             expect(actualList).toEqual(expectedList);
         });

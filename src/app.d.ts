@@ -1,6 +1,6 @@
 /// <reference types="@sveltejs/kit" />
 
-export {};
+export { };
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces

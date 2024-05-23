@@ -1,14 +1,14 @@
-import { octokitFactory } from '$lib/server/api/octokit';
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { ApiRepo } from '$lib/models/repo';
+import { octokitFactory } from '$lib/server/api/octokit';
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
 import { ZodError } from 'zod';
+import type { RequestHandler } from './$types';
 
 export type ResponsePayload = { repos: ApiRepo[] } | App.Error;
 
 export const GET = (async ({ locals }) => {
-    const octokit = octokitFactory(locals.token!);
+    const octokit = octokitFactory(locals.token);
     try {
         const repos_data = await octokit.paginate(octokit.rest.repos.listForAuthenticatedUser, {
             per_page: 100,

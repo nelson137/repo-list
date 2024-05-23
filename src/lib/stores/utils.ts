@@ -41,7 +41,7 @@ export function cloneMapObj<T extends { clone: () => T }>(map: {
  * @returns The calculated hex digest of `data`.
  */
 export async function hash(data: string): Promise<string> {
-    var data_array = new TextEncoder().encode(data);
+    const data_array = new TextEncoder().encode(data);
     const digest = await crypto.subtle.digest('SHA-1', data_array);
     const digest_array = Array.from(new Uint8Array(digest));
     return digest_array.map(b => b.toString(16).padStart(2, '0')).join('');

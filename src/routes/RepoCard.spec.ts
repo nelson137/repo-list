@@ -1,7 +1,7 @@
+import type { Repo } from '$lib/models/repo';
+import { mockAnimations, rand } from '$test/utils';
 import { render, screen } from '@testing-library/svelte';
 import RepoCard from './RepoCard.svelte';
-import { mockAnimations, rand } from '$test/utils';
-import type { Repo } from '$lib/models/repo';
 
 describe('RepoCard component', () => {
     mockAnimations();

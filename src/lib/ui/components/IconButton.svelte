@@ -36,7 +36,7 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    interface $$Props extends Props {}
+    type $$Props = Props;
 
     const D = defaults;
     export let variant: $$Props['variant'] = D.variant;

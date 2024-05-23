@@ -17,4 +17,7 @@ export const init = () => {
     });
 };
 
-export const octokitFactory = (token: string): Octokit => new Octokit({ auth: token });
+export function octokitFactory(token?: string): Octokit {
+    if (token == null) throw new Error('Token is null or undefined');
+    return new Octokit({ auth: token });
+}

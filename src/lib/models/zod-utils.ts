@@ -8,7 +8,7 @@ export interface ZClass<Shape extends z.ZodRawShape> extends Omit<z.ZodObject<Sh
     new (data: z.input<z.ZodObject<Shape>>): z.output<z.ZodObject<Shape>>;
 }
 
-export function ZClass<T>() {
+export function ZClass<_T>() {
     return function <Shape extends z.ZodRawShape>(_schema: z.ZodObject<Shape>): ZClass<Shape> {
         return class {
             constructor(data: z.input<z.ZodObject<Shape>>) {

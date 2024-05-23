@@ -1,6 +1,6 @@
+import { __GITHUB_CLIENT_ID, __GITHUB_REDIRECT_BASE_URL } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { __GITHUB_CLIENT_ID, __GITHUB_REDIRECT_BASE_URL } from '$env/static/private';
 
 export const GET: RequestHandler = async () => {
     const gh_auth_params = new URLSearchParams({
