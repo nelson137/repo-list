@@ -23,7 +23,11 @@ export const GET = (async ({ locals }) => {
                 .join('; ');
             return endpoint_err(500, EndpointErrorReason.Data, message);
         } else {
-            return endpoint_err(400, EndpointErrorReason.Github, error.response.data.message);
+            return endpoint_err(
+                400,
+                EndpointErrorReason.Github,
+                error.response?.data?.message ?? 'unknown error',
+            );
         }
     }
 }) satisfies RequestHandler;
