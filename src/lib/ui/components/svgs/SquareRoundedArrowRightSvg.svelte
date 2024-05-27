@@ -6,7 +6,7 @@
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    stroke-width="1.5"
+    stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
     stroke="#2c3e50"

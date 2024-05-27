@@ -147,8 +147,14 @@
                 border: 1px solid var(--color-border);
                 border-radius: 6px;
 
-                & > span {
+                > span {
                     margin-left: 4px;
+                }
+
+                > :global(svg.icon-git-fork),
+                > :global(svg.icon-star) {
+                    width: 16px;
+                    height: 16px;
                 }
             }
         }

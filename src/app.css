@@ -18,7 +18,7 @@
 
     /* https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
     --color-green-a700-rgb: 0 200 83;
-    --color-green-500-rgb: 76 175 80;
+    --color-green-500-rgb: 111 192 114; /*76 175 80;*/
     --color-red-500-rgb: 244 67 54;
 }
 

@@ -50,12 +50,17 @@
         }
     }
 
-    button:hover :global(svg.icon-trash) {
-        stroke: rgba(var(--color-red-500-rgb) / 0.8);
+    button {
+        padding: 6px;
     }
 
     button :global(svg.icon-trash) {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
+        stroke: var(--color-text-secondary);
+    }
+
+    button:hover :global(svg.icon-trash) {
+        stroke: rgba(var(--color-red-500-rgb) / 0.8);
     }
 </style>

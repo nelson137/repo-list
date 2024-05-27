@@ -88,9 +88,11 @@
 
 <style lang="scss">
     button {
+        padding: 5px;
+
         :global(svg.icon-square-rounded-arrow-right) {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             stroke: var(--color-text-secondary);
         }
 

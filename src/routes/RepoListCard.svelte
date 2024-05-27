@@ -124,13 +124,11 @@
                     {#if $in_edit_mode}
                         <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                             {#if any_repos_selected}
+                                <button class="bulk-remove-repos-button" on:click={remove_repos_from_list}><BackspaceSvg /></button>
                                 <MoveReposModal
                                     src_list_id={list.id}
                                     on:submit={move_repos_to_list}
                                 />
-                            {/if}
-                            {#if any_repos_selected}
-                                <button on:click={remove_repos_from_list}><BackspaceSvg /></button>
                             {/if}
                             <AddRepoModal list_id={list.id} on:submit={add_repos_to_list} />
                             <DeleteListModal
@@ -207,6 +205,7 @@
                 }
 
                 .edit-controls-container {
+                    height: 100%;
                     display: grid;
                     grid: 1fr / 1fr;
                     grid-template-areas: 'slot';
@@ -216,7 +215,20 @@
                         grid-area: slot;
                         display: flex;
                         flex-direction: row;
-                        gap: calc($repoCardGap / 2);
+                        align-items: center;
+                        gap: 4px;
+
+                        button.bulk-remove-repos-button {
+                            padding: 2px 1px;
+                            :global(svg.icon-backspace) {
+                                width: 30px;
+                                height: 28px;
+                                stroke: var(--color-text-secondary);
+                            }
+                            &:hover :global(svg.icon-backspace) {
+                                stroke: var(--color-text);
+                            }
+                        }
                     }
                 }
 

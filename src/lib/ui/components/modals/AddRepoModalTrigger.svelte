@@ -56,12 +56,17 @@
         }
     }
 
-    button:hover :global(svg.icon-plus) {
-        stroke: rgba(var(--color-green-500-rgb) / 0.8);
+    button {
+        padding: 4px 0px;
     }
 
     button :global(svg.icon-plus) {
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
+        stroke: var(--color-text-secondary);
+    }
+
+    button:hover :global(svg.icon-plus) {
+        stroke: rgba(var(--color-green-500-rgb) / 0.8);
     }
 </style>
