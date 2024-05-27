@@ -7,6 +7,7 @@ export { };
 declare global {
     declare namespace App {
         interface Locals {
+            debug_data: boolean;
             token?: string;
         }
 

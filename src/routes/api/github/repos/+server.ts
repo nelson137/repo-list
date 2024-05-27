@@ -3,6 +3,7 @@ import { ApiRepo } from '$lib/models/repo';
 import { octokitFactory } from '$lib/server/api/octokit';
 import { json } from '@sveltejs/kit';
 import { ZodError } from 'zod';
+import debug_data from '../../../../../debug_data/repos.json';
 import type { RequestHandler } from './$types';
 
 export type ResponsePayload = { repos: ApiRepo[] } | App.Error;
@@ -10,6 +11,7 @@ export type ResponsePayload = { repos: ApiRepo[] } | App.Error;
 export const GET = (async ({ locals }) => {
     const octokit = octokitFactory(locals.token);
     try {
+        if (locals.debug_data) return json({ repos: debug_data });
         const repos_data = await octokit.paginate(octokit.rest.repos.listForAuthenticatedUser, {
             per_page: 100,
             affiliation: 'owner',
