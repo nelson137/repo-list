@@ -15,7 +15,7 @@
 
     let opened = false;
 
-    // Hack because the `centered` prop on `Modal` is typed incorrectly.
+    // Hack because some props on `Modal` are typed incorrectly.
     let centered = true as unknown as null;
     const overlayOpacity = 0.4 as unknown as null;
 
@@ -56,7 +56,7 @@
 </button>
 
 <Modal
-    class="move-repos-modal"
+    class="app-modal move-repos-modal"
     {opened}
     {centered}
     {overlayOpacity}
@@ -105,20 +105,19 @@
     //     animation: 250ms linear 0ms 1 normal both running modal-fade;
     // }
 
-    @media (prefers-reduced-motion) {
-        :global(.move-repos-modal .svelteui-Modal-inner .svelteui-Paper-root) {
-            background-color: rgba(255, 0, 0, 80%);
-        }
-    }
+    // @media (prefers-reduced-motion) {
+    //     :global(.app-modal.move-repos-modal div[role="dialog"]) {
+    //         background-color: rgba(255, 0, 0, 80%);
+    //     }
+    // }
 
-    @media not (prefers-reduced-motion) {
-        :global(.move-repos-modal .svelteui-Modal-inner .svelteui-Paper-root) {
-            background-color: rgba(0, 255, 0, 80%);
-        }
-    }
+    // @media not (prefers-reduced-motion) {
+    //     :global(.app-modal.move-repos-modal div[role="dialog"]) {
+    //         background-color: rgba(0, 255, 0, 80%);
+    //     }
+    // }
 
-    :global(.move-repos-modal .svelteui-Modal-inner .svelteui-Paper-root) {
-        // background-color: transparent;
+    :global(.app-modal.move-repos-modal div[role="dialog"]) {
         padding: 0px;
     }
 
