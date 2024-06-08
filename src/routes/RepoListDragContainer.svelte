@@ -1,7 +1,7 @@
 <script lang="ts">
     import { repo_drag, type DragSource } from '$lib/stores/repo-drag';
     import { repo_lists } from '$lib/stores/repo-lists';
-    import { Side, type _DragEvent } from '$lib/ui/drag-and-drop';
+    import { Side, type _DragEvent } from '$lib/drag-and-drop';
     import { dist } from '$lib/util';
 
     export let list_id: string;

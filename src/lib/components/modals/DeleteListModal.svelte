@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Modal } from '@svelteuidev/core';
-    import TrashSvg from '$components/svgs/TrashSvg.svelte';
+    import TrashSvg from '$lib/components/svgs/TrashSvg.svelte';
     import { createEventDispatcher } from 'svelte';
-    import type { DeleteListModalEvents } from '$lib/ui/events';
+    import type { DeleteListModalEvents } from '$lib/events';
     import XButton from '../XButton.svelte';
     import CheckButton from '../CheckButton.svelte';
 

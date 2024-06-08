@@ -12,8 +12,6 @@
         "paths": {
             "$lib": ["./src/lib"],
             "$lib/*": ["./src/lib/*"],
-            "$components": ["./src/lib/ui/components"],
-            "$components/*": ["./src/lib/ui/components/*"],
             "$test": ["./src/test"],
             "$test/*": ["./src/test/*"]
         },

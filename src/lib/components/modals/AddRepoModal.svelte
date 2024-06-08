@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import PlusSvg from "../svgs/PlusSvg.svelte";
-    import type { AddRepoModalEvents } from "$lib/ui/events";
+    import type { AddRepoModalEvents } from "$lib/events";
     import Svelecte from "svelecte";
     import CheckButton from "../CheckButton.svelte";
     import XButton from "../XButton.svelte";

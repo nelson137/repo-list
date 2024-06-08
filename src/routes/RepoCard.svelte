@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { _DragEvent } from '$lib/ui/drag-and-drop';
+    import type { _DragEvent } from '$lib/drag-and-drop';
     import type { Repo } from '$lib/models/repo';
-    import GitForkSvg from '$components/svgs/GitForkSvg.svelte';
-    import GitStarSvg from '$components/svgs/GitStarSvg.svelte';
+    import GitForkSvg from '$lib/components/svgs/GitForkSvg.svelte';
+    import GitStarSvg from '$lib/components/svgs/GitStarSvg.svelte';
     import { createEventDispatcher } from 'svelte';
     import type { DragSource } from '$lib/stores/repo-drag';
     import { in_edit_mode } from '$lib/stores/repo-lists';

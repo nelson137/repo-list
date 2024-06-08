@@ -1,13 +1,13 @@
 <script lang="ts">
     import type { LayoutData } from './$types';
     import '../app.css';
-    import EditSvg from '$components/svgs/EditSvg.svelte';
-    import CheckButton from '$lib/ui/components/CheckButton.svelte';
-    import XButton from '$lib/ui/components/XButton.svelte';
+    import EditSvg from '$lib/components/svgs/EditSvg.svelte';
+    import CheckButton from '$lib/components/CheckButton.svelte';
+    import XButton from '$lib/components/XButton.svelte';
     import { fly } from 'svelte/transition';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
-    import CreateListModal from '$components/modals/CreateListModal.svelte';
-    import type { CreateListOkData } from '$lib/ui/events';
+    import CreateListModal from '$lib/components/modals/CreateListModal.svelte';
+    import type { CreateListOkData } from '$lib/events';
     import { RepoList } from '$lib/models/repo-list';
     import { SvelteUIProvider } from '@svelteuidev/core';
 

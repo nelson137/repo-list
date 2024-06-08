@@ -1,23 +1,23 @@
 <script lang="ts">
-    import { type _DragEvent } from '$lib/ui/drag-and-drop';
-    import DeleteListModal from '$components/modals/DeleteListModal.svelte';
+    import { type _DragEvent } from '$lib/drag-and-drop';
+    import DeleteListModal from '$lib/components/modals/DeleteListModal.svelte';
     import RepoCard from './RepoCard.svelte';
     import { flip } from 'svelte/animate';
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import type { RepoList } from '$lib/models/repo-list';
     import { repos } from '$lib/stores/repos';
-    import AddRepoModal from '$components/modals/AddRepoModal.svelte';
-    import type { AddRepoSubmitData, DeleteListYesData, MoveReposSubmitData } from '$lib/ui/events';
+    import AddRepoModal from '$lib/components/modals/AddRepoModal.svelte';
+    import type { AddRepoSubmitData, DeleteListYesData, MoveReposSubmitData } from '$lib/events';
     import { fly } from 'svelte/transition';
     import RepoListDragContainer from './RepoListDragContainer.svelte';
     import { onMount } from 'svelte';
-    import BackspaceSvg from '$components/svgs/BackspaceSvg.svelte';
-    import PencilSvg from '$lib/ui/components/svgs/PencilSvg.svelte';
+    import BackspaceSvg from '$lib/components/svgs/BackspaceSvg.svelte';
+    import PencilSvg from '$lib/components/svgs/PencilSvg.svelte';
     import { TextInput } from '@svelteuidev/core';
-    import CheckButton from '$lib/ui/components/CheckButton.svelte';
-    import XButton from '$lib/ui/components/XButton.svelte';
+    import CheckButton from '$lib/components/CheckButton.svelte';
+    import XButton from '$lib/components/XButton.svelte';
     import { clickoutside, focus } from '@svelteuidev/composables';
-    import MoveReposModal from '$lib/ui/components/modals/MoveReposModal.svelte';
+    import MoveReposModal from '$lib/components/modals/MoveReposModal.svelte';
 
     export let list: RepoList;
 

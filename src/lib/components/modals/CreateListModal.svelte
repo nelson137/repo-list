@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import type { CreateListModalEvents } from '$lib/ui/events';
+    import type { CreateListModalEvents } from '$lib/events';
     import ListPlusSvg from '../svgs/ListPlusSvg.svelte';
     import { Modal, TextInput } from '@svelteuidev/core';
 

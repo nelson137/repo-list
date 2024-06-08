@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, tick } from 'svelte';
-    import type { MoveReposModalEvents } from '$lib/ui/events';
+    import type { MoveReposModalEvents } from '$lib/events';
     import { Modal } from '@svelteuidev/core';
     import SquareRoundedArrowRightSvg from '../svgs/SquareRoundedArrowRightSvg.svelte';
     import Svelecte from 'svelecte';
