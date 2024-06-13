@@ -117,7 +117,7 @@
     //     }
     // }
 
-    :global(.app-modal.move-repos-modal div[role="dialog"]) {
+    :global(.app-modal.move-repos-modal div[role='dialog']) {
         padding: 0px;
     }
 

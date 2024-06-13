@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import PlusSvg from "../svgs/PlusSvg.svelte";
-    import type { AddRepoModalEvents } from "$lib/events";
-    import Svelecte from "svelecte";
-    import CheckButton from "../CheckButton.svelte";
-    import XButton from "../XButton.svelte";
-    import { repo_lists } from "$lib/stores/repo-lists";
-    import { repos } from "$lib/stores/repos";
-    import { Modal } from "@svelteuidev/core";
+    import { createEventDispatcher } from 'svelte';
+    import PlusSvg from '../svgs/PlusSvg.svelte';
+    import type { AddRepoModalEvents } from '$lib/events';
+    import Svelecte from 'svelecte';
+    import CheckButton from '../CheckButton.svelte';
+    import XButton from '../XButton.svelte';
+    import { repo_lists } from '$lib/stores/repo-lists';
+    import { repos } from '$lib/stores/repos';
+    import { Modal } from '@svelteuidev/core';
 
     export let list_id: string;
 
@@ -50,7 +50,7 @@
     {centered}
     withCloseButton={false}
     {overlayOpacity}
-    on:close={() => opened = false}
+    on:close={() => (opened = false)}
 >
     <form on:submit|preventDefault={on_submit}>
         <Svelecte
@@ -91,18 +91,17 @@
     $selectDropdownHeight: 256px;
 
     :global(.app-modal.add-repos-modal) {
-        :global(> div[role="presentation"]) {
+        :global(> div[role='presentation']) {
             align-items: flex-start;
 
             :global(> div) {
                 margin-top: calc(
-                    50vh -
-                    ($selectHeight + $selectDropdownHeight) / 2 -
-                    $modalWrapperVerticalPadding
+                    50vh - ($selectHeight + $selectDropdownHeight) / 2 -
+                        $modalWrapperVerticalPadding
                 );
             }
 
-            :global(div[role="dialog"]) {
+            :global(div[role='dialog']) {
                 width: 60%;
                 min-width: 300px;
                 max-width: 512px;

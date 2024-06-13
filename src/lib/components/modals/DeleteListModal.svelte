@@ -23,7 +23,7 @@
     }
 </script>
 
-<button class="trigger" on:click={() => opened = true}>
+<button class="trigger" on:click={() => (opened = true)}>
     <TrashSvg />
 </button>
 
@@ -33,12 +33,12 @@
     {centered}
     withCloseButton={false}
     {overlayOpacity}
-    on:close={() => opened = false}
+    on:close={() => (opened = false)}
 >
     <p class="message">Are you sure you want to delete list "{list_name}"?</p>
 
     <div class="modal-buttons">
-        <XButton variant="colorbox" on:click={() => opened = false} />
+        <XButton variant="colorbox" on:click={() => (opened = false)} />
         <CheckButton variant="colorbox" on:click={on_yes} />
     </div>
 </Modal>
@@ -46,7 +46,7 @@
 <style lang="scss">
     @use 'global' as *;
 
-    :global(.app-modal.delete-list-modal div[role="dialog"]) {
+    :global(.app-modal.delete-list-modal div[role='dialog']) {
         width: unset;
         max-width: 512px;
         background: $colorModalBg;

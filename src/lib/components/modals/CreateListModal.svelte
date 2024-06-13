@@ -66,7 +66,7 @@
         }
     }
 
-    :global(.app-modal.create-list-modal div[role="dialog"]) {
+    :global(.app-modal.create-list-modal div[role='dialog']) {
         width: 60%;
         min-width: 300px;
         max-width: 512px;

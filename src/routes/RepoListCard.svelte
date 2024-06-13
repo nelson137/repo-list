@@ -124,7 +124,10 @@
                     {#if $in_edit_mode}
                         <div class="edit-controls" transition:fly={{ x: -16, duration: 200 }}>
                             {#if any_repos_selected}
-                                <button class="bulk-remove-repos-button" on:click={remove_repos_from_list}><BackspaceSvg /></button>
+                                <button
+                                    class="bulk-remove-repos-button"
+                                    on:click={remove_repos_from_list}><BackspaceSvg /></button
+                                >
                                 <MoveReposModal
                                     src_list_id={list.id}
                                     on:submit={move_repos_to_list}
