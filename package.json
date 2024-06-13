@@ -6,7 +6,7 @@
         "node": "^18.18.0 || >=20.0.0"
     },
     "scripts": {
-        "lint": "prettier --check --plugin-search-dir=. .; eslint .",
+        "lint": "eslint . && prettier --check --plugin-search-dir=. .",
         "format": "prettier --write --plugin-search-dir=. .",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

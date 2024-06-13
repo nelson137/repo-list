@@ -37,3 +37,13 @@ export function endpoint_err<Data>(
 ): Data {
     throw error(status, endpoint_err_body(reason, message));
 }
+
+export async function get_response_error(response: Response): Promise<string> {
+    const fallback = response.statusText || 'Unknown error';
+    try {
+        const body = (await response.json()) as App.Error;
+        return body.message ?? fallback;
+    } catch {
+        return fallback;
+    }
+}

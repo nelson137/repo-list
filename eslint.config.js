@@ -22,6 +22,11 @@ export default ts_eslint.config(
     },
     eslint.configs.recommended,
     ...ts_eslint.configs.recommended,
+    ...ts_eslint.configs.recommendedTypeCheckedOnly.map(config => ({
+        ...config,
+        files: ['**/*.ts', '**/*.svelte'],
+    })),
+    ...ts_eslint.configs.stylistic,
     ...svelte_eslint.configs['flat/recommended'],
     ...svelte_eslint.configs['flat/prettier'],
     {
@@ -43,6 +48,12 @@ export default ts_eslint.config(
         },
         plugins: {
             '@typescript-eslint': ts_eslint.plugin,
+        },
+    },
+    {
+        files: ['**/*.spec.ts'],
+        rules: {
+            '@typescript-eslint/unbound-method': 'off',
         },
     },
     {

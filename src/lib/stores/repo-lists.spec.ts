@@ -71,7 +71,7 @@ describe('RepositoryListsData', () => {
             const actualLists = sut.get_repo_lists();
 
             expect(mockConsoleError).toHaveBeenCalledOnce();
-            expect(mockConsoleError.mock.lastCall.join(' ')).toContain(unexpectedId);
+            expect(mockConsoleError.mock.lastCall?.join(' ')).toContain(unexpectedId);
             expect(actualLists).toEqual([]);
         });
     });
@@ -128,7 +128,7 @@ describe('RepositoryListsData', () => {
             sut.delete_list(id);
 
             expect(mockConsoleError).toHaveBeenCalledOnce();
-            expect(mockConsoleError.mock.lastCall.join(' ')).toContain(id);
+            expect(mockConsoleError.mock.lastCall?.join(' ')).toContain(id);
         });
 
         it('should remove the list from the lists map', () => {
@@ -148,7 +148,7 @@ describe('RepositoryListsData', () => {
             sut.delete_list(id);
 
             expect(mockConsoleError).toHaveBeenCalledOnce();
-            expect(mockConsoleError.mock.lastCall.join(' ')).toContain(id);
+            expect(mockConsoleError.mock.lastCall?.join(' ')).toContain(id);
         });
     });
 });
@@ -200,7 +200,7 @@ describe('read_local_storage', () => {
         const actualLists = read_local_storage();
 
         expect(mockConsoleError).toHaveBeenCalledOnce();
-        expect(mockConsoleError.mock.lastCall.join(' ')).toContain(
+        expect(mockConsoleError.mock.lastCall?.join(' ')).toContain(
             'Failed to load repository lists from local storage:',
         );
         expect(actualLists).toEqual([]);
@@ -212,7 +212,7 @@ describe('read_local_storage', () => {
         const actualLists = read_local_storage();
 
         expect(mockConsoleError).toHaveBeenCalledOnce();
-        expect(mockConsoleError.mock.lastCall.join(' ')).toContain('data is not an array');
+        expect(mockConsoleError.mock.lastCall?.join(' ')).toContain('data is not an array');
         expect(actualLists).toEqual([]);
     });
 
@@ -222,7 +222,7 @@ describe('read_local_storage', () => {
         const actualLists = read_local_storage();
 
         expect(mockConsoleError).toHaveBeenCalledOnce();
-        expect(mockConsoleError.mock.lastCall.join(' ')).toContain('"code": "invalid_type"');
+        expect(mockConsoleError.mock.lastCall?.join(' ')).toContain('"code": "invalid_type"');
         expect(actualLists).toEqual([]);
     });
 });

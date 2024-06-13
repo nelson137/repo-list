@@ -6,6 +6,7 @@ import {
     repoListStorageSchema,
 } from '$lib/models/repo-list';
 import { generateMock } from '@anatine/zod-mock';
+import type { Mock } from 'vitest';
 import { z } from 'zod';
 
 export const rand = {
@@ -37,9 +38,9 @@ export const rand = {
     uuid: (): string => generateMock(z.string().uuid()),
 };
 
-export function createMockConsoleError() {
+export function createMockConsoleError(): Mock<any[], void> {
     const originalConsoleError = console.error;
-    const mock = vi.fn();
+    const mock = vi.fn<Parameters<typeof console.error>, ReturnType<typeof console.error>>();
 
     beforeAll(() => {
         console.error = mock;

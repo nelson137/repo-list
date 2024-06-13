@@ -15,7 +15,7 @@
     const list_clear_drag_indicator = (list: HTMLElement) =>
         list.style.removeProperty('--indicator-display');
 
-    const _element_is_in_list = (o: any): boolean => {
+    const _element_is_in_list = (o: null | HTMLElement): boolean => {
         if (!o || typeof o !== 'object' || !(o.classList ?? true) || !(o.parentElement ?? true))
             return false;
         return o.classList.contains('list') || _element_is_in_list(o.parentElement);
@@ -45,7 +45,7 @@
     };
 
     const drag_leave = (event: _DragEvent) => {
-        if (_element_is_in_list(event.relatedTarget)) return;
+        if (_element_is_in_list(event.relatedTarget as HTMLElement)) return;
         list_clear_drag_indicator(event.currentTarget);
     };
 

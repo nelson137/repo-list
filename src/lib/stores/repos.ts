@@ -10,7 +10,7 @@ export class RepositoriesData {
      * Repositories are stored in the lists by ID only. This allows for quick
      * access to a repo by ID.
      */
-    public repositories: { [id: string]: Repo };
+    public repositories: Record<string, Repo>;
 
     constructor(repositories: RepositoriesData['repositories'] = {}) {
         this.repositories = repositories;

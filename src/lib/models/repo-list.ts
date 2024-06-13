@@ -32,7 +32,8 @@ export class RepoList extends ZClass<RepoList>()(repoListSchema) {
      */
     public static parse = (data: unknown): RepoList => new RepoList(repoListSchema.parse(data));
 
-    public clone = (): RepoList => new RepoList(JSON.parse(JSON.stringify(this)));
+    public clone = (): RepoList =>
+        new RepoList(JSON.parse(JSON.stringify(this)) as ConstructorParameters<typeof RepoList>[0]);
 }
 
 export const repoListStorageSchema = repoListSchema.extend({

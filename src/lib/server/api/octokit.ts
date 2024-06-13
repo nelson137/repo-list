@@ -7,6 +7,12 @@ export type OctoRest = InstanceType<typeof Octokit>['rest'];
 type OctoMethod = (...args: any) => Promise<any>;
 export type OctoEndpointData<E extends OctoMethod> = Awaited<ReturnType<E>>['data'];
 
+export interface OktokitErrorResponseData {
+    message: string;
+    documentation_url: string;
+    status: string;
+}
+
 export let auth: OAuthAppAuthInterface;
 
 export const init = () => {

@@ -2,8 +2,8 @@ import type { Repo } from '$lib/models/repo';
 import { RepoList, RepoListStorage } from '$lib/models/repo-list';
 import * as _ from 'lodash-es';
 import { derived, get, writable } from 'svelte/store';
-import { async_derived, cloneMapObj, hash } from './utils';
 import { repos as repos_store } from './repos';
+import { async_derived, cloneMapObj, hash } from './utils';
 
 export class RepositoryListsData {
     /**
@@ -16,7 +16,7 @@ export class RepositoryListsData {
      *
      * This allows for quick access to a list by ID.
      */
-    public lists: { [id: string]: RepoList } = {};
+    public lists: Record<string, RepoList> = {};
 
     /**
      * Create a deep clone.
@@ -25,7 +25,7 @@ export class RepositoryListsData {
     public clone = (): RepositoryListsData => {
         const new_data = new RepositoryListsData();
         new_data.lists = cloneMapObj(this.lists);
-        new_data.list_order = JSON.parse(JSON.stringify(this.list_order));
+        new_data.list_order = JSON.parse(JSON.stringify(this.list_order)) as string[];
         return new_data;
     };
 
@@ -142,9 +142,10 @@ export function load_local_storage(repos: Repo[]) {
  */
 export function read_local_storage(): RepoListStorage[] {
     try {
-        const data = JSON.parse(localStorage.getItem(REPO_LISTS_KEY) ?? '[]');
+        const data_str = localStorage.getItem(REPO_LISTS_KEY) ?? '[]';
+        const data = JSON.parse(data_str) as unknown;
         if (!Array.isArray(data)) {
-            throw `data is not an array: ${data}`;
+            throw `data is not an array: ${data_str}`;
         }
 
         return data.map(RepoListStorage.parse);

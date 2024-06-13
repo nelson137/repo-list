@@ -14,6 +14,6 @@ export function ZClass<_T>() {
             constructor(data: z.input<z.ZodObject<Shape>>) {
                 return Object.assign(this, data);
             }
-        } as any;
+        } as unknown as ZClass<Shape>;
     };
 }

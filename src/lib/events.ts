@@ -1,35 +1,35 @@
-export type CreateListOkData = {
+export interface CreateListOkData {
     /** The name of the new repository list to be created. */
     name: string;
-};
+}
 
-export type CreateListModalEvents = {
+export interface CreateListModalEvents {
     ok: CreateListOkData;
-};
+}
 
-export type AddRepoSubmitData = {
+export interface AddRepoSubmitData {
     /** The IDs of the repositories to add. */
     repo_ids: string[];
-};
+}
 
-export type AddRepoModalEvents = {
+export interface AddRepoModalEvents {
     submit: AddRepoSubmitData;
-};
+}
 
-export type DeleteListYesData = {
+export interface DeleteListYesData {
     /** The ID of the repository list. */
     list_id: string;
-};
+}
 
-export type DeleteListModalEvents = {
+export interface DeleteListModalEvents {
     yes: DeleteListYesData;
-};
+}
 
-export type MoveReposSubmitData = {
+export interface MoveReposSubmitData {
     /** The ID of the repository list to which to move the repositories. */
     list_id: string;
-};
+}
 
-export type MoveReposModalEvents = {
+export interface MoveReposModalEvents {
     submit: MoveReposSubmitData;
-};
+}

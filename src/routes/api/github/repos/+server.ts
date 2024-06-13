@@ -1,6 +1,7 @@
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { ApiRepo } from '$lib/models/repo';
-import { octokitFactory } from '$lib/server/api/octokit';
+import { octokitFactory, type OktokitErrorResponseData } from '$lib/server/api/octokit';
+import type { RequestError } from '@octokit/request-error';
 import { json } from '@sveltejs/kit';
 import { ZodError } from 'zod';
 import debug_data from '../../../../../debug_data/repos.json';
@@ -18,18 +19,15 @@ export const GET = (async ({ locals }) => {
         });
         const repos = repos_data.map(ApiRepo.parse);
         return json({ repos });
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof ZodError) {
             const message = error.issues
                 .map((iss, i) => `(${i + 1}) ${iss.message}: ${path_to_string(iss.path)}`)
                 .join('; ');
             return endpoint_err(500, EndpointErrorReason.Data, message);
         } else {
-            return endpoint_err(
-                400,
-                EndpointErrorReason.Github,
-                error.response?.data?.message ?? 'unknown error',
-            );
+            const data = (error as RequestError).response?.data as OktokitErrorResponseData;
+            return endpoint_err(400, EndpointErrorReason.Github, data?.message ?? 'unknown error');
         }
     }
 }) satisfies RequestHandler;

@@ -1,13 +1,12 @@
-import { EndpointErrorReason, endpoint_err } from '$lib/error';
+import { EndpointErrorReason, endpoint_err, get_response_error } from '$lib/error';
 import type { User } from '$lib/models/user';
-import { error } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import type { ResponsePayload as UserApiPayload } from './api/github/user/+server';
 
-type OutData = {
+interface OutData {
     logged_in: boolean;
     user: User | null;
-};
+}
 
 export const load = (async ({ fetch, locals }) => {
     if (!locals.token) {
@@ -17,17 +16,21 @@ export const load = (async ({ fetch, locals }) => {
         };
     }
 
-    let response: Response;
+    const response = await fetch('/api/github/user');
+    if (!response.ok) {
+        return endpoint_err(
+            response.status,
+            EndpointErrorReason.Other,
+            await get_response_error(response),
+        );
+    }
+
     let payload: UserApiPayload;
     try {
-        response = await fetch('/api/github/user');
-        payload = await response.json();
-    } catch (error: any) {
-        return endpoint_err(
-            500,
-            EndpointErrorReason.Other,
-            `An unexpected error occurred while fetching user data: ${error.message}`,
-        );
+        payload = (await response.json()) as UserApiPayload;
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'unknown';
+        return endpoint_err(500, EndpointErrorReason.Other, `Invalid response: ${message}`);
     }
 
     if ('user' in payload) {
@@ -37,5 +40,10 @@ export const load = (async ({ fetch, locals }) => {
         };
     }
 
-    throw error(response.status, payload);
+    const message = payload.message ?? 'unknown';
+    return endpoint_err(
+        response.status,
+        EndpointErrorReason.Other,
+        `An unexpected error occurred while fetching user data: ${message}`,
+    );
 }) satisfies LayoutServerLoad<OutData>;

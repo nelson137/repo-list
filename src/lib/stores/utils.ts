@@ -18,20 +18,24 @@ export function async_derived<S extends Stores, T>(
         stores,
         ($stores, set) => {
             const start = Date.now();
-            Promise.resolve(callback($stores)).then(value => {
-                if (start > previous) {
-                    previous = start;
-                    set(value);
-                }
-            });
+            callback($stores).then(
+                value => {
+                    if (start > previous) {
+                        previous = start;
+                        set(value);
+                    }
+                },
+                reject_reason =>
+                    console.error(`Failed to run update for async derived store: ${reject_reason}`),
+            );
         },
         initial_value,
     );
 }
 
-export function cloneMapObj<T extends { clone: () => T }>(map: {
-    [key: string]: T;
-}): { [key: string]: T } {
+export function cloneMapObj<T extends { clone: () => T }>(
+    map: Record<string, T>,
+): Record<string, T> {
     return Object.fromEntries(Object.entries(map).map(([k, v]) => [`${k}`, v.clone()]));
 }
 

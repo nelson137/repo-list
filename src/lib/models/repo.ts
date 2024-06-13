@@ -38,7 +38,8 @@ export class ApiRepo extends ZClass<Repo>()(apiRepoSchema) {
             .parse(data)
             .map(d => new Repo(d));
 
-    public clone = (): Repo => new Repo(JSON.parse(JSON.stringify(this)));
+    public clone = (): Repo =>
+        new Repo(JSON.parse(JSON.stringify(this)) as ConstructorParameters<typeof Repo>[0]);
 }
 
 export const repoSchema = repoBaseSchema.extend({
@@ -59,5 +60,6 @@ export class Repo extends ZClass<Repo>()(repoSchema) {
             .parse(data)
             .map(d => new Repo(d));
 
-    public clone = (): Repo => new Repo(JSON.parse(JSON.stringify(this)));
+    public clone = (): Repo =>
+        new Repo(JSON.parse(JSON.stringify(this)) as ConstructorParameters<typeof Repo>[0]);
 }

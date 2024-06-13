@@ -2,7 +2,6 @@
     import { type _DragEvent } from '$lib/drag-and-drop';
     import { onMount } from 'svelte';
     import type { PageData } from './$types';
-    import { page } from '$app/stores';
     import { lists, load_local_storage, is_edit_mode_dirty } from '$lib/stores/repo-lists';
     import RepoListCard from './RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
@@ -11,7 +10,9 @@
     export let data: PageData;
 
     onMount(() => {
-        load_local_storage(Repo.parse_array($page.data.repos));
+        if (data.repos) {
+            load_local_storage(parse_array(Repo, data.repos));
+        }
     });
 
     function on_before_unload(event: BeforeUnloadEvent) {

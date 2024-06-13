@@ -19,7 +19,7 @@
 
     const onWindowClick = (event: MouseEvent) => {
         if (!data.logged_in) return;
-        let path = event.composedPath();
+        const path = event.composedPath();
         if (
             profile_menu_details.hasAttribute('open') &&
             !path.includes(profile_menu_summary) &&

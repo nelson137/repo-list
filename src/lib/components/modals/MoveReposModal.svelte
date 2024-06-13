@@ -16,7 +16,7 @@
     let opened = false;
 
     // Hack because some props on `Modal` are typed incorrectly.
-    let centered = true as unknown as null;
+    const centered = true as unknown as null;
     const overlayOpacity = 0.4 as unknown as null;
 
     async function on_open() {

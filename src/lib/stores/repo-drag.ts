@@ -1,7 +1,7 @@
 import type { Side } from '$lib/drag-and-drop';
 import { get, writable } from 'svelte/store';
 
-export type DragSource = {
+export interface DragSource {
     /**
      * The ID of the list from which the card is being dragged.
      */
@@ -16,9 +16,9 @@ export type DragSource = {
      * The index of the card being dragged in the source list.
      */
     repo_index: number;
-};
+}
 
-export type DragIndicator = {
+export interface DragIndicator {
     /**
      * The index of the repository card closest to the mouse.
      */
@@ -28,7 +28,7 @@ export type DragIndicator = {
      * The side of the repostiroy card that is closest to the mouse.
      */
     side: Side;
-};
+}
 
 export class RepoDragData {
     /**
@@ -48,7 +48,7 @@ export class RepoDragData {
     }
 
     public clone = (): RepoDragData => {
-        const { source, indicator } = JSON.parse(JSON.stringify(this));
+        const { source, indicator } = JSON.parse(JSON.stringify(this)) as RepoDragData;
         return new RepoDragData(source, indicator);
     };
 }

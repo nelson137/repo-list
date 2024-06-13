@@ -21,7 +21,7 @@
 
     export let list: RepoList;
 
-    let selected_repos: { [repo_id: string]: boolean } = {};
+    let selected_repos: Record<string, boolean> = {};
 
     $: selected_repo_ids = Object.entries(selected_repos)
         .filter(([_id, selected]) => selected)

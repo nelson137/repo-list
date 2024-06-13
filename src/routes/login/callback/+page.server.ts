@@ -1,7 +1,14 @@
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { auth } from '$lib/server/api/octokit';
+import type { RequestError } from '@octokit/request-error';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+
+interface AuthErrorData {
+    error: string;
+    error_description: string;
+    error_uri: string;
+}
 
 export const load = (async ({ url, cookies }) => {
     const code = url.searchParams.get('code');
@@ -21,9 +28,10 @@ export const load = (async ({ url, cookies }) => {
             // maxAge: 60 * 60 * 24, // Number of secs from receipt it will be deleted // 1 day
             sameSite: 'lax',
         });
-    } catch (error: any) {
-        const desc = error.response?.data?.error_description;
-        return endpoint_err(401, EndpointErrorReason.Github, desc);
+    } catch (error: unknown) {
+        console.error(error);
+        const data = (error as RequestError).response?.data as AuthErrorData;
+        return endpoint_err(401, EndpointErrorReason.Github, data?.error_description);
     }
 
     throw redirect(302, '/');
