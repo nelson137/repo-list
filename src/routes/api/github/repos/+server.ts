@@ -1,5 +1,6 @@
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { ApiRepo } from '$lib/models/repo';
+import { parse_array } from '$lib/models/zod-utils';
 import { octokitFactory, type OktokitErrorResponseData } from '$lib/server/api/octokit';
 import type { RequestError } from '@octokit/request-error';
 import { json } from '@sveltejs/kit';
@@ -17,7 +18,7 @@ export const GET = (async ({ locals }) => {
             per_page: 100,
             affiliation: 'owner',
         });
-        const repos = repos_data.map(ApiRepo.parse);
+        const repos = parse_array(ApiRepo, repos_data);
         return json({ repos });
     } catch (error: unknown) {
         if (error instanceof ZodError) {

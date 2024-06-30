@@ -33,10 +33,10 @@ export function async_derived<S extends Stores, T>(
     );
 }
 
-export function cloneMapObj<T extends { clone: () => T }>(
-    map: Record<string, T>,
-): Record<string, T> {
-    return Object.fromEntries(Object.entries(map).map(([k, v]) => [`${k}`, v.clone()]));
+export function cloneMapObj<T>(map: Record<string, T>): Record<string, T> {
+    return Object.fromEntries(
+        Object.entries(map).map(([k, v]) => [`${k}`, JSON.parse(JSON.stringify(v))]),
+    );
 }
 
 /**

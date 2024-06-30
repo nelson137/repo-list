@@ -8,7 +8,7 @@
     import { in_edit_mode, repo_lists } from '$lib/stores/repo-lists';
     import CreateListModal from '$lib/components/modals/CreateListModal.svelte';
     import type { CreateListOkData } from '$lib/events';
-    import { RepoList } from '$lib/models/repo-list';
+    import { build_repo_list } from '$lib/models/repo-list';
     import { SvelteUIProvider } from '@svelteuidev/core';
 
     export let data: LayoutData;
@@ -34,7 +34,7 @@
     }
 
     function on_click_new_list(event: CustomEvent<CreateListOkData>) {
-        repo_lists.add_list(RepoList.from(event.detail.name));
+        repo_lists.add_list(build_repo_list(event.detail.name));
     }
 
     function on_click_edit_submit() {

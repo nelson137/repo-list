@@ -1,29 +1,25 @@
-import { Repo, repoSchema } from '$lib/models/repo';
-import {
-    RepoList,
-    RepoListStorage,
-    repoListSchema,
-    repoListStorageSchema,
-} from '$lib/models/repo-list';
+import { Repo } from '$lib/models/repo';
+import { RepoList, RepoListStorage } from '$lib/models/repo-list';
 import { generateMock } from '@anatine/zod-mock';
 import type { Mock } from 'vitest';
 import { z } from 'zod';
 
 export const rand = {
     array: {
-        from: <T>(value_schema: z.Schema<T>, length = 3): T[] =>
-            generateMock(z.array(value_schema).length(length)),
-        repo: (length = 3) => rand.array.from(repoSchema, length).map(d => new Repo(d)),
-        repoList: (length = 3) => rand.array.from(repoListSchema, length).map(d => new RepoList(d)),
-        repoListStorage: (length = 3) =>
-            rand.array.from(repoListStorageSchema, length).map(d => new RepoListStorage(d)),
+        from: <Output, Def extends z.ZodTypeDef, Input>(
+            schema: z.Schema<Output, Def, Input>,
+            length = 3,
+        ): Output[] => generateMock(z.array(schema).length(length)),
+        repo: (length = 3) => rand.array.from(Repo, length),
+        repoList: (length = 3) => rand.array.from(RepoList, length),
+        repoListStorage: (length = 3) => rand.array.from(RepoListStorage, length),
     },
 
     choice: <T>(array: T[]): T => array[rand.number(array.length - 1)],
 
     model: {
-        repo: () => new Repo(generateMock(repoSchema)),
-        repoList: () => new RepoList(generateMock(repoListSchema)),
+        repo: () => generateMock(Repo),
+        repoList: () => generateMock(RepoList),
     },
 
     /**

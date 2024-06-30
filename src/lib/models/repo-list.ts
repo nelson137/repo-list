@@ -1,9 +1,8 @@
 import * as _ from 'lodash-es';
 import { v4 as uuid } from 'uuid';
 import { z } from 'zod';
-import { ZClass } from './zod-utils';
 
-export const repoListSchema = z.object({
+export const RepoList = z.object({
     id: z
         .string()
         .uuid()
@@ -16,36 +15,18 @@ export const repoListSchema = z.object({
     ),
 });
 
-export class RepoList extends ZClass<RepoList>()(repoListSchema) {
-    public static from(name: string, repo_ids: string[] = [], id?: string): RepoList {
-        return new RepoList({
-            name,
-            id: id ?? uuid(),
-            repo_ids,
-        });
-    }
+export type RepoList = z.infer<typeof RepoList>;
 
-    /**
-     * Deserialize, validate, and construct an instance of this model.
-     * @param data The raw data.
-     * @returns An instance of this model.
-     */
-    public static parse = (data: unknown): RepoList => new RepoList(repoListSchema.parse(data));
-
-    public clone = (): RepoList =>
-        new RepoList(JSON.parse(JSON.stringify(this)) as ConstructorParameters<typeof RepoList>[0]);
+export function build_repo_list(name: string, repo_ids: string[] = [], id?: string): RepoList {
+    return {
+        name,
+        id: id ?? uuid(),
+        repo_ids,
+    } satisfies RepoList;
 }
 
-export const repoListStorageSchema = repoListSchema.extend({
+export const RepoListStorage = RepoList.extend({
     index: z.number().nullable(),
 });
 
-export class RepoListStorage extends ZClass<RepoListStorage>()(repoListStorageSchema) {
-    /**
-     * Deserialize, validate, and construct an instance of this model.
-     * @param data The raw data.
-     * @returns An instance of this model.
-     */
-    public static parse = (data: unknown): RepoListStorage =>
-        new RepoListStorage(repoListStorageSchema.parse(data));
-}
+export type RepoListStorage = z.infer<typeof RepoListStorage>;

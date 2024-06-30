@@ -1,5 +1,6 @@
 import type { Repo } from '$lib/models/repo';
 import { RepoList, RepoListStorage } from '$lib/models/repo-list';
+import { parse_array } from '$lib/models/zod-utils';
 import * as _ from 'lodash-es';
 import { derived, get, writable } from 'svelte/store';
 import { repos as repos_store } from './repos';
@@ -49,10 +50,7 @@ export class RepositoryListsData {
      * - Calculate the list order.
      */
     public load = (lists: RepoListStorage[]) => {
-        this.lists = _.keyBy(
-            lists.map(s => new RepoList(s)),
-            rl => rl.id,
-        );
+        this.lists = _.keyBy(lists, rl => rl.id);
 
         type IndexedRepoListStorage = RepoListStorage & { index: number };
         this.list_order = lists
@@ -148,7 +146,7 @@ export function read_local_storage(): RepoListStorage[] {
             throw `data is not an array: ${data_str}`;
         }
 
-        return data.map(RepoListStorage.parse);
+        return parse_array(RepoListStorage, data);
     } catch (error: any) {
         console.error('Failed to load repository lists from local storage:', error);
         return [];
@@ -160,7 +158,7 @@ export function read_local_storage(): RepoListStorage[] {
  */
 export function write_to_local_storage({ lists, list_order }: RepositoryListsData) {
     const data = Object.fromEntries(
-        Object.values(lists).map(l => [l.id, new RepoListStorage({ ...l, index: null })]),
+        Object.values(lists).map(l => [l.id, { ...l, index: null as number | null }]),
     );
 
     for (let i = 0; i < list_order.length; i++) {

@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { ZClass } from './zod-utils';
 
-const repoBaseSchema = z.object({
+export const RepoBase = z.object({
     archived: z.boolean().describe(`Whether this repo is archived.`),
     description: z.string().nullable().describe(`The repo's description.`),
     disabled: z.boolean().describe(`Whether this repo is disabled.`),
@@ -11,10 +10,10 @@ const repoBaseSchema = z.object({
     name: z.string().describe(`The repo's name.`),
     private: z.boolean().describe(`Whether the repo is private.`),
     stargazers_count: z.number().describe(`The number of stars on this repo.`),
-    updated_at: z.string().describe(`The last time this repo was updated.`),
+    updated_at: z.string().nullable().describe(`The last time this repo was updated.`),
 });
 
-export const apiRepoSchema = repoBaseSchema.extend({
+export const ApiRepo = RepoBase.extend({
     id: z
         .number()
         .int()
@@ -24,42 +23,10 @@ export const apiRepoSchema = repoBaseSchema.extend({
         .describe(`The repo's ID.`),
 });
 
-export class ApiRepo extends ZClass<Repo>()(apiRepoSchema) {
-    /**
-     * Deserialize, validate, and construct an instance of this model.
-     * @param data The raw data.
-     * @returns An instance of this model.
-     */
-    public static parse = (data: unknown): Repo => new Repo(apiRepoSchema.parse(data));
+export type ApiRepo = z.infer<typeof ApiRepo>;
 
-    public static parse_array = (data: unknown): Repo[] =>
-        z
-            .array(apiRepoSchema)
-            .parse(data)
-            .map(d => new Repo(d));
-
-    public clone = (): Repo =>
-        new Repo(JSON.parse(JSON.stringify(this)) as ConstructorParameters<typeof Repo>[0]);
-}
-
-export const repoSchema = repoBaseSchema.extend({
+export const Repo = RepoBase.extend({
     id: z.string().regex(/\d+/).describe(`The repo's ID.`),
 });
 
-export class Repo extends ZClass<Repo>()(repoSchema) {
-    /**
-     * Deserialize, validate, and construct an instance of this model.
-     * @param data The raw data.
-     * @returns An instance of this model.
-     */
-    public static parse = (data: unknown): Repo => new Repo(repoSchema.parse(data));
-
-    public static parse_array = (data: unknown): Repo[] =>
-        z
-            .array(repoSchema)
-            .parse(data)
-            .map(d => new Repo(d));
-
-    public clone = (): Repo =>
-        new Repo(JSON.parse(JSON.stringify(this)) as ConstructorParameters<typeof Repo>[0]);
-}
+export type Repo = z.infer<typeof Repo>;

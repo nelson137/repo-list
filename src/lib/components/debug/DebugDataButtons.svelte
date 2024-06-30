@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { RepoList } from '$lib/models/repo-list';
+    import { build_repo_list } from '$lib/models/repo-list';
     import { in_edit_mode, lists, repo_lists } from '$lib/stores/repo-lists';
     import { get } from 'svelte/store';
 
@@ -17,7 +17,7 @@
     function on_click_defaults() {
         delete_all_lists();
         repo_lists.add_list(
-            RepoList.from('School', [
+            build_repo_list('School', [
                 '258009459',
                 '530779943',
                 '399959884',
@@ -31,7 +31,7 @@
             ]),
         );
         repo_lists.add_list(
-            RepoList.from('Games', [
+            build_repo_list('Games', [
                 '529015461',
                 '532099005',
                 '79787322',
@@ -39,7 +39,7 @@
                 '486736755',
             ]),
         );
-        repo_lists.add_list(RepoList.from('Pinned', ['102030669', '532099005', '202956385']));
+        repo_lists.add_list(build_repo_list('Pinned', ['102030669', '532099005', '202956385']));
         if (!get(in_edit_mode)) {
             repo_lists.write_to_local_storage();
         }
