@@ -1,6 +1,6 @@
 import { EndpointErrorReason, endpoint_err } from '$lib/error';
 import { ApiRepo } from '$lib/models/repo';
-import { parse_array } from '$lib/models/zod-utils';
+import { parse_array } from '$lib/models/util';
 import { octokitFactory, type OktokitErrorResponseData } from '$lib/server/api/octokit';
 import type { RequestError } from '@octokit/request-error';
 import { json } from '@sveltejs/kit';

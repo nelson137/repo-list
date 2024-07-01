@@ -1,6 +1,6 @@
 import type { Repo } from '$lib/models/repo';
 import { RepoList, RepoListStorage } from '$lib/models/repo-list';
-import { parse_array } from '$lib/models/zod-utils';
+import { parse_array } from '$lib/models/util';
 import * as _ from 'lodash-es';
 import { derived, get, writable } from 'svelte/store';
 import { repos as repos_store } from './repos';

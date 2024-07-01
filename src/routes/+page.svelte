@@ -6,7 +6,7 @@
     import RepoListCard from './RepoListCard.svelte';
     import { Repo } from '$lib/models/repo';
     import DebugDataButtons from '$lib/components/debug/DebugDataButtons.svelte';
-    import { parse_array } from '$lib/models/zod-utils';
+    import { parse_array } from '$lib/models/util';
 
     export let data: PageData;
 
