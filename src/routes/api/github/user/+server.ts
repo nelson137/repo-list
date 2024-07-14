@@ -3,7 +3,6 @@ import { User } from '$lib/models/user';
 import { octokitFactory, type OktokitErrorResponseData } from '$lib/server/api/octokit';
 import type { RequestError } from '@octokit/request-error';
 import { json } from '@sveltejs/kit';
-import debug_data from '../../../../../debug_data/user.json';
 import type { RequestHandler } from './$types';
 
 export type ResponsePayload = { user: User } | App.Error;
@@ -11,7 +10,6 @@ export type ResponsePayload = { user: User } | App.Error;
 export const GET = (async ({ locals }) => {
     const octokit = octokitFactory(locals.token);
     try {
-        if (locals.debug_data) return json({ user: debug_data });
         const users_response = await octokit.rest.users.getAuthenticated();
         const user = User.parse(users_response.data);
         return json({ user });
