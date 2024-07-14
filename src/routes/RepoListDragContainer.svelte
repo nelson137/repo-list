@@ -175,7 +175,7 @@
     .list {
         margin: 0 auto;
         padding: $repoCardGap;
-        min-height: 91px;
+        min-height: calc(88px + 2 * $repoCardGap);
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
